@@ -1,0 +1,5 @@
+query GetNavigation($where: NavigationWhereUniqueInput!) {
+  navigation(where: $where) {
+    ...Navigation
+  }
+}

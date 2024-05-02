@@ -1,0 +1,8 @@
+query GetStaticNavigations {
+  header: navigation(where: {staticNavigation: header}) {
+    ...Navigation
+  }
+  footer: navigation(where: {staticNavigation: footer}) {
+    ...Navigation
+  }
+}

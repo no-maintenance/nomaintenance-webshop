@@ -1,0 +1,5 @@
+query GetEntities($where: [EntityWhereInput!]!) {
+  entities(where: $where) {
+    ...Block
+  }
+}

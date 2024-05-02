@@ -1,0 +1,21 @@
+query GetOnPageShopData(
+  $productsWhere: ProductWhereInput
+  $collectionsInfo: CollectionWhereInput
+  $collectionsFeed: CollectionWhereInput
+) {
+  products(where: $productsWhere) {
+    gid
+  }
+  collectionsInfo: collections(where: $collectionsInfo) {
+    gid
+  }
+  collectionsFeed: collections(where: $collectionsFeed) {
+    gid
+  }
+}
+fragment CollectionGid on Collection {
+  gid
+}
+fragment ProductGid on Product {
+  gid
+}

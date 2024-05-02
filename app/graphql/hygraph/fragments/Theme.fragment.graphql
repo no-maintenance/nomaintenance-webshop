@@ -1,0 +1,113 @@
+fragment Theme on Theme {
+    radius
+    id
+    slug
+    ...ColorScheme
+}
+
+fragment ColorScheme on Theme {
+    foreground {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    background {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    card {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    cardForeground {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    primary {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    secondary {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    muted {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    mutedForeground {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    destructive {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    destructiveForeground {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    border {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    ring {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+    inputColor {
+      rgba {
+        r
+        g
+        b
+        a
+      }
+    }
+}

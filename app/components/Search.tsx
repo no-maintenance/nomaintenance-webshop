@@ -12,13 +12,14 @@ import {applyTrackingParams} from '~/lib/search';
 import type {
   PredictiveProductFragment,
   PredictiveCollectionFragment,
-  PredictiveArticleFragment,
   SearchQuery,
-} from 'storefrontapi.generated';
+} from '~/__generated__/storefrontapi.generated';
+import {Heading, Text} from '~/components/Text';
+import {Grid} from '~/components/Grid';
+import {Button} from '~/components/ui/button';
 
 type PredicticeSearchResultItemImage =
   | PredictiveCollectionFragment['image']
-  | PredictiveArticleFragment['image']
   | PredictiveProductFragment['variants']['nodes'][0]['image'];
 
 type PredictiveSearchResultItemPrice =
@@ -333,7 +334,7 @@ export function PredictiveSearchResults() {
   }
 
   if (state === 'loading') {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (!totalResults) {
@@ -341,7 +342,7 @@ export function PredictiveSearchResults() {
   }
 
   return (
-    <div className="predictive-search-results">
+    <div className="predictive-search-results pb-gutter">
       <div>
         {results.map(({type, items}) => (
           <PredictiveSearchResult
@@ -355,10 +356,10 @@ export function PredictiveSearchResults() {
       </div>
       {searchTerm.current && (
         <Link onClick={goToSearchResult} to={`/search?q=${searchTerm.current}`}>
-          <p>
+          <Button className={'my-gutter'}>
             View all results for <q>{searchTerm.current}</q>
             &nbsp; →
-          </p>
+          </Button>
         </Link>
       )}
     </div>
@@ -399,19 +400,33 @@ function PredictiveSearchResult({
   }&type=${pluralToSingularSearchType(type)}`;
 
   return (
-    <div className="predictive-search-result" key={type}>
+    <div className="predictive-search-result outline-offset-0" key={type}>
       <Link prefetch="intent" to={categoryUrl} onClick={goToSearchResult}>
-        <h5>{isSuggestions ? 'Suggestions' : type}</h5>
+        <Heading size={'copy'} as={'h5'} className={'py-3 font-medium'}>
+          {isSuggestions ? 'Suggestions' : type}
+        </Heading>
       </Link>
-      <ul>
-        {items.map((item: NormalizedPredictiveSearchResultItem) => (
-          <SearchResultItem
-            goToSearchResult={goToSearchResult}
-            item={item}
-            key={item.id}
-          />
-        ))}
-      </ul>
+      {type === 'products' || type === 'collections' ? (
+        <Grid layout={'products'} as={'ul'}>
+          {items.map((item: NormalizedPredictiveSearchResultItem) => (
+            <SearchResultProduct
+              goToSearchResult={goToSearchResult}
+              item={item}
+              key={item.id}
+            />
+          ))}
+        </Grid>
+      ) : (
+        <ul>
+          {items.map((item: NormalizedPredictiveSearchResultItem) => (
+            <SearchResultItem
+              goToSearchResult={goToSearchResult}
+              item={item}
+              key={item.id}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -420,18 +435,65 @@ type SearchResultItemProps = Pick<SearchResultTypeProps, 'goToSearchResult'> & {
   item: NormalizedPredictiveSearchResultItem;
 };
 
+function SearchResultProduct({goToSearchResult, item}: SearchResultItemProps) {
+  return (
+    <li
+      className="predictive-search-result-item outline-offset-4"
+      key={item.id}
+    >
+      <Link onClick={goToSearchResult} to={item.url}>
+        <div className="flex flex-col gap-2 product-card">
+          <div className={'grid gap-3'}>
+            {item.image?.url && (
+              <div className="card-image aspect-[4/5] bg-primary/5 relative group">
+                <Image
+                  alt={item.image.altText ?? ''}
+                  src={item.image.url}
+                  aspectRatio={'4/5'}
+                  sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
+                  className={
+                    'object-cover w-full absolute inset-0 transition-opacity duration-200 ease-in-out'
+                  }
+                />
+              </div>
+            )}
+
+            <div className="grid gap-1">
+              <Text
+                className="w-full overflow-hidden whitespace-nowrap text-ellipsis uppercase"
+                as="h3"
+              >
+                {item.styledTitle ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: item.styledTitle,
+                    }}
+                  />
+                ) : (
+                  <span>{item.title}</span>
+                )}
+              </Text>
+              <div className={'h-[23px]'}>
+                <div className="flex gap-4 group-hover:hidden block">
+                  <Text className="flex gap-4">
+                    {item?.price && (
+                      <Money withoutTrailingZeros data={item.price} />
+                    )}
+                  </Text>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </li>
+  );
+}
+
 function SearchResultItem({goToSearchResult, item}: SearchResultItemProps) {
   return (
-    <li className="predictive-search-result-item" key={item.id}>
+    <li className="predictive-search-result-item capitalize" key={item.id}>
       <Link onClick={goToSearchResult} to={item.url}>
-        {item.image?.url && (
-          <Image
-            alt={item.image.altText ?? ''}
-            src={item.image.url}
-            width={50}
-            height={50}
-          />
-        )}
         <div>
           {item.styledTitle ? (
             <div
@@ -441,11 +503,6 @@ function SearchResultItem({goToSearchResult, item}: SearchResultItemProps) {
             />
           ) : (
             <span>{item.title}</span>
-          )}
-          {item?.price && (
-            <small>
-              <Money data={item.price} />
-            </small>
           )}
         </div>
       </Link>

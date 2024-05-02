@@ -1,0 +1,64 @@
+fragment Heroes on LayoutHero {
+  __typename
+  ... on Entity {
+    id
+  }
+  ... on MixedMedia {
+    id
+    link {
+      ...Link
+    }
+    title
+    excerpt: body {
+      html
+    }
+    media {
+      ...ResponsiveAsset
+    }
+  }
+  #  ... on Lock {
+  #    ...LockSection
+  #  }
+  ... on Product {
+    ...ProductGid
+  }
+  ... on Page {
+    id
+    title
+    slug
+    staticPage
+    featuredMedia {
+      ...ResponsiveAsset
+    }
+  }
+  ... on Collection {
+    gid
+  }
+  ... on Event {
+    id
+    title
+    date
+    hasReleasePage
+    slug
+    featuredMedia {
+      ...ResponsiveAsset
+    }
+    excerpt {
+      html
+    }
+  }
+  ... on Editorial {
+    title
+    id
+    excerpt {
+      html
+    }
+    featuredMedia {
+      ...ResponsiveAsset
+    }
+    slug
+  }
+}
+fragment ProductGid on Product {
+  gid
+}

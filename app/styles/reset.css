@@ -43,18 +43,15 @@ p {
 }
 
 a {
-  color: #000;
   text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
   cursor: pointer;
 }
 
 hr {
   border-bottom: none;
-  border-top: 1px solid #000;
   margin: 0;
 }
 

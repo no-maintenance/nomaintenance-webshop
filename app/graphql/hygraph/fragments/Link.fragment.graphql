@@ -1,0 +1,27 @@
+fragment Link on Link {
+  label
+  title
+  id
+  rel
+  hasTargetBlank
+  externalTarget
+  internalTarget {
+    __typename
+    ... on Page {
+      slug
+      staticPage
+    }
+    ... on Product {
+      slug
+    }
+    ... on Collection {
+      slug
+    }
+    ... on Editorial {
+      slug
+    }
+    ... on Event {
+      slug
+    }
+  }
+}

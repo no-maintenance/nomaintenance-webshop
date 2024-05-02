@@ -1,0 +1,4 @@
+fragment Form on Form {
+  id
+  type
+}

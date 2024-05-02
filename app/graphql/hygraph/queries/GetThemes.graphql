@@ -1,0 +1,14 @@
+query GetThemes {
+    normal: theme(where: {globalDefault: normal}) {
+       slug
+    }
+    light: theme(where: {globalDefault: light}) {
+        slug
+    }
+    dark: theme(where: {globalDefault: dark}) {
+        slug
+    }
+    themes(first: 20) {
+        ...Theme
+    }
+}

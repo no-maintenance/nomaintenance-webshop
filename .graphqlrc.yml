@@ -6,7 +6,18 @@ projects:
       - '*.{ts,tsx,js,jsx}'
       - 'app/**/*.{ts,tsx,js,jsx}'
       - '!app/graphql/**/*.{ts,tsx,js,jsx}'
+      - '!./app/__generated__/**'
   customer-account:
     schema: 'node_modules/@shopify/hydrogen/customer-account.schema.json'
     documents:
       - 'app/graphql/customer-account/**/*.{ts,tsx,js,jsx}'
+  hygraph:
+    schema:
+      - https://us-west-2.cdn.hygraph.com/content/clu2m9jgk0cqi07lfb5f7101i/master:
+          headers:
+            Authorization: "Bearer ${HYGRAPH_CONTENT_TOKEN}"
+    documents: 'app/graphql/hygraph/**/*.{graphql}'
+
+
+
+

@@ -1,0 +1,8 @@
+fragment LockSection on Lock {
+  id
+  isEnabled
+  isGlobal
+  scheduledUnlockTime
+  alwaysUnlockForAuthenticatedUser
+  alwaysUnlockOnTime
+}

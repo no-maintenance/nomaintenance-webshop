@@ -1,0 +1,11 @@
+query GetGlobals(
+  $locksWhere: LockWhereInput!
+  $layoutsWhere: LayoutWhereInput!
+) {
+  locks(where: $locksWhere) {
+    ...Lock
+  }
+  layouts(first: 1, where: $layoutsWhere) {
+    ...LayoutConfig
+  }
+}

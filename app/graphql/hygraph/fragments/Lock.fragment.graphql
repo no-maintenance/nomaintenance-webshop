@@ -1,0 +1,44 @@
+fragment Lock on Lock {
+  slug
+  id
+  isEnabled
+  isGlobal
+  pageLocks {
+    ... on Page {
+      slug
+    }
+    ... on Product {
+      slug
+    }
+    ... on Collection {
+      slug
+    }
+    ... on Editorial {
+      slug
+    }
+  }
+  exemptions {
+    ... on Page {
+      slug
+    }
+    ... on Product {
+      slug
+    }
+    ... on Collection {
+      slug
+    }
+    ... on Editorial {
+      slug
+    }
+  }
+  background {
+    ...ResponsiveAsset
+  }
+  customLockScreen {
+    ...LayoutConfig
+  }
+  password
+  scheduledUnlockTime
+  alwaysUnlockForAuthenticatedUser
+  alwaysUnlockOnTime
+}

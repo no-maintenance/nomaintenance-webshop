@@ -1,0 +1,37 @@
+fragment MixedMedia on MixedMedia {
+  id
+  link {
+    ...Link
+  }
+  title
+  body {
+    ...RichText
+  }
+  media {
+    ...ResponsiveAsset
+  }
+}
+fragment RichText on MixedMediaBodyRichText {
+  json
+  references {
+    __typename
+    ... on Asset {
+      ...ResponsiveAsset
+    }
+    ... on Form {
+      id
+      ...Form
+    }
+    #      ... on Collection {
+    #        id
+    #        ...Collection
+    #      }
+    ... on Page {
+      id
+    }
+    ... on Lock {
+      id
+      ...LockSection
+    }
+  }
+}

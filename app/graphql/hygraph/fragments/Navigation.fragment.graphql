@@ -1,0 +1,8 @@
+fragment Navigation on Navigation {
+  slug
+  id
+  title
+  links {
+    ...Link
+  }
+}

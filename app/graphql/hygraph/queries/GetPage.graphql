@@ -1,0 +1,26 @@
+query GetPage($where: PageWhereUniqueInput!) {
+  page(where: $where) {
+    seo {
+      ...Seo
+    }
+    id
+    layout {
+      id
+      title
+      displayTitle
+      heroes {
+        ...Heroes
+      }
+      sections {
+        ... on Entity {
+          ...Entity
+        }
+      }
+    }
+  }
+}
+fragment Entity on Entity {
+  __typename
+  id
+  stage
+}

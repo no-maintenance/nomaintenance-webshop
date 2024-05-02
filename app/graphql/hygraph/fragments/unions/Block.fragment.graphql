@@ -1,0 +1,71 @@
+fragment Block on Entity {
+    id
+    ...BlockPrimitive
+    ... on CustomizedSection {
+        __typename
+        id
+        theme {
+            slug
+        }
+        ...BlockSettings
+        content {
+            ...BlockPrimitive
+        }
+    }
+}
+fragment BlockSettings on CustomizedSection {
+    ...Spacing
+    reverseLayout
+    alternateLayout
+    heading
+    theme {
+        slug
+    }
+}
+fragment Spacing on CustomizedSection {
+    verticalPadding
+    horizontalPadding
+}
+fragment BlockPrimitive on LayoutSections {
+    __typename
+    ... on Collection {
+        id
+        gid
+    }
+    ... on Product {
+        gid
+        id
+    }
+    ... on Form {
+        id
+        type
+    }
+    ... on Lock {
+        id
+        ...LockSection
+    }
+    ... on MixedMedia {
+        id
+        ...MixedMedia
+    }
+    ... on Archive {
+        id
+        media {
+            ...ResponsiveAsset
+        }
+        entries {
+            ... on Editorial {
+                id
+                title
+                slug
+                featuredMedia {
+                    ...ResponsiveAsset
+                }
+            }
+        }
+
+    }
+    ... on Event {
+        id
+    }
+}

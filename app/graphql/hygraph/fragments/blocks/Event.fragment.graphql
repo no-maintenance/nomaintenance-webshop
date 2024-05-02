@@ -1,0 +1,13 @@
+fragment EventBlock on Event {
+  id
+  title
+  date
+  hasReleasePage
+  slug
+  featuredMedia {
+    ...ResponsiveAsset
+  }
+  excerpt {
+    raw
+  }
+}

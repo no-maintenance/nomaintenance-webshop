@@ -1,0 +1,13 @@
+query GetLayoutConfig($where: LayoutWhereInput!) {
+  layouts(where: $where) {
+    ...LayoutConfig
+  }
+}
+fragment LayoutConfig on Layout {
+  id
+  headerStyle
+  footerStyle
+  theme {
+    slug
+  }
+}

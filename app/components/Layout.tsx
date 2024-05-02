@@ -1,61 +1,109 @@
 import {Await} from '@remix-run/react';
-import {Suspense} from 'react';
-import type {
-  CartApiQueryFragment,
-  FooterQuery,
-  HeaderQuery,
-} from 'storefrontapi.generated';
+import {ReactNode, Suspense, useContext, useState} from 'react';
 import {Aside} from '~/components/Aside';
-import {Footer} from '~/components/Footer';
-import {Header, HeaderMenu} from '~/components/Header';
-import {CartMain} from '~/components/Cart';
 import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
+import {
+  FooterStyle,
+  HeaderStyle,
+  Maybe,
+} from '~/__generated__/hygraph.generated';
+import {Header} from '~/components/Header';
+import {ChildThemeContext, ThemeConsumer} from '~/components/ui/theme';
+import {useRootLoaderData} from '~/root';
+import {Footer} from '~/components/Footer';
+import {cn} from '~/lib/utils';
 
+export type LayoutConfig = {
+  header: HeaderStyle;
+  footer: FooterStyle;
+  theme: Maybe<string>;
+  id: string;
+};
+const DEFAULT_LAYOUT: LayoutConfig = {
+  theme: null,
+  header: HeaderStyle.Fluid,
+  footer: FooterStyle.Default,
+  id: '',
+};
 export type LayoutProps = {
-  cart: Promise<CartApiQueryFragment | null>;
+  layoutConfig?: LayoutConfig;
   children?: React.ReactNode;
-  footer: Promise<FooterQuery>;
-  header: HeaderQuery;
-  isLoggedIn: Promise<boolean>;
 };
 
-export function Layout({
-  cart,
-  children = null,
-  footer,
-  header,
-  isLoggedIn,
-}: LayoutProps) {
-  return (
-    <>
-      <CartAside cart={cart} />
-      <SearchAside />
-      <MobileMenuAside menu={header?.menu} shop={header?.shop} />
-      {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />}
-      <main>{children}</main>
-      <Suspense>
-        <Await resolve={footer}>
-          {(footer) => <Footer menu={footer?.menu} shop={header?.shop} />}
-        </Await>
-      </Suspense>
-    </>
+const ConditionalThemeWrapper = ({
+  theme,
+  children,
+}: {
+  theme: Maybe<string>;
+  children: ReactNode;
+}) =>
+  theme ? (
+    <ChildThemeContext.Provider value={theme}>
+      <ThemeConsumer asChild>{children}</ThemeConsumer>
+    </ChildThemeContext.Provider>
+  ) : (
+    <>{children}</>
   );
-}
 
-function CartAside({cart}: {cart: LayoutProps['cart']}) {
+export function Layout({
+  children = null,
+  layoutConfig = DEFAULT_LAYOUT,
+}: LayoutProps) {
+  const {navigations} = useRootLoaderData();
   return (
-    <Aside id="cart-aside" heading="CART">
-      <Suspense fallback={<p>Loading cart ...</p>}>
-        <Await resolve={cart}>
-          {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
-          }}
-        </Await>
-      </Suspense>
-    </Aside>
+    <ConditionalThemeWrapper theme={layoutConfig?.theme}>
+      <div className="flex flex-col min-h-screen bg-background text-foreground">
+        {/*<CartAside cart={cart} />*/}
+        {/*<SearchAside />*/}
+        <div className="">
+          <a href="#mainContent" className="sr-only">
+            Skip to content
+          </a>
+        </div>
+        <Suspense
+          fallback={
+            <Header
+              headerStyle={layoutConfig?.header}
+              title={'NO MAINTENANCE'}
+              menu={null}
+            />
+          }
+        >
+          <Await resolve={navigations}>
+            {(nav) => {
+              if (!nav.header) return <></>;
+              return (
+                <Header
+                  headerStyle={layoutConfig?.header}
+                  title={'NO MAINTENANCE'}
+                  menu={nav.header}
+                />
+              );
+            }}
+          </Await>
+        </Suspense>
+        <main
+          role="main"
+          id="mainContent"
+          className={cn(
+            'flex-grow',
+            layoutConfig?.header === HeaderStyle.Fluid && '-mt-nav',
+          )}
+        >
+          {children}
+        </main>
+        <Suspense
+          fallback={<Footer style={layoutConfig?.footer} menu={null} />}
+        >
+          <Await resolve={navigations}>
+            {(nav) => <Footer style={layoutConfig?.footer} menu={nav.footer} />}
+          </Await>
+        </Suspense>
+      </div>
+    </ConditionalThemeWrapper>
   );
 }
 
@@ -91,26 +139,5 @@ function SearchAside() {
         <PredictiveSearchResults />
       </div>
     </Aside>
-  );
-}
-
-function MobileMenuAside({
-  menu,
-  shop,
-}: {
-  menu: HeaderQuery['menu'];
-  shop: HeaderQuery['shop'];
-}) {
-  return (
-    menu &&
-    shop?.primaryDomain?.url && (
-      <Aside id="mobile-menu-aside" heading="MENU">
-        <HeaderMenu
-          menu={menu}
-          viewport="mobile"
-          primaryDomainUrl={shop.primaryDomain.url}
-        />
-      </Aside>
-    )
   );
 }

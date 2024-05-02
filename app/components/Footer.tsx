@@ -1,112 +1,62 @@
-import {NavLink} from '@remix-run/react';
-import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
-import {useRootLoaderData} from '~/root';
+import {Section} from '~/components/Text';
+// import {KlaviyoNewsletter} from '~/components/KlavivyoForm';
+import type {
+  LinkFragment,
+  Maybe,
+  NavigationFragment,
+} from '~/__generated__/hygraph.generated';
+import {FooterStyle} from '~/__generated__/hygraph.generated';
+import {HygraphLink} from '~/components/blocks/fragment/HygraphLink';
 
 export function Footer({
   menu,
-  shop,
-}: FooterQuery & {shop: HeaderQuery['shop']}) {
+  style,
+}: {
+  menu?: Maybe<NavigationFragment>;
+  style: FooterStyle;
+}) {
+  if (style === FooterStyle.Minimal) return <></>;
+
   return (
-    <footer className="footer">
-      {menu && shop?.primaryDomain?.url && (
-        <FooterMenu menu={menu} primaryDomainUrl={shop.primaryDomain.url} />
-      )}
-    </footer>
+    <Section
+      padding={'x'}
+      as="footer"
+      role="contentinfo"
+      className={`grid sm:mt-8 items-center w-full pt-8 pb-6 px-gutter gap-2 md:gap-4 grid-cols-1 md:grid-cols-2`}
+    >
+      {menu && <FooterMenu menu={menu} />}
+      <div className={'col-span-2 sm:col-span-1 flex sm:justify-center'}>
+        <div className={'sm:max-w-xs w-full max-w-[295px]'}>
+          {/*<KlaviyoNewsletter hasSubmitBtn={true} />*/}
+        </div>
+      </div>
+      <h6
+        className={
+          'col-span-2 text-mid sm:text-heading font-bold uppercase sm:mt-8 sm:mb-8 '
+        }
+      >
+        © No Maintenance Corp. 2024
+      </h6>
+    </Section>
   );
 }
 
-function FooterMenu({
-  menu,
-  primaryDomainUrl,
-}: {
-  menu: FooterQuery['menu'];
-  primaryDomainUrl: HeaderQuery['shop']['primaryDomain']['url'];
-}) {
-  const {publicStoreDomain} = useRootLoaderData();
-
+function FooterMenu({menu}: {menu?: NavigationFragment}) {
   return (
-    <nav className="footer-menu" role="navigation">
-      {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
-        if (!item.url) return null;
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        const isExternal = !url.startsWith('/');
-        return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
-            {item.title}
-          </a>
-        ) : (
-          <NavLink
-            end
-            key={item.id}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
+    <nav>
+      <ul className={'gap-2 grid grid-cols-2'}>
+        {(menu?.links || []).map((item: LinkFragment, idx) => (
+          <li key={item.id} className={'col-span-1 sm:col-span-2 py-1'}>
+            <HygraphLink hygraphLink={item}>{item.label}</HygraphLink>
+          </li>
+        ))}
+      </ul>
+      <div
+        className={'row-span-1 sm:row-span-2 w-full md:w-fit hidden md:block'}
+      >
+        {/*<LanguageSelector />*/}
+        {/*<CountrySelector heading={'Shipping to'} />*/}
+      </div>
     </nav>
   );
-}
-
-const FALLBACK_FOOTER_MENU = {
-  id: 'gid://shopify/Menu/199655620664',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461633060920',
-      resourceId: 'gid://shopify/ShopPolicy/23358046264',
-      tags: [],
-      title: 'Privacy Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/privacy-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633093688',
-      resourceId: 'gid://shopify/ShopPolicy/23358013496',
-      tags: [],
-      title: 'Refund Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/refund-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633126456',
-      resourceId: 'gid://shopify/ShopPolicy/23358111800',
-      tags: [],
-      title: 'Shipping Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/shipping-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159224',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'Terms of Service',
-      type: 'SHOP_POLICY',
-      url: '/policies/terms-of-service',
-      items: [],
-    },
-  ],
-};
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
 }

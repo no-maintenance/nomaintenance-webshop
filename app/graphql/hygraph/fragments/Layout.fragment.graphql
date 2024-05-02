@@ -1,0 +1,11 @@
+fragment Layout on Layout {
+  id
+  title
+  displayTitle
+  heroes {
+    ...Heroes
+  }
+  sections {
+    __typename
+  }
+}

@@ -1,0 +1,22 @@
+query GetEditorial($where: EditorialWhereUniqueInput!) {
+  editorial(where: $where) {
+    title
+    id
+    seo {
+      ...Seo
+    }
+    featuredMedia {
+      ...ResponsiveAsset
+    }
+    credits {
+      ...Person
+    }
+    artistStatement {
+      json
+    }
+    mainContent {
+      ...EditorialContent
+    }
+
+  }
+}

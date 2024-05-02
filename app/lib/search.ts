@@ -5,7 +5,7 @@ import type {
   PredictiveCollectionFragment,
   PredictivePageFragment,
   PredictiveArticleFragment,
-} from 'storefrontapi.generated';
+} from '~/__generated__/storefrontapi.generated';
 
 export function applyTrackingParams(
   resource:

@@ -1,0 +1,20 @@
+fragment Collection on Collection {
+  gid
+  #  id
+  #  products
+  #  enrichedProducts {
+  #    product
+  #    title
+  #    icon {
+  #      alt
+  #      url(
+  #        transformation: {image: {resize: {height: 30, width: 30, fit: max}}}
+  #      )
+  #    }
+  #    media {
+  #      alt
+  #      mimeType
+  #      url
+  #    }
+  #  }
+}

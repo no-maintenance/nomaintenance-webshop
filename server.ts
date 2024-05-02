@@ -2,21 +2,42 @@
 // Virtual entry point for the app
 import * as remixBuild from 'virtual:remix/server-build';
 import {
+  createRequestHandler,
+  getStorefrontHeaders,
+} from '@shopify/remix-oxygen';
+import {
   cartGetIdDefault,
   cartSetIdDefault,
   createCartHandler,
+  createCustomerAccountClient,
   createStorefrontClient,
   storefrontRedirect,
-  createCustomerAccountClient,
 } from '@shopify/hydrogen';
-import {
-  createRequestHandler,
-  getStorefrontHeaders,
-  type AppLoadContext,
-} from '@shopify/remix-oxygen';
-import {AppSession} from '~/lib/session';
-import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
+import type {
+  CountryCode,
+  LanguageCode,
+} from '@shopify/hydrogen/storefront-api-types';
 
+import {AppSession} from '~/lib/session';
+import {subfolderLocaleParser} from '~/lib/utils';
+import {getI18n} from '~/i18n/server';
+import {createHygraphClient} from '~/lib/createHygraphClient.server';
+
+import defaultCountry from './public/locales/country/US.json';
+import defaultLanguage from './public/locales/language/en.json';
+
+import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
+import {HYGRAPH_CACHE_NAME} from '~/lib/const';
+
+const DEFAULT_I18N = {
+  isDefault: true,
+  country: defaultCountry,
+  language: defaultLanguage,
+  prefix: subfolderLocaleParser({
+    country: defaultCountry.code as CountryCode,
+    language: defaultLanguage.code as LanguageCode,
+  }),
+};
 /**
  * Export a fetch handler in module format.
  */
@@ -34,11 +55,22 @@ export default {
         throw new Error('SESSION_SECRET environment variable is not set');
       }
 
-      const waitUntil = executionContext.waitUntil.bind(executionContext);
       const [cache, session] = await Promise.all([
         caches.open('hydrogen'),
         AppSession.init(request, [env.SESSION_SECRET]),
       ]);
+      const waitUntil = (promise: Promise<unknown>) =>
+        executionContext.waitUntil(promise);
+
+      // @ts-ignore
+      const {i18n, i18nSfApi} = await getI18n<typeof DEFAULT_I18N>({
+        cache,
+        defaultI18n: DEFAULT_I18N,
+        prefixParser: subfolderLocaleParser,
+        request,
+        strategy: 'subfolder',
+        waitUntil,
+      });
 
       /**
        * Create Hydrogen's Storefront client.
@@ -46,14 +78,22 @@ export default {
       const {storefront} = createStorefrontClient({
         cache,
         waitUntil,
-        i18n: {language: 'EN', country: 'US'},
+        i18n: i18nSfApi,
         publicStorefrontToken: env.PUBLIC_STOREFRONT_API_TOKEN,
         privateStorefrontToken: env.PRIVATE_STOREFRONT_API_TOKEN,
         storeDomain: env.PUBLIC_STORE_DOMAIN,
         storefrontId: env.PUBLIC_STOREFRONT_ID,
         storefrontHeaders: getStorefrontHeaders(request),
       });
-
+      const m = await fetch(env.KV_URL + '/get');
+      const lastModified = await m.text();
+      console.log('lastModified', lastModified);
+      const hygraph = createHygraphClient({
+        env,
+        cache: await caches.open(HYGRAPH_CACHE_NAME),
+        waitUntil,
+        lastModified,
+      });
       /**
        * Create a client for Customer Account API.
        */
@@ -76,7 +116,6 @@ export default {
         setCartId: cartSetIdDefault(),
         cartQueryFragment: CART_QUERY_FRAGMENT,
       });
-
       /**
        * Create a Remix request handler and pass
        * Hydrogen's Storefront client to the loader context.
@@ -84,13 +123,15 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: (): AppLoadContext => ({
+        getLoadContext: () => ({
           session,
+          waitUntil,
+          i18n,
           storefront,
           customerAccount,
           cart,
           env,
-          waitUntil,
+          hygraph,
         }),
       });
 

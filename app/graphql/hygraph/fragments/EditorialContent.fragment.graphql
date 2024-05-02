@@ -1,0 +1,14 @@
+fragment EditorialContent on EditorialMainContentRichText {
+  json
+  references {
+    ... on Asset {
+      ...ResponsiveAsset
+    }
+    ... on Archive {
+      id
+      media {
+        ...ResponsiveAsset
+      }
+    }
+  }
+}

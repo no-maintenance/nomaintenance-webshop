@@ -1,0 +1,9 @@
+fragment Seo on Seo {
+  title
+  hasTitleTemplate
+  description
+  noIndex
+  image {
+    url
+  }
+}

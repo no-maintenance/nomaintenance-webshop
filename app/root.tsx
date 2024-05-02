@@ -1,4 +1,4 @@
-import {useNonce} from '@shopify/hydrogen';
+import {CacheLong, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {
   defer,
   type SerializeFrom,
@@ -16,11 +16,21 @@ import {
   isRouteErrorResponse,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import favicon from './assets/favicon.svg';
-import resetStyles from './styles/reset.css?url';
 import appStyles from './styles/app.css?url';
-import {Layout} from '~/components/Layout';
-
+import customFont from './styles/custom-font.css?url';
+import appleTouchIcon from './assets/apple-touch-icon.png';
+import chromeShortcutIcon from './assets/android-chrome-512x512.png';
+import favicon32 from './assets/favicon-32x32.png';
+import type {GetThemesQuery} from '~/__generated__/hygraph.generated';
+import {
+  createRootThemeCss,
+  GLOBAL_DEFAULT_VALUE,
+  GlobalThemeContext,
+  ChildThemeContext,
+  DEFAULT_CHILD_THEME,
+  ThemeConsumer,
+} from '~/components/ui/theme';
+// import {parseAcceptLanguage} from 'intl-parse-accept-language';
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
  */
@@ -44,8 +54,8 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export function links() {
   return [
-    {rel: 'stylesheet', href: resetStyles},
     {rel: 'stylesheet', href: appStyles},
+    {rel: 'stylesheet', href: customFont},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -54,7 +64,9 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {rel: 'icon', type: 'image/svg+xml', href: favicon32},
+    {rel: 'apple-touch-icon', sizes: '180x180', href: appleTouchIcon},
+    {rel: 'shortcut icon', sizes: '512x512', href: chromeShortcutIcon},
   ];
 }
 
@@ -66,36 +78,38 @@ export const useRootLoaderData = () => {
   return root?.data as SerializeFrom<typeof loader>;
 };
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront, customerAccount, cart} = context;
+export async function loader({context, request}: LoaderFunctionArgs) {
+  const {storefront, customerAccount, session, cart} = context;
   const publicStoreDomain = context.env.PUBLIC_STORE_DOMAIN;
 
+  // const acceptsLang = request.headers.get('accept-language');
+  // const switchedDefaultLocale = session.get('switched-default-locale');
+  // if (acceptsLang && !switchedDefaultLocale) {
+  //   const preferredLocale = parseAcceptLanguage(acceptsLang, {
+  //     validate: Intl.DateTimeFormat.supportedLocalesOf,
+  //   });
+  //   console.log(preferredLocale);
+  // }
   const isLoggedInPromise = customerAccount.isLoggedIn();
   const cartPromise = cart.get();
-
-  // defer the footer query (below the fold)
-  const footerPromise = storefront.query(FOOTER_QUERY, {
-    cache: storefront.CacheLong(),
-    variables: {
-      footerMenuHandle: 'footer', // Adjust to your footer menu handle
-    },
-  });
-
-  // await the header query (above the fold)
-  const headerPromise = storefront.query(HEADER_QUERY, {
-    cache: storefront.CacheLong(),
-    variables: {
-      headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-    },
-  });
-
+  const navigations = context.hygraph.query(CacheLong()).GetNavigations();
+  const themes = await context.hygraph.query(CacheLong()).GetThemes();
   return defer(
     {
       cart: cartPromise,
-      footer: footerPromise,
-      header: await headerPromise,
+      navigations,
       isLoggedIn: isLoggedInPromise,
       publicStoreDomain,
+      shop: getShopAnalytics({
+        storefront,
+        publicStorefrontId: context.env.PUBLIC_STOREFRONT_ID,
+      }),
+      i18n: context.i18n,
+      themes,
+      consent: {
+        checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
+        storefrontAccessToken: context.env.PUBLIC_STOREFRONT_API_TOKEN,
+      },
     },
     {
       headers: {
@@ -105,26 +119,73 @@ export async function loader({context}: LoaderFunctionArgs) {
   );
 }
 
-export default function App() {
-  const nonce = useNonce();
-  const data = useLoaderData<typeof loader>();
-
+export function Document({
+  children,
+  nonce = '',
+  lang = 'en',
+  env = {},
+  allowIndexing = true,
+  direction = 'ltr',
+  themes,
+}: {
+  themes?: GetThemesQuery;
+  children: React.ReactNode;
+  nonce?: string;
+  lang?: string;
+  env?: Record<string, string>;
+  allowIndexing?: boolean;
+  direction?: 'ltr' | 'rtl';
+}) {
+  const t = createRootThemeCss(themes);
   return (
-    <html lang="en">
+    <html dir={direction} lang={lang} className={`h-full`}>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1,viewport-fit=cover"
+        />
+        <meta name="msvalidate.01" content="A352E6A0AF9A652267361BBB572B8468" />
+        {allowIndexing ? null : (
+          <meta name="robots" content="noindex, nofollow" />
+        )}
         <Meta />
         <Links />
       </head>
-      <body>
-        <Layout {...data}>
-          <Outlet />
-        </Layout>
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
-      </body>
+      <GlobalThemeContext.Provider value={t?.themes ?? GLOBAL_DEFAULT_VALUE}>
+        <ChildThemeContext.Provider
+          value={t?.staticRoots?.normal ?? DEFAULT_CHILD_THEME}
+        >
+          <ThemeConsumer asChild>
+            <body>
+              {children}
+              <script
+                nonce={nonce}
+                dangerouslySetInnerHTML={{
+                  __html: `window.ENV = ${JSON.stringify(env)}`,
+                }}
+              />
+              <ScrollRestoration nonce={nonce} />
+              <Scripts nonce={nonce} />
+            </body>
+          </ThemeConsumer>
+        </ChildThemeContext.Provider>
+      </GlobalThemeContext.Provider>
     </html>
+  );
+}
+
+export default function App() {
+  const nonce = useNonce();
+  const data = useLoaderData<typeof loader>();
+  return (
+    <Document
+      nonce={nonce}
+      lang={data.i18n.language.code}
+      themes={data?.themes}
+    >
+      <Outlet />
+    </Document>
   );
 }
 
@@ -143,98 +204,20 @@ export function ErrorBoundary() {
   }
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Layout {...rootData}>
-          <div className="route-error">
-            <h1>Oops</h1>
-            <h2>{errorStatus}</h2>
-            {errorMessage && (
-              <fieldset>
-                <pre>{errorMessage}</pre>
-              </fieldset>
-            )}
-          </div>
-        </Layout>
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
-      </body>
-    </html>
+    <Document
+      nonce={nonce}
+      lang={rootData?.i18n?.language?.code ?? 'en'}
+      themes={rootData?.themes}
+    >
+      <div className="route-error">
+        <h1>Oops</h1>
+        <h2>{errorStatus}</h2>
+        {errorMessage && (
+          <fieldset>
+            <pre>{errorMessage}</pre>
+          </fieldset>
+        )}
+      </div>
+    </Document>
   );
 }
-
-const MENU_FRAGMENT = `#graphql
-  fragment MenuItem on MenuItem {
-    id
-    resourceId
-    tags
-    title
-    type
-    url
-  }
-  fragment ChildMenuItem on MenuItem {
-    ...MenuItem
-  }
-  fragment ParentMenuItem on MenuItem {
-    ...MenuItem
-    items {
-      ...ChildMenuItem
-    }
-  }
-  fragment Menu on Menu {
-    id
-    items {
-      ...ParentMenuItem
-    }
-  }
-` as const;
-
-const HEADER_QUERY = `#graphql
-  fragment Shop on Shop {
-    id
-    name
-    description
-    primaryDomain {
-      url
-    }
-    brand {
-      logo {
-        image {
-          url
-        }
-      }
-    }
-  }
-  query Header(
-    $country: CountryCode
-    $headerMenuHandle: String!
-    $language: LanguageCode
-  ) @inContext(language: $language, country: $country) {
-    shop {
-      ...Shop
-    }
-    menu(handle: $headerMenuHandle) {
-      ...Menu
-    }
-  }
-  ${MENU_FRAGMENT}
-` as const;
-
-const FOOTER_QUERY = `#graphql
-  query Footer(
-    $country: CountryCode
-    $footerMenuHandle: String!
-    $language: LanguageCode
-  ) @inContext(language: $language, country: $country) {
-    menu(handle: $footerMenuHandle) {
-      ...Menu
-    }
-  }
-  ${MENU_FRAGMENT}
-` as const;
