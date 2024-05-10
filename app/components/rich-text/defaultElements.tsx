@@ -5,10 +5,13 @@ import {Audio, Class, IFrame, Image, Link, Video} from './elements';
 import type {NodeRendererType} from '~/lib/react-renderer';
 import {Heading} from '~/components/Text';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
-import {cn} from '~/lib/utils';
+import {cn, isAfterDate} from '~/lib/utils';
 import {Archive} from '~/components/blocks/Archive';
 import {BlockProvider} from '~/components/blocks/BlockFactory';
 import {Sizes} from '~/__generated__/hygraph.generated';
+import {FormBlock} from '~/components/blocks/FormBlock';
+import {CompactTimer, Countdown, CounterSize} from '~/components/Countdown';
+import {ClientOnly} from '~/lib/client-only';
 
 function FallbackForCustomAsset({mimeType}: {mimeType: string}) {
   if (__DEV__) {
@@ -31,13 +34,19 @@ export const defaultElements: Required<RichTextProps['renderers']> = {
   ol: ({children}) => <ol>{children}</ol>,
   li: ({children}) => <li>{children}</li>,
   p: ({children}) => {
-    console.log('children', children);
-    if (children?.props?.references.length) {
+    if (
+      children?.props?.references?.length ||
+      children?.props?.content.length > 1
+    ) {
       return (
         <div className={' gap-4 flex flex-wrap md:flex-nowrap'}>{children}</div>
       );
     }
-    return <p className={'prose'}>{children}</p>;
+    return (
+      <p className={'prose'}>
+        <p>{children}</p>
+      </p>
+    );
   },
   h1: ({children}) => <h1>{children}</h1>,
   h2: ({children}) => <h2>{children}</h2>,
@@ -82,12 +91,36 @@ export const defaultElements: Required<RichTextProps['renderers']> = {
   link: {},
 };
 export const DEFAULT_RENDERERS: NodeRendererType = {
-  h1: ({children}) => <Heading as="h1">{children}</Heading>,
-  h2: ({children}) => <Heading as="h2">{children}</Heading>,
-  h3: ({children}) => <Heading as="h3">{children}</Heading>,
-  h4: ({children}) => <Heading as="h4">{children}</Heading>,
-  h5: ({children}) => <Heading as="h5">{children}</Heading>,
-  h6: ({children}) => <Heading as="h6">{children}</Heading>,
+  h1: ({children}) => (
+    <Heading as="h1" className={'pb-1'}>
+      {children}
+    </Heading>
+  ),
+  h2: ({children}) => (
+    <Heading as="h2" className={'pb-1'}>
+      {children}
+    </Heading>
+  ),
+  h3: ({children}) => (
+    <Heading as="h3" className={'pb-1'}>
+      {children}
+    </Heading>
+  ),
+  h4: ({children}) => (
+    <Heading as="h4" className={'pb-1'}>
+      {children}
+    </Heading>
+  ),
+  h5: ({children}) => (
+    <Heading as="h5" className={'pb-1'}>
+      {children}
+    </Heading>
+  ),
+  h6: ({children}) => (
+    <Heading as="h6" className={'pb-1'}>
+      {children}
+    </Heading>
+  ),
   img: ({height, width, src, title, altText}) => (
     <img
       src={src}
@@ -118,6 +151,29 @@ export const DEFAULT_RENDERERS: NodeRendererType = {
           <Archive {...archive} />
         </BlockProvider>
       );
+    },
+    Form: (form) => {
+      return <FormBlock variant={'embedded'} {...form} />;
+    },
+    Lock: (data) => {
+      if (!data.scheduledUnlockTime) return <></>;
+      return (
+        <ClientOnly>
+          {() => (
+            <Countdown
+              launchDate={data.scheduledUnlockTime}
+              isLiveAtInit={isAfterDate(data)}
+            >
+              {({timeLeft, isLive}) => {
+                return (
+                  <CompactTimer time={timeLeft} size={CounterSize.Small} />
+                );
+              }}
+            </Countdown>
+          )}
+        </ClientOnly>
+      );
+      return <></>;
     },
   },
   // Asset: (asset) => {

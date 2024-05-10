@@ -8,6 +8,7 @@ import type {
 } from '~/__generated__/hygraph.generated';
 import {Sizes} from '~/__generated__/hygraph.generated';
 import {Slot} from '@radix-ui/react-slot';
+import {cn} from '~/lib/utils';
 
 type ThemeConsumerProps = {
   children: ReactNode;
@@ -64,15 +65,6 @@ export const GlobalThemeContext =
 
 export const ChildThemeContext = createContext(DEFAULT_CHILD_THEME);
 
-export const useThemeMerge = (
-  baseTheme: ThemeProps,
-  childTheme?: Maybe<ThemeFragment>,
-) => {
-  const dynamicTheme = getHexCssVariables(childTheme);
-  const [theme, setTheme] = useState({...dynamicTheme, ...baseTheme});
-  return {theme, setTheme};
-};
-
 export function ThemeConsumer({
   children,
   className,
@@ -85,7 +77,10 @@ export function ThemeConsumer({
   const Component = asChild ? Slot : 'div';
 
   return (
-    <Component style={activeThemeProps} className={className}>
+    <Component
+      style={activeThemeProps}
+      className={cn('bg-background text-foreground', className)}
+    >
       {children}
     </Component>
   );

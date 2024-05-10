@@ -81,7 +81,7 @@ export function createHygraphClient({
             JSON.stringify(variables),
             lastModified,
           ],
-          cache,
+          env.HYGRAPH_ENV === 'DRAFT' ? CacheNone() : cache,
           async () => {
             return await action();
           },

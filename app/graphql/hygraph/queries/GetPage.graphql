@@ -8,6 +8,7 @@ query GetPage($where: PageWhereUniqueInput!) {
       id
       title
       displayTitle
+      mirrorLayout
       heroes {
         ...Heroes
       }

@@ -171,7 +171,7 @@ const TileTitle = React.forwardRef<
 >(({className, children, ...props}, ref) => (
   <h2
     ref={ref}
-    className={cn('font-normal text-heading mt-0 mb-0', className)}
+    className={cn('font-normal text-lead uppercase mt-0 mb-0', className)}
     {...props}
   >
     {children}

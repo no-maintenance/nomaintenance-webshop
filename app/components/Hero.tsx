@@ -1,11 +1,11 @@
 import {Image, MediaFile} from '@shopify/hydrogen';
-import {ReactNode, useMemo} from 'react';
+import {ReactNode, useContext} from 'react';
 
-import type {
+import {
+  HeaderStyle,
   HeroesFragment,
   LinkFragment,
 } from '~/__generated__/hygraph.generated';
-import {HeaderStyle} from '~/__generated__/hygraph.generated';
 import {useBaseLayoutData} from '~/routes/($locale)+/_layout';
 import {Link} from '~/components/Link';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
@@ -26,6 +26,8 @@ import {CounterSize} from '~/components/Countdown';
 import {EventCounter} from '~/components/blocks/EventBlock';
 import {cn} from '~/lib/utils';
 import {Skeleton} from '~/components/ui/skeleton';
+import {LayoutContext} from '~/components/Layout';
+
 enum HeroMode {
   Duplex = 'duplex',
   Singular = 'singular',
@@ -41,7 +43,13 @@ type HeroProps = {
   showExcerpt?: boolean;
 };
 type HeroSettings = Omit<HeroProps, 'hero'>;
-export function HeroFactory({heroes}: {heroes: HeroesFragment[]}) {
+export function HeroFactory({
+  heroes,
+  reverseLayout,
+}: {
+  heroes: HeroesFragment[];
+  reverseLayout: boolean;
+}) {
   const {layoutConfig} = useBaseLayoutData();
   const isFluid = layoutConfig.header === HeaderStyle.Fluid;
   if (heroes.length === 1) {
@@ -80,26 +88,41 @@ export function HeroFactory({heroes}: {heroes: HeroesFragment[]}) {
       showExcerpt: false,
       mode: HeroMode.Sticky,
     };
-    return <StickyHero settings={settings} heroes={heroes} />;
+    return (
+      <StickyHero
+        reverseLayout={reverseLayout}
+        settings={settings}
+        heroes={heroes}
+      />
+    );
   }
   return <></>;
 }
 function StickyHero({
   settings,
   heroes,
+  reverseLayout,
 }: {
+  reverseLayout: boolean;
   settings: HeroSettings;
   heroes: HeroesFragment[];
 }) {
   const [stickyHero, ...gridHeroes] = heroes;
+  const layout = useContext(LayoutContext);
+  const isFluid = layout.header === HeaderStyle.Fluid;
   return (
     <section className={'grid grid-cols-1 md:grid-cols-2 w-full gap-0'}>
-      <div className={'h-full'}>
-        <div className={'top-nav sticky'}>
-          <HeroSwitcher hero={stickyHero} {...settings} />
+      <div className={cn('h-full', reverseLayout ? 'order-2' : 'order-1')}>
+        <div className={cn(isFluid ? 'top-0' : 'top-nav', 'sticky')}>
+          <HeroSwitcher
+            hero={stickyHero}
+            {...settings}
+            size={isFluid ? 'screen' : 'navOffset'}
+            mode={HeroMode.Singular}
+          />
         </div>
       </div>
-      <div className={'grid grid-cols-1'}>
+      <div className={'grid grid-cols-1 order-1'}>
         {gridHeroes &&
           gridHeroes.map((hero) => (
             <HeroSwitcher key={hero.id} hero={hero} {...settings} />
@@ -233,7 +256,7 @@ function HygraphHero({
       }
       return (
         <Wrap to={to}>
-          <Tile size={props.size}>
+          <Tile size={props.size} mode={props.mode}>
             <TileHeader
               posX={props.posX}
               posY={props.posY}
@@ -255,6 +278,7 @@ function HygraphHero({
               <TileBackground asChild>
                 <HygraphMultiMedia
                   media={media}
+                  aspect={'fluid'}
                   className={'inset-0 object-cover'}
                 />
               </TileBackground>
@@ -271,7 +295,7 @@ function HygraphHero({
   }
   return (
     <Wrap to={to}>
-      <Tile size={props.size}>
+      <Tile size={props.size} mode={props.mode}>
         <TileHeader
           posX={props.posX}
           posY={props.posY}
@@ -286,6 +310,7 @@ function HygraphHero({
           <TileBackground asChild>
             <HygraphMultiMedia
               media={media}
+              aspect={'fluid'}
               className={'inset-0 object-cover'}
             />
           </TileBackground>
@@ -308,12 +333,14 @@ function ShopifyHero({
       return (
         <CollectionInfo gid={hero.gid} Fallback={<SkeletonTile {...props} />}>
           {({collection}) => {
+            console.log('collection', collection);
             let overrideClasses = '';
             if (!collection?.image) {
               props.posY = 'middle';
               props.posX = 'center';
               overrideClasses = 'text-foreground';
             }
+            console.log('collection', collection);
             return (
               <LinkWrap
                 to={
@@ -322,7 +349,7 @@ function ShopifyHero({
                     : undefined
                 }
               >
-                <Tile size={props.size}>
+                <Tile mode={props.mode} size={props.size}>
                   <TileHeader
                     posX={props.posX}
                     posY={props.posY}
@@ -339,13 +366,7 @@ function ShopifyHero({
                   </TileHeader>
                   <TileBackground asChild>
                     {collection?.image && (
-                      <Image
-                        aspectRatio={
-                          props.mode !== HeroMode.Singular ? '4/5' : undefined
-                        }
-                        sizes={imgSizes}
-                        data={collection?.image}
-                      />
+                      <Image sizes={imgSizes} data={collection?.image} />
                     )}
                   </TileBackground>
                 </Tile>
@@ -363,7 +384,7 @@ function ShopifyHero({
               <LinkWrap
                 to={product?.handle ? `/products/${product.handle}` : undefined}
               >
-                <Tile size={props.size}>
+                <Tile size={props.size} mode={props.mode}>
                   <TileHeader
                     posX={props.posX}
                     posY={props.posY}

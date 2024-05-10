@@ -1,5 +1,5 @@
 import {Await} from '@remix-run/react';
-import {ReactNode, Suspense, useContext, useState} from 'react';
+import {createContext, ReactNode, Suspense, useContext, useState} from 'react';
 import {Aside} from '~/components/Aside';
 import {
   PredictiveSearchForm,
@@ -47,6 +47,7 @@ const ConditionalThemeWrapper = ({
   ) : (
     <>{children}</>
   );
+export const LayoutContext = createContext(DEFAULT_LAYOUT);
 
 export function Layout({
   children = null,
@@ -54,56 +55,60 @@ export function Layout({
 }: LayoutProps) {
   const {navigations} = useRootLoaderData();
   return (
-    <ConditionalThemeWrapper theme={layoutConfig?.theme}>
-      <div className="flex flex-col min-h-screen bg-background text-foreground">
-        {/*<CartAside cart={cart} />*/}
-        {/*<SearchAside />*/}
-        <div className="">
-          <a href="#mainContent" className="sr-only">
-            Skip to content
-          </a>
+    <LayoutContext.Provider value={layoutConfig}>
+      <ConditionalThemeWrapper theme={layoutConfig?.theme}>
+        <div className="flex flex-col min-h-screen bg-background text-foreground">
+          {/*<CartAside cart={cart} />*/}
+          {/*<SearchAside />*/}
+          <div className="">
+            <a href="#mainContent" className="sr-only">
+              Skip to content
+            </a>
+          </div>
+          <Suspense
+            fallback={
+              <Header
+                headerStyle={layoutConfig?.header}
+                title={'NO MAINTENANCE'}
+                menu={null}
+              />
+            }
+          >
+            <Await resolve={navigations}>
+              {(nav) => {
+                if (!nav.header) return <></>;
+                return (
+                  <Header
+                    headerStyle={layoutConfig?.header}
+                    title={'NO MAINTENANCE'}
+                    menu={nav.header}
+                  />
+                );
+              }}
+            </Await>
+          </Suspense>
+          <main
+            role="main"
+            id="mainContent"
+            className={cn(
+              'flex-grow',
+              layoutConfig?.header === HeaderStyle.Fluid && '-mt-nav',
+            )}
+          >
+            {children}
+          </main>
+          <Suspense
+            fallback={<Footer style={layoutConfig?.footer} menu={null} />}
+          >
+            <Await resolve={navigations}>
+              {(nav) => (
+                <Footer style={layoutConfig?.footer} menu={nav.footer} />
+              )}
+            </Await>
+          </Suspense>
         </div>
-        <Suspense
-          fallback={
-            <Header
-              headerStyle={layoutConfig?.header}
-              title={'NO MAINTENANCE'}
-              menu={null}
-            />
-          }
-        >
-          <Await resolve={navigations}>
-            {(nav) => {
-              if (!nav.header) return <></>;
-              return (
-                <Header
-                  headerStyle={layoutConfig?.header}
-                  title={'NO MAINTENANCE'}
-                  menu={nav.header}
-                />
-              );
-            }}
-          </Await>
-        </Suspense>
-        <main
-          role="main"
-          id="mainContent"
-          className={cn(
-            'flex-grow',
-            layoutConfig?.header === HeaderStyle.Fluid && '-mt-nav',
-          )}
-        >
-          {children}
-        </main>
-        <Suspense
-          fallback={<Footer style={layoutConfig?.footer} menu={null} />}
-        >
-          <Await resolve={navigations}>
-            {(nav) => <Footer style={layoutConfig?.footer} menu={nav.footer} />}
-          </Await>
-        </Suspense>
-      </div>
-    </ConditionalThemeWrapper>
+      </ConditionalThemeWrapper>
+    </LayoutContext.Provider>
   );
 }
 

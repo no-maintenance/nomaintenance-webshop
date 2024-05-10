@@ -65,6 +65,8 @@ export default {
         nav: 'var(--height-nav)',
         screen: 'var(--screen-height, 100vh)',
         gutter: 'var(--gutter)',
+        'gutter-lg': 'var(--gutter-lg)',
+        'gutter-xl': 'var(--gutter-xl)',
       },
       height: {
         screen: 'var(--screen-height, 100vh)',

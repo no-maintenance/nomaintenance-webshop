@@ -2,6 +2,7 @@ import type {ReactNode} from 'react';
 import {useMemo, useEffect, useState, createElement, Fragment} from 'react';
 
 import {cn} from '~/lib/utils';
+import {Heading} from '~/components/Text';
 
 export type Time = {
   days: number;
@@ -138,6 +139,54 @@ function VerboseTimer({time, size}: Omit<TimerProps, 'variant'>) {
           {addZeroes(seconds)}
           <span className={labelStyles}>Seconds</span>
         </h3>
+      </div>
+    </div>
+  );
+}
+export function CompactTimer({time, size}: Omit<TimerProps, 'variant'>) {
+  return (
+    <div>
+      <div className={'flex justify-between pt-2 pb-8'}>
+        <div>
+          <span className={'text-mid font-light'}>{time.days}</span>
+          <Heading
+            as={'h3'}
+            size={'mid'}
+            className={'uppercase pt-2 font-light text-mid'}
+          >
+            Days
+          </Heading>
+        </div>
+        <div>
+          <span className={'text-mid font-light'}>{time.hours}</span>
+          <Heading
+            as={'h3'}
+            size={'mid'}
+            className={'uppercase pt-2 font-light text-mid'}
+          >
+            Hours
+          </Heading>
+        </div>
+        <div>
+          <span className={'text-mid font-light'}>{time.minutes}</span>
+          <Heading
+            as={'h3'}
+            size={'mid'}
+            className={'uppercase pt-2 font-light text-mid'}
+          >
+            Minutes
+          </Heading>
+        </div>
+        <div>
+          <span className={'text-mid font-light'}>{time.seconds}</span>
+          <Heading
+            as={'h3'}
+            size={'mid'}
+            className={'uppercase pt-2 font-light text-mid'}
+          >
+            Seconds
+          </Heading>
+        </div>
       </div>
     </div>
   );

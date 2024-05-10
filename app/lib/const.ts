@@ -10,3 +10,5 @@ export function getImageLoadingPriority(
 }
 
 export const HYGRAPH_CACHE_NAME = 'hygraph';
+export const KLAVIYO_BASE_URL = 'https://a.klaviyo.com';
+export const KLAVIYO_COMPANY_ID = 'RDT3xD';

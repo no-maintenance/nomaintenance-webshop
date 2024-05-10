@@ -67,7 +67,7 @@ export function CollectionBlock({gid}: BlockProps<'Collection'>) {
                     'grid grid-cols-1 gap-8 gutter md:max-w-2xl mx-auto'
                   }
                 >
-                  <Heading as={'h2'} className={'pb-4 md:pb-8'}>
+                  <Heading as={'h2'}>
                     {heading ? heading : collection.title}
                   </Heading>
                   {collection.descriptionHtml && (

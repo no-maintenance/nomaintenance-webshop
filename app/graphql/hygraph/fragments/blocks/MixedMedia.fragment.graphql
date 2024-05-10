@@ -3,7 +3,6 @@ fragment MixedMedia on MixedMedia {
   link {
     ...Link
   }
-  title
   body {
     ...RichText
   }

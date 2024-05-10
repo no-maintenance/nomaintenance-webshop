@@ -89,6 +89,8 @@
     --screen-height: 100vh;
     --screen-height-dynamic: 100vh;
     --gutter: 1rem;
+    --gutter-lg: 1.5rem;
+    --gutter-xl: 2rem;
 
     --shop-pay-button-width: 100%; /* Sets the width for the shop-pay-button web component */
     --shop-pay-button-height: 39px; /* Sets the width for the shop-pay-button web component */
@@ -104,14 +106,21 @@
       --font-size-display: 3.75rem; /* text-6xl */
       --font-size-oversize: 6rem;
       --gutter: 1.5rem;
+      --gutter-lg: 2rem;
+      --gutter-xl: 2.5rem;
+
     }
     /* lg */
     @media (min-width: 64em) {
       --gutter: 2rem;
+      --gutter-lg: 2.5rem;
+      --gutter-xl: 3rem;
     }
     /* xl */
     @media (min-width: 80em) {
       --gutter: 2.5rem;
+      --gutter-lg: 3rem;
+      --gutter-xl: 3.5rem;
     }
 
     @supports (height: 100svh) {

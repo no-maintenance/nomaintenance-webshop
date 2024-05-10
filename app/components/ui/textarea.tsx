@@ -4,6 +4,7 @@ import {cn} from '~/lib/utils';
 import {useState} from 'react';
 
 const MAX_LEN = 1000;
+
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
@@ -17,9 +18,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             'flex min-h-[60px] h-52 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
             className,
           )}
-          onChange={(e) => setCount(e.target.value.length)}
           ref={ref}
           {...props}
+          onInput={(e) => setCount(e.target.value.length)}
         />
         <div
           className={

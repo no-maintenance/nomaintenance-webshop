@@ -6,6 +6,7 @@ import {Button} from '~/components/ui/button';
 import {SpacingWrapper} from '~/components/blocks/CustomizedSection';
 import type {
   LinkFragment,
+  Maybe,
   ResponsiveAssetFragment,
 } from '~/__generated__/hygraph.generated';
 import type {ReactNode} from 'react';
@@ -18,7 +19,6 @@ export function MixedMedia({
   body,
   ...props
 }: BlockProps<'MixedMedia'>) {
-  console.log(props);
   return (
     <DuplexHygraph {...props}>
       {body && (
@@ -38,51 +38,68 @@ export function DuplexHygraph({
   children,
   link,
 }: {
-  link?: LinkFragment;
+  link?: Maybe<LinkFragment>;
   children: ReactNode;
-  title?: string;
+  title?: Maybe<string>;
   media?: ResponsiveAssetFragment[];
 }) {
-  const {verticalPadding, horizontalPadding, reverseLayout} = useSettings();
+  const {verticalPadding, horizontalPadding, reverseLayout, alternateLayout} =
+    useSettings();
+  const mediaAspectRatio =
+    alternateLayout === 'duplex1_1'
+      ? 'square'
+      : alternateLayout === 'duplexTile'
+      ? 'fluid'
+      : '4/5';
+  const maxHeight = 'md:max-h-[940px]';
   return (
     <SpacingWrapper spacing={{verticalPadding, horizontalPadding}}>
       <div
-        className={'grid grid-cols-2 gap-12 pb-12 md:pb-0 md:gap-4 mx-auto'}
-        id={'drop'}
+        className={cn(
+          'grid grid-cols-2 gap-12 pb-12 md:pb-0 md:gap-0 mx-auto',
+          maxHeight,
+        )}
       >
         {media && (
           <div
             className={cn(
               !children && !title ? 'col-span-2' : 'md:col-span-1 col-span-2',
               reverseLayout && 'md:order-2',
+              maxHeight,
             )}
           >
             {media.length > 1 && link ? (
               <HygraphLink hygraphLink={link}>
-                <HygraphMultiMedia aspect={'4/5'} media={media} />
+                <HygraphMultiMedia
+                  className={cn('w-full', maxHeight)}
+                  aspect={mediaAspectRatio}
+                  media={media}
+                />
               </HygraphLink>
             ) : (
-              <HygraphMultiMedia media={media} aspect={'4/5'} />
+              <HygraphMultiMedia
+                className={cn('w-full', maxHeight)}
+                media={media}
+                aspect={mediaAspectRatio}
+              />
             )}
           </div>
         )}
 
         <div
           className={cn(
-            'flex items-center ',
+            'flex items-center',
             media?.length
               ? 'col-span-2 md:col-span-1'
               : 'col-span-2 justify-center max-w-2xl',
           )}
         >
-          <div className={'grid grid-cols-1 gap-8 gutter md:max-w-2xl mx-auto'}>
-            {title && (
-              <Heading as={'h2'} className={'pb-4 md:pb-8'}>
-                {title}
-              </Heading>
-            )}
+          <div
+            className={'grid grid-cols-1 gap-8 p-gutter md:max-w-2xl mx-auto'}
+          >
+            {title && <Heading as={'h2'}>{title}</Heading>}
             {children}
-            {link && (
+            {link && link.label && (
               <HygraphLink hygraphLink={link}>
                 <Button size={'lg'}>{link.label}</Button>
               </HygraphLink>

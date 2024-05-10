@@ -59,20 +59,23 @@ export function HygraphMultiMedia({
   if (!media[0]) return <></>;
   const ResponsiveAsset = ({...asset}: ResponsiveAssetFragment) =>
     !setPortrait || !asset.portrait ? (
-      <Media
+      <HygraphMedia
         className={cn(
+          'object-cover',
           aspect === '4/5'
             ? 'aspect-[4/5]'
             : aspect === 'square'
             ? 'aspect-square'
-            : aspect === '16/9' && 'aspect-[16/9]',
+            : aspect === '16/9'
+            ? 'aspect-[16/9]'
+            : aspect === 'fluid' && 'h-full',
           className,
         )}
         {...asset}
       />
     ) : (
       <>
-        <Media
+        <HygraphMedia
           className={cn(
             aspect === '4/5'
               ? 'aspect-[4/5]'
@@ -84,7 +87,7 @@ export function HygraphMultiMedia({
           )}
           {...asset}
         />
-        <Media
+        <HygraphMedia
           className={cn(
             aspect === '4/5'
               ? 'aspect-[4/5]'
@@ -118,7 +121,7 @@ export function HygraphMultiMedia({
   );
 }
 
-function Media({
+function HygraphMedia({
   thumbnail,
   small,
   medium,

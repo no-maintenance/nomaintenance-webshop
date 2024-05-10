@@ -4,11 +4,7 @@ import clsx from 'clsx';
 
 import type {BlockProps} from '~/components/blocks/BlockFactory';
 import {Block, BlockProvider} from '~/components/blocks/BlockFactory';
-import {
-  ThemeConsumer,
-  ChildThemeContext,
-  useThemeMerge,
-} from '~/components/ui/theme';
+import {ThemeConsumer, ChildThemeContext} from '~/components/ui/theme';
 import type {Maybe, SpacingFragment} from '~/__generated__/hygraph.generated';
 import {Sizes} from '~/__generated__/hygraph.generated';
 import {Slot} from '@radix-ui/react-slot';
@@ -27,7 +23,7 @@ export function CustomizedSection({
   const ThemeWrapper = ({children}: {children: ReactNode}) =>
     theme?.slug ? (
       <ChildThemeContext.Provider value={theme?.slug}>
-        <ThemeConsumer asChild>{children}</ThemeConsumer>
+        <ThemeConsumer>{children}</ThemeConsumer>
       </ChildThemeContext.Provider>
     ) : (
       <>{children}</>
@@ -76,17 +72,17 @@ export function SpacingWrapper({
 
 const getSizing = (
   defaults: {horizontal: string; vertical: string} = {
-    horizontal: 'gutter',
-    vertical: 'gutter-y',
+    horizontal: 'px-gutter',
+    vertical: 'py-gutter',
   },
   sizing: Maybe<Sizes> = Sizes.Default,
   orientation: 'horizontal' | 'vertical' = 'horizontal',
 ) => {
   const sizes = {
     none: {horizontal: '', vertical: ''},
-    large: {horizontal: 'gutter-lg', vertical: 'gutter-lg-y'},
-    medium: {horizontal: 'gutter', vertical: 'gutter-y'},
-    small: {horizontal: 'gutter', vertical: 'gutter-y'},
+    large: {horizontal: 'px-gutter-xl', vertical: 'py-gutter-xl'},
+    medium: {horizontal: 'px-gutter-lg', vertical: 'py-gutter-lg'},
+    small: {horizontal: 'px-gutter', vertical: 'py-gutter'},
     default: defaults,
   };
   return sizes[sizing ?? 'default'][orientation];

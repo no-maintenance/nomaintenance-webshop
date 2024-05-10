@@ -8,7 +8,6 @@ import type {
   GetEntitiesQuery,
   HeroesFragment,
 } from '~/__generated__/hygraph.generated';
-import {StaticPage} from '~/__generated__/hygraph.generated';
 import {isValidLocaleServer} from '~/i18n/isValidLocaleServer';
 import {HeroFactory} from '~/components/Hero';
 import {
@@ -37,6 +36,7 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
       })
     : null;
   const {seo, layout} = page;
+  console.log(JSON.stringify(layout, null, 4));
   return defer({
     layout,
     blocks: blocksPromise,
@@ -47,10 +47,14 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
 
 export default function Layout() {
   const {layout, blocks, blockOutline} = useLoaderData<typeof loader>();
+  console.log('layout', layout);
   return (
     <>
       {layout?.heroes && (
-        <HeroFactory heroes={layout.heroes as HeroesFragment[]} />
+        <HeroFactory
+          reverseLayout={!!layout?.mirrorLayout}
+          heroes={layout.heroes as HeroesFragment[]}
+        />
       )}
       {layout?.displayTitle && layout?.title && (
         <PageHeader variant={'page'} heading={layout.title} />
