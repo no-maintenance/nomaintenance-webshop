@@ -8,6 +8,8 @@ fragment AssetDetails on Asset {
   id
   alt
   mimeType
+  height
+  width
   url(
     transformation: {
       document: {output: {format: autoImage}}

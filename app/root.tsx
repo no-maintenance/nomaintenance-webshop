@@ -1,6 +1,13 @@
-import {CacheLong, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import type {SeoConfig} from '@shopify/hydrogen';
 import {
-  defer,
+  CacheLong,
+  getSeoMeta,
+  getShopAnalytics,
+  useNonce,
+} from '@shopify/hydrogen';
+import {defer} from '@shopify/remix-oxygen';
+import type {
+  MetaArgs,
   type SerializeFrom,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
@@ -30,6 +37,8 @@ import {
   DEFAULT_CHILD_THEME,
   ThemeConsumer,
 } from '~/components/ui/theme';
+import {seoPayload} from '~/lib/seo.server';
+import invariant from 'tiny-invariant';
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -81,6 +90,11 @@ export const useRootLoaderData = () => {
 export async function loader({context, request}: LoaderFunctionArgs) {
   const {storefront, customerAccount, session, cart} = context;
   const publicStoreDomain = context.env.PUBLIC_STORE_DOMAIN;
+  const shopPromise = storefront.query(LAYOUT_QUERY, {
+    variables: {
+      language: context.i18n.language.code,
+    },
+  });
 
   // const acceptsLang = request.headers.get('accept-language');
   // const switchedDefaultLocale = session.get('switched-default-locale');
@@ -90,12 +104,17 @@ export async function loader({context, request}: LoaderFunctionArgs) {
   //   });
   //   console.log(preferredLocale);
   // }
+
   const isLoggedInPromise = customerAccount.isLoggedIn();
   const cartPromise = cart.get();
   const navigations = context.hygraph.query(CacheLong()).GetNavigations();
-  const themes = await context.hygraph.query(CacheLong()).GetThemes();
+  const themesPromise = context.hygraph.query(CacheLong()).GetThemes();
+  const [tData, sData] = await Promise.all([themesPromise, shopPromise]);
+  invariant(sData?.shop, 'No data returned from Shopify API');
+  const seo = seoPayload.root({shop: sData.shop, url: request.url});
   return defer(
     {
+      seo,
       cart: cartPromise,
       navigations,
       isLoggedIn: isLoggedInPromise,
@@ -105,7 +124,7 @@ export async function loader({context, request}: LoaderFunctionArgs) {
         publicStorefrontId: context.env.PUBLIC_STOREFRONT_ID,
       }),
       i18n: context.i18n,
-      themes,
+      themes: tData,
       consent: {
         checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
         storefrontAccessToken: context.env.PUBLIC_STOREFRONT_API_TOKEN,
@@ -118,6 +137,9 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     },
   );
 }
+export const meta = ({data}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(data!.seo as SeoConfig);
+};
 
 export function Document({
   children,
@@ -221,3 +243,29 @@ export function ErrorBoundary() {
     </Document>
   );
 }
+
+const LAYOUT_QUERY = `#graphql
+query layout(
+    $language: LanguageCode
+) @inContext(language: $language) {
+    shop {
+        ...Shop
+    }
+   
+}
+fragment Shop on Shop {
+    id
+    name
+    description
+    primaryDomain {
+        url
+    }
+    brand {
+        logo {
+            image {
+                url
+            }
+        }
+    }
+}
+` as const;

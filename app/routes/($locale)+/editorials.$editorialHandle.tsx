@@ -1,9 +1,10 @@
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {json} from '@shopify/remix-oxygen';
+import {LoaderFunctionArgs, MetaArgs, json} from '@shopify/remix-oxygen';
 import {isValidLocaleServer} from '~/i18n/isValidLocaleServer';
 import {useLoaderData} from '@remix-run/react';
 import {PageHeader, Section} from '~/components/Text';
 import {DEFAULT_RENDERERS, RichText} from '~/components/rich-text';
+import {getSeoMeta} from '@shopify/hydrogen';
+import {seoPayload} from '~/lib/seo.server';
 
 export async function loader({params, request, context}: LoaderFunctionArgs) {
   if (!isValidLocaleServer(context, params)) {
@@ -17,11 +18,16 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     throw new Response(null, {status: 404});
   }
   const {seo, ...editorial} = page;
+  console.log('article', seoPayload.article({article: page, url: request.url}));
   return json({
     editorial,
+    seo: seoPayload.article({article: page, url: request.url}),
   });
 }
 
+export const meta = ({matches}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+};
 export default function Editorial() {
   const {editorial} = useLoaderData<typeof loader>();
   return (
@@ -44,7 +50,11 @@ export default function Editorial() {
       </Section>
       {editorial.artistStatement && (
         <Section className={'justify-center'}>
-          <RichText content={editorial.artistStatement.json} />
+          <RichText
+            references={editorial.artistStatement.references}
+            renderers={DEFAULT_RENDERERS}
+            content={editorial.artistStatement.json}
+          />
         </Section>
       )}
     </>

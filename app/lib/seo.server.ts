@@ -1,26 +1,18 @@
 import {type SeoConfig} from '@shopify/hydrogen';
 import type {
-  Article,
-  Blog,
   Collection,
-  Page,
   Product,
   ProductVariant,
   ShopPolicy,
   Image,
 } from '@shopify/hydrogen/storefront-api-types';
-import type {
-  Article as SeoArticle,
-  BreadcrumbList,
-  Blog as SeoBlog,
-  CollectionPage,
-  Offer,
-  Organization,
-  Product as SeoProduct,
-  WebPage,
-} from 'schema-dts';
+import type {BreadcrumbList, CollectionPage, Offer} from 'schema-dts';
 
-import type {ShopFragment} from '~/__generated__/storefrontapi.generated';
+import type {
+  GetEditorialQuery,
+  SeoFragment,
+} from '~/__generated__/hygraph.generated';
+import {ShopFragment} from '~/__generated__/storefrontapi.generated';
 
 function root({
   shop,
@@ -28,12 +20,12 @@ function root({
 }: {
   shop: ShopFragment;
   url: Request['url'];
-}): SeoConfig<Organization> {
+}): SeoConfig {
   return {
     title: shop?.name,
-    titleTemplate: '%s | No Maintenance',
+    titleTemplate: '%s',
     description: truncate(shop?.description ?? ''),
-    handle: '@nomaintenance',
+    handle: '@shopify',
     url,
     robots: {
       noIndex: false,
@@ -45,8 +37,11 @@ function root({
       name: shop.name,
       logo: shop.brand?.logo?.image?.url,
       sameAs: [
-        'https://instagram.com/nomaintenance',
-        'https://tiktok.com/@nomaintenance',
+        'https://twitter.com/shopify',
+        'https://facebook.com/shopify',
+        'https://instagram.com/shopify',
+        'https://youtube.com/shopify',
+        'https://tiktok.com/@shopify',
       ],
       url,
       potentialAction: {
@@ -58,12 +53,11 @@ function root({
   };
 }
 
-function home(): SeoConfig<WebPage> {
+function home(): SeoConfig {
   return {
     title: 'Home',
     titleTemplate: '%s | No Maintenance',
-    description:
-      'NO MAINTENANCE is a modern homage to the interchange of classic Americana and Japanese inspired artisanship.',
+    description: 'The best place to buy snowboarding products',
     robots: {
       noIndex: false,
       noFollow: false,
@@ -102,7 +96,7 @@ function productJsonLd({
   product: ProductRequiredFields;
   selectedVariant: SelectedVariantRequiredFields;
   url: Request['url'];
-}): SeoConfig<SeoProduct | BreadcrumbList>['jsonLd'] {
+}): SeoConfig['jsonLd'] {
   const origin = new URL(url).origin;
   const variants = product.variants.nodes;
   const description = truncate(
@@ -169,7 +163,7 @@ function product({
   product: ProductRequiredFields;
   selectedVariant: SelectedVariantRequiredFields;
   url: Request['url'];
-}): SeoConfig<SeoProduct | BreadcrumbList> {
+}): SeoConfig {
   const description = truncate(
     product?.seo?.description ?? product?.description ?? '',
   );
@@ -198,7 +192,7 @@ function collectionJsonLd({
 }: {
   url: Request['url'];
   collection: CollectionRequiredFields;
-}): SeoConfig<CollectionPage | BreadcrumbList>['jsonLd'] {
+}): SeoConfig['jsonLd'] {
   const siteUrl = new URL(url);
   const itemListElement: CollectionPage['mainEntity'] =
     collection.products.nodes.map((product, index) => {
@@ -250,7 +244,7 @@ function collection({
 }: {
   collection: CollectionRequiredFields;
   url: Request['url'];
-}): SeoConfig<CollectionPage | BreadcrumbList> {
+}): SeoConfig {
   return {
     title: collection?.seo?.title,
     description: truncate(
@@ -278,7 +272,7 @@ function collectionsJsonLd({
 }: {
   url: Request['url'];
   collections: CollectionListRequiredFields;
-}): SeoConfig<CollectionPage>['jsonLd'] {
+}): SeoConfig['jsonLd'] {
   const itemListElement: CollectionPage['mainEntity'] = collections.nodes.map(
     (collection, index) => {
       return {
@@ -308,11 +302,11 @@ function listCollections({
 }: {
   collections: CollectionListRequiredFields;
   url: Request['url'];
-}): SeoConfig<CollectionPage> {
+}): SeoConfig {
   return {
     title: 'Collections',
     titleTemplate: '%s | Collections',
-    description: 'All hydrogen collections',
+    description: 'All No Maintenance collections',
     url,
     jsonLd: collectionsJsonLd({collections, url}),
   };
@@ -322,84 +316,100 @@ function article({
   article,
   url,
 }: {
-  article: Pick<
-    Article,
-    'title' | 'contentHtml' | 'seo' | 'publishedAt' | 'excerpt'
-  > & {
-    image?: null | Pick<
-      NonNullable<Article['image']>,
-      'url' | 'height' | 'width' | 'altText'
-    >;
-  };
+  article: GetEditorialQuery['editorial'];
   url: Request['url'];
-}): SeoConfig<SeoArticle> {
+}): SeoConfig {
+  const media: SeoConfig['media'] = article?.seo?.image
+    ? {
+        type: 'image',
+        url: article?.seo?.image.url,
+        height: article?.seo?.image.height,
+        width: article?.seo?.image.width,
+        altText: article?.seo?.image.alt,
+      }
+    : {
+        type: article?.featuredMedia?.mimeType?.startsWith('video/')
+          ? 'video'
+          : 'image',
+        url: article?.featuredMedia?.url,
+        height: article?.featuredMedia?.height,
+        width: article?.featuredMedia?.width,
+        altText: article?.featuredMedia?.alt,
+      };
   return {
     title: article?.seo?.title ?? article?.title,
     description: truncate(article?.seo?.description ?? ''),
-    titleTemplate: '%s | Journal',
+    titleTemplate: '%s | Editorial',
     url,
-    media: {
-      type: 'image',
-      url: article?.image?.url,
-      height: article?.image?.height,
-      width: article?.image?.width,
-      altText: article?.image?.altText,
-    },
+    media,
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'Article',
-      alternativeHeadline: article.title,
-      articleBody: article.contentHtml,
-      author: 'No Maintenance',
+      alternativeHeadline: article?.title ?? '',
+      articleBody: article?.mainContent?.html,
       datePublished: article?.publishedAt,
       description: truncate(
-        article?.seo?.description || article?.excerpt || '',
+        article?.seo?.description || article?.excerpt?.text || '',
       ),
       headline: article?.seo?.title || '',
-      image: article?.image?.url,
+      image: article?.featuredMedia?.url,
       url,
     },
   };
 }
 
-function blog({
-  blog,
-  url,
-}: {
-  blog: Pick<Blog, 'seo' | 'title'>;
-  url: Request['url'];
-}): SeoConfig<SeoBlog> {
+function blog({seo, url}: {seo: SeoFragment; url: Request['url']}): SeoConfig {
   return {
-    title: blog?.seo?.title,
-    description: truncate(blog?.seo?.description || ''),
-    titleTemplate: '%s | Blog',
+    description: truncate(seo.description || ''),
+    title: seo.title,
+    titleTemplate: seo.hasTitleTemplate ? '%s | Editorials' : '%s',
     url,
+    ...(seo.image
+      ? {
+          media: {
+            type: 'image',
+            url: seo?.image.url,
+            height: seo?.image.height,
+            width: seo?.image.width,
+            altText: seo?.image.alt,
+          },
+        }
+      : {}),
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'Blog',
-      name: blog?.seo?.title || blog?.title || '',
-      description: blog?.seo?.description || '',
+      name: seo.title || '',
+      description: seo.description || '',
       url,
     },
   };
 }
 
-function page({
-  page,
-  url,
-}: {
-  page: Pick<Page, 'title' | 'seo'>;
-  url: Request['url'];
-}): SeoConfig<WebPage> {
+function page({seo, url}: {seo: SeoFragment; url: Request['url']}): SeoConfig {
   return {
-    description: truncate(page?.seo?.description || ''),
-    title: page?.seo?.title ?? page?.title,
-    titleTemplate: '%s | Page',
+    description: truncate(seo.description || ''),
+    title: seo.title,
+    titleTemplate: seo.hasTitleTemplate ? '%s | No Maintenance' : '%s',
     url,
+    robots: {
+      noIndex: seo.noIndex,
+      noFollow: false,
+    },
+    ...(seo.image
+      ? {
+          media: {
+            type: 'image',
+            url: seo?.image.url,
+            height: seo?.image.height,
+            width: seo?.image.width,
+            altText: seo?.image.alt,
+          },
+        }
+      : {}),
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: page.title,
+      name: seo.title,
     },
   };
 }
@@ -410,7 +420,7 @@ function policy({
 }: {
   policy: Pick<ShopPolicy, 'title' | 'body'>;
   url: Request['url'];
-}): SeoConfig<WebPage> {
+}): SeoConfig {
   return {
     description: truncate(policy?.body ?? ''),
     title: policy?.title,
@@ -425,7 +435,7 @@ function policies({
 }: {
   policies: Array<Pick<ShopPolicy, 'title' | 'handle'>>;
   url: Request['url'];
-}): SeoConfig<WebPage | BreadcrumbList> {
+}): SeoConfig {
   const origin = new URL(url).origin;
   const itemListElement: BreadcrumbList['itemListElement'] = policies
     .filter(Boolean)
@@ -440,7 +450,7 @@ function policies({
   return {
     title: 'Policies',
     titleTemplate: '%s | Policies',
-    description: 'Hydroge store policies',
+    description: 'No Maintenance Store policies',
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -450,7 +460,7 @@ function policies({
       {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        description: 'Hydrogen store policies',
+        description: 'No Maintenance store policies',
         name: 'Policies',
         url,
       },

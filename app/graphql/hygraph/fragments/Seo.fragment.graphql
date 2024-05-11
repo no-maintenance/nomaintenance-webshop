@@ -5,5 +5,8 @@ fragment Seo on Seo {
   noIndex
   image {
     url
+    height
+    width
+    alt
   }
 }

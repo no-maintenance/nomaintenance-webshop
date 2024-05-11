@@ -148,9 +148,11 @@ function LocaleForm({
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const form = new FormData();
-    const {country, language} = data;
+    const {country: cSelect, language} = data;
     const selectedLanguage = language ? language : i18n.language.code;
-    const selectedCountry = JSON.parse(country!) as BaseI18n['country'];
+    const selectedCountry = cSelect
+      ? (JSON.parse(cSelect) as BaseI18n['country'])
+      : country;
     const prefix = subfolderLocaleParser({
       country: selectedCountry.code,
       language: selectedLanguage,
@@ -200,12 +202,12 @@ function LocaleForm({
                   <SelectValue placeholder={'Select a Language'} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={'en'}>English</SelectItem>
-                  <SelectItem value={'ja'}>日本語</SelectItem>
-                  <SelectItem value={'de'}>Deutsch</SelectItem>
-                  <SelectItem value={'ko'}>한국어</SelectItem>
-                  <SelectItem value={'it'}>Italiano</SelectItem>
-                  <SelectItem value={'fr'}>Français</SelectItem>
+                  <SelectItem value={'EN'}>English</SelectItem>
+                  <SelectItem value={'JA'}>日本語</SelectItem>
+                  <SelectItem value={'DE'}>Deutsch</SelectItem>
+                  <SelectItem value={'KO'}>한국어</SelectItem>
+                  <SelectItem value={'IT'}>Italiano</SelectItem>
+                  <SelectItem value={'FR'}>Français</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>

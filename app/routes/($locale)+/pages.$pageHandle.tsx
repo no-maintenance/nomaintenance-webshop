@@ -1,5 +1,4 @@
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {defer} from '@shopify/remix-oxygen';
+import {defer, LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
 import {Await, useLoaderData} from '@remix-run/react';
 import React, {Suspense} from 'react';
 
@@ -14,9 +13,10 @@ import {
   BlockFactory,
   BlockSkeletonFactory,
 } from '~/components/blocks/BlockFactory';
-import {CacheLong} from '@shopify/hydrogen';
+import {CacheLong, getSeoMeta} from '@shopify/hydrogen';
 import {PageHeader} from '~/components/Text';
 import {cn} from '~/lib/utils';
+import {seoPayload} from '~/lib/seo.server';
 
 export async function loader({params, context, request}: LoaderFunctionArgs) {
   if (!isValidLocaleServer(context, params)) {
@@ -36,18 +36,20 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
       })
     : null;
   const {seo, layout} = page;
-  console.log(JSON.stringify(layout, null, 4));
   return defer({
     layout,
     blocks: blocksPromise,
     blockOutline: sections,
-    seo,
+    seo: seo ? seoPayload.page({seo, url: request.url}) : null,
   });
 }
 
-export default function Layout() {
+export const meta = ({matches}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+};
+
+export default function Page() {
   const {layout, blocks, blockOutline} = useLoaderData<typeof loader>();
-  console.log('layout', layout);
   return (
     <>
       {layout?.heroes && (

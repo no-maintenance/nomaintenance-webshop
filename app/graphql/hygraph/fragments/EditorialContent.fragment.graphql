@@ -10,5 +10,9 @@ fragment EditorialContent on EditorialMainContentRichText {
         ...ResponsiveAsset
       }
     }
+    ... on Form {
+      id
+      ...Form
+    }
   }
 }

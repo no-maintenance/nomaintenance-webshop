@@ -34,19 +34,20 @@ export const defaultElements: Required<RichTextProps['renderers']> = {
   ol: ({children}) => <ol>{children}</ol>,
   li: ({children}) => <li>{children}</li>,
   p: ({children}) => {
+    console.log(
+      'children',
+      children?.props?.references,
+      children?.props?.content,
+    );
     if (
-      children?.props?.references?.length ||
-      children?.props?.content.length > 1
+      children?.props?.content.length > 1 ||
+      (children?.props?.content.length === 1 && children?.props?.content?.text)
     ) {
       return (
         <div className={' gap-4 flex flex-wrap md:flex-nowrap'}>{children}</div>
       );
     }
-    return (
-      <p className={'prose'}>
-        <p>{children}</p>
-      </p>
-    );
+    return <p className={'prose mb-4'}>{children}</p>;
   },
   h1: ({children}) => <h1>{children}</h1>,
   h2: ({children}) => <h2>{children}</h2>,

@@ -333,14 +333,12 @@ function ShopifyHero({
       return (
         <CollectionInfo gid={hero.gid} Fallback={<SkeletonTile {...props} />}>
           {({collection}) => {
-            console.log('collection', collection);
             let overrideClasses = '';
             if (!collection?.image) {
               props.posY = 'middle';
               props.posX = 'center';
               overrideClasses = 'text-foreground';
             }
-            console.log('collection', collection);
             return (
               <LinkWrap
                 to={

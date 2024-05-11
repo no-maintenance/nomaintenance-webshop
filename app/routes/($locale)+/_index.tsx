@@ -1,4 +1,4 @@
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData} from '@remix-run/react';
 import React, {Suspense} from 'react';
@@ -15,7 +15,10 @@ import {
   BlockFactory,
   BlockSkeletonFactory,
 } from '~/components/blocks/BlockFactory';
-import {CacheLong} from '@shopify/hydrogen';
+import {CacheLong, getSeoMeta, SeoConfig} from '@shopify/hydrogen';
+import {PageHeader} from '~/components/Text';
+import {cn} from '~/lib/utils';
+import {seoPayload} from '~/lib/seo.server';
 
 export async function loader({params, context, request}: LoaderFunctionArgs) {
   if (!isValidLocaleServer(context, params)) {
@@ -35,23 +38,42 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
     : null;
   const {seo, layout} = page;
   return defer({
-    heroes: layout?.heroes,
+    layout,
     blocks: blocksPromise,
     blockOutline: sections,
-    seo,
+    seo: seo ? seoPayload.page({seo, url: request.url}) : null,
   });
 }
-
-export default function Layout() {
-  const {heroes, blocks, blockOutline} = useLoaderData<typeof loader>();
+export const meta = ({matches}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+};
+export default function Page() {
+  const {layout, blocks, blockOutline} = useLoaderData<typeof loader>();
   return (
     <>
-      {heroes && <HeroFactory heroes={heroes as HeroesFragment[]} />}
-      <Suspense fallback={<BlockSkeletonFactory outline={blockOutline} />}>
-        <Await resolve={blocks}>
-          {(b) => b && <BlockFactory blocks={b as GetEntitiesQuery} />}
-        </Await>
-      </Suspense>
+      {layout?.heroes && (
+        <HeroFactory
+          reverseLayout={!!layout?.mirrorLayout}
+          heroes={layout.heroes as HeroesFragment[]}
+        />
+      )}
+      {layout?.displayTitle && layout?.title && (
+        <PageHeader variant={'page'} heading={layout.title} />
+      )}
+      <div
+        className={cn(
+          !layout?.heroes &&
+            !layout?.displayTitle &&
+            !layout?.title &&
+            'pt-gutter mt-gutter',
+        )}
+      >
+        <Suspense fallback={<BlockSkeletonFactory outline={blockOutline} />}>
+          <Await resolve={blocks}>
+            {(b) => b && <BlockFactory blocks={b as GetEntitiesQuery} />}
+          </Await>
+        </Suspense>
+      </div>
     </>
   );
 }

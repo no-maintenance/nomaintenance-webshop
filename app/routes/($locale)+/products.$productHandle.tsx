@@ -1,8 +1,17 @@
 import {useState, useRef, Suspense, Fragment, useEffect} from 'react';
 import {Listbox} from '@headlessui/react';
-import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {
+  MetaArgs,
+  defer,
+  redirect,
+  type LoaderFunctionArgs,
+} from '@shopify/remix-oxygen';
 import {useLoaderData, Await, useNavigate} from '@remix-run/react';
-import type {ShopifyAnalyticsProduct, Storefront} from '@shopify/hydrogen';
+import {
+  getSeoMeta,
+  ShopifyAnalyticsProduct,
+  Storefront,
+} from '@shopify/hydrogen';
 import {
   flattenConnection,
   AnalyticsPageType,
@@ -178,6 +187,10 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     seo,
   });
 }
+
+export const meta = ({matches}: MetaArgs<typeof loader>) => {
+  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+};
 
 function redirectToFirstVariant({
   product,

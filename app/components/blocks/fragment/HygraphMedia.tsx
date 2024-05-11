@@ -48,7 +48,7 @@ export function HygraphMultiMedia({
   className,
   hasCarousel,
   setPortrait = true,
-  aspect = 'fluid',
+  aspect,
 }: {
   className?: string;
   media: ResponsiveAssetFragment[];

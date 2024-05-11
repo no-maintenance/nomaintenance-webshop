@@ -261,8 +261,8 @@ export function AppointmentForm() {
             <FormItem className="flex flex-col">
               <FormLabel>Availability</FormLabel>
               <FormDescription>
-                We are available from 9 - 5 every day. Please include 1 or more
-                days that you're available for an appointment, then we will
+                We are available from 9 - 5 every day. Please provide 1 or more
+                days that you&apos;re available for an appointment, then we will
                 confirm a time for you to come in.
               </FormDescription>
               <Popover>
@@ -335,7 +335,7 @@ export function NewsletterForm({
   hasSubmitBtn = true,
   id,
 }: {
-  hasSubmitBtn: boolean;
+  hasSubmitBtn?: boolean;
   id?: string;
 }) {
   const form = useForm<z.infer<typeof newsletterSchema>>({

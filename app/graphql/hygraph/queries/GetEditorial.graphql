@@ -13,10 +13,20 @@ query GetEditorial($where: EditorialWhereUniqueInput!) {
     }
     artistStatement {
       json
+      references {
+        ... on Form {
+          id
+          ...Form
+        }
+      }
+    }
+    excerpt {
+      text
     }
     mainContent {
+      html
       ...EditorialContent
     }
-
+    publishedAt(variation: BASE)
   }
 }
