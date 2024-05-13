@@ -34,11 +34,6 @@ export const defaultElements: Required<RichTextProps['renderers']> = {
   ol: ({children}) => <ol>{children}</ol>,
   li: ({children}) => <li>{children}</li>,
   p: ({children}) => {
-    console.log(
-      'children',
-      children?.props?.references,
-      children?.props?.content,
-    );
     if (
       children?.props?.content.length > 1 ||
       (children?.props?.content.length === 1 && children?.props?.content?.text)

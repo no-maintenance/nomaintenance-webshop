@@ -1,4 +1,5 @@
-import {BlockProps, useSettings} from '~/components/blocks/BlockFactory';
+import type {BlockProps} from '~/components/blocks/BlockFactory';
+import {useSettings} from '~/components/blocks/BlockFactory';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
@@ -347,61 +348,61 @@ export function NewsletterForm({
   });
   const isLoading = false;
 
-  // function onSubmit(data: z.infer<typeof contactFormSchema>) {
-  //   toast({
-  //     title: "You submitted the following values:",
-  //     description: (
-  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-  //       </pre>
-  //     ),
-  //   })
-  // }
-  const onSubmit = (data: z.infer<typeof contactFormSchema>) => {
-    const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
-    const options = {
-      method: 'POST',
-      headers: {revision: '2023-02-22', 'content-type': 'application/json'},
-      body: JSON.stringify({
-        data: {
-          type: 'subscription',
-          attributes: {
-            list_id: 'Wimtnj',
-            custom_source: id,
-            email: data.email,
-          },
-        },
-      }),
-    };
-    fetch(url, options)
-      .then((res) => {
-        if (res.ok) {
-          // analytics.trackEvent(AnalyticsFormEvents.MainNewsletterSignup, {
-          //   location: 'footer',
-          //   componentID: '9c448a26-16bf-4011-ba0a-1d651eebd649',
-          // });
-          // setSubmissionState('success');
-          toast({
-            title: 'You have been subscribed to our newsletter.',
-            description:
-              'We will keep you posted on upcoming promotions and releases.',
-          });
-        } else {
-          toast({
-            title: 'Uh oh! Something went wrong.',
-            description: 'There was a problem with your request.',
-          });
-        }
-      })
-      .catch((err) => {
-        toast({
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.',
-        });
-        // @TODO add sentry error
-        console.error('error:' + err);
-      });
-  };
+  function onSubmit(data: z.infer<typeof newsletterSchema>) {
+    toast({
+      title: 'You submitted the following values:',
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
+  // const onSubmit = (data: z.infer<typeof contactFormSchema>) => {
+  //   const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
+  //   const options = {
+  //     method: 'POST',
+  //     headers: {revision: '2023-02-22', 'content-type': 'application/json'},
+  //     body: JSON.stringify({
+  //       data: {
+  //         type: 'subscription',
+  //         attributes: {
+  //           list_id: 'Wimtnj',
+  //           custom_source: id,
+  //           email: data.email,
+  //         },
+  //       },
+  //     }),
+  //   };
+  //   fetch(url, options)
+  //     .then((res) => {
+  //       if (res.ok) {
+  //         // analytics.trackEvent(AnalyticsFormEvents.MainNewsletterSignup, {
+  //         //   location: 'footer',
+  //         //   componentID: '9c448a26-16bf-4011-ba0a-1d651eebd649',
+  //         // });
+  //         // setSubmissionState('success');
+  //         toast({
+  //           title: 'You have been subscribed to our newsletter.',
+  //           description:
+  //             'We will keep you posted on upcoming promotions and releases.',
+  //         });
+  //       } else {
+  //         toast({
+  //           title: 'Uh oh! Something went wrong.',
+  //           description: 'There was a problem with your request.',
+  //         });
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       toast({
+  //         title: 'Uh oh! Something went wrong.',
+  //         description: 'There was a problem with your request.',
+  //       });
+  //       // @TODO add sentry error
+  //       console.error('error:' + err);
+  //     });
+  // };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -467,6 +468,13 @@ export function NewsletterForm({
             </FormItem>
           )}
         />
+        {/*<button*/}
+        {/*  type="submit"*/}
+        {/*  disabled={isLoading}*/}
+        {/*  className={' right-0 bottom-0 py-2 lg:pb-[6px] transform px-2'}*/}
+        {/*>*/}
+        {/*  {isLoading ? <p>Loading...</p> : 'Submit'}*/}
+        {/*</button>*/}
       </form>
     </Form>
   );

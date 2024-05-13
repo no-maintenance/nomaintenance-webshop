@@ -128,7 +128,7 @@ export function FeaturedProducts({
     [count, sortKey, query, reverse],
   );
   const productsApiPath = params.locale
-    ? `${params.locale}/api/products?${queryString}`
+    ? `/${params.locale}/api/products?${queryString}`
     : `/api/products?${queryString}`;
 
   useEffect(() => {

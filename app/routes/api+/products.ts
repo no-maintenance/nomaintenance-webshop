@@ -73,7 +73,7 @@ query ApiAllProducts(
     $language: LanguageCode
     $sortKey: ProductSortKeys
 ) @inContext(country: $country, language: $language) {
-    products(first: $count, sortKey: $sortKey, reverse: $reverse, query: $query) {
+    products(first: $count, sortKey: $sortKey, reverse: $reverse, query: $query, ) {
         nodes {
             ...ProductCard
         }

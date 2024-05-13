@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import {useRef, useState} from 'react';
 import {useScroll} from 'react-use';
 import {
-  flattenConnection,
   CartForm,
+  type CartReturn,
+  flattenConnection,
   Image,
   Money,
-  useOptimisticData,
   OptimisticInput,
-  type CartReturn,
+  useOptimisticData,
 } from '@shopify/hydrogen';
 import type {
   Cart as CartType,
@@ -24,6 +24,7 @@ import {Heading, Text} from '~/components/Text';
 import {Button} from '~/components/ui/button';
 import {Input} from '~/components/ui/input';
 import {FeaturedProducts} from '~/components/FeaturedShopifyContent';
+import {CountrySelector} from '~/components/CountrySelector';
 
 type Layouts = 'page' | 'drawer';
 
@@ -36,7 +37,7 @@ export function Cart({
   onClose?: () => void;
   cart: CartReturn | null;
 }) {
-  const linesCount = Boolean(cart?.lines?.edges?.length || 0);
+  const linesCount = Boolean(cart?.lines?.nodes?.length || 0); // @TODO investigate why my cart lines return nodes rather than edges
 
   return (
     <>
@@ -253,14 +254,15 @@ function CartSummary({
             {t('layout.cart.calculatedAt')}
           </Text>
         </div>
-        <div className="flex items-center justify-between font-medium">
-          <Text as="dt" className={' whitespace-nowrap flex-1'}>
-            {t('layout.cart.shippingCountry')}
-          </Text>
-          <Text as="dd" className={'underline w-full ml-6 flex-initial'}>
-            {/*<CountrySelector />*/}
-          </Text>
-        </div>
+        {/* @todo add country selector */}
+        {/*  <Text as="dt" className={' whitespace-nowrap flex-1'}>*/}
+        {/*<div className="flex items-center justify-between font-medium">*/}
+        {/*    {t('layout.cart.shippingCountry')}*/}
+        {/*  </Text>*/}
+        {/*  <Text as="dd" className={'underline w-full ml-6 flex-initial'}>*/}
+        {/*    <CountrySelector />*/}
+        {/*  </Text>*/}
+        {/*</div>*/}
         <div className="flex items-center justify-between font-medium">
           <div className={'flex flex-wrap'}>
             <Text
@@ -532,6 +534,7 @@ export function CartEmpty({
           heading={t('layout.sections.featuredProducts.shopBestSellers')}
           layout={layout}
           onClose={onClose}
+          query={'available_for_sale:true'}
           sortKey="BEST_SELLING"
         />
       </section>
