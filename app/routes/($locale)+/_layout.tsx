@@ -12,12 +12,12 @@ import type {
 } from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
 import {useRouteLoaderData} from 'react-router';
-import {CacheLong, useNonce} from '@shopify/hydrogen';
-
-// import LockLayout from '~/components/LockLayout';
-import {getLock, isHome} from '~/lib/locks.server';
+import {CacheLong, useNonce} from '@shopify/hydrogen'; // import LockLayout from '~/components/LockLayout';
+import {getLock} from '~/lib/locks.server';
 import {GenericError, NotFound} from '~/components/Error';
 import type {
+  EntityTypeName,
+  GetEntitiesQuery,
   LayoutConfigFragment,
   LockFragment,
   Maybe,
@@ -30,8 +30,10 @@ import {
   getCollectionHeroes,
   getProducts,
 } from '~/components/ShopMemos';
-import {DEFAULT_CHILD_THEME} from '~/components/ui/theme';
 import {delocalizePath} from '~/i18n';
+import {LockScreen} from '~/components/LockScreen';
+import React from 'react';
+import {LazyMotion} from 'framer-motion';
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   currentUrl,
@@ -40,21 +42,43 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   if (currentUrl !== nextUrl) return true;
   return false;
 };
+// export const shouldRevalidate: ShouldRevalidateFunction = ({
+//   formMethod,
+//   currentUrl,
+//   nextUrl,
+// }) => {
+//   // revalidate when a mutation is performed e.g add to cart, login...
+//   if (formMethod && formMethod !== 'GET') {
+//     return true;
+//   }
+//
+//   // revalidate when manually revalidating via useRevalidator
+//   if (currentUrl.toString() === nextUrl.toString()) {
+//     return true;
+//   }
+//
+//   return false;
+// };
+
 enum CollectionQueryTypes {
   Hero,
   Feed,
 }
 
-export async function loader({request, context, params}: LoaderFunctionArgs) {
+export function getPathSlug({request, context, params}: LoaderFunctionArgs) {
   const {pageHandle: hygraphSlug, editorialHandle} = params;
   // if slug is undefined, fallback with random number to ensure that "layoutsWhere" does not return any results.
   const path = new URL(request.url).pathname;
   const delocalizedPath = delocalizePath(path, context.i18n);
+  return delocalizedPath === '/' ? 'home' : hygraphSlug ?? editorialHandle;
+}
+
+export async function loader({request, context, params}: LoaderFunctionArgs) {
+  const {pageHandle: hygraphSlug, editorialHandle} = params;
+
   const slug =
-    delocalizedPath === '/'
-      ? 'home'
-      : hygraphSlug ?? editorialHandle ?? '73801813333362060615849066158275';
-  const {env} = context;
+    getPathSlug({request, context, params}) ??
+    '73801813333362060615849066158275';
 
   const {locks, layouts} = await context.hygraph.query(CacheLong()).GetGlobals({
     locksWhere: {
@@ -68,22 +92,36 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
   });
   const lock = getLock(context, request, params, locks);
   const pageLayout = layouts[0];
-  const layoutConfig = getAppearance(lock, pageLayout);
+  const {blocks, ...layoutConfig} = getAppearance(context, lock, pageLayout);
   const {products, collectionsFeed, collectionsInfo} =
     await getOnPageShopifyGids(context, layoutConfig.id);
   return defer({
     lock,
+    customLockContent: blocks,
     layoutConfig,
     products: getProducts(context, products),
     collectionsFeed: getCollectionFeeds(context, collectionsFeed),
     collectionsInfo: getCollectionHeroes(context, collectionsInfo),
   });
 }
+
 export default function BaseLayout() {
-  const {layoutConfig} = useLoaderData<typeof loader>();
+  const {layoutConfig, lock, customLockContent} =
+    useLoaderData<typeof loader>();
   return (
     <Layout layoutConfig={layoutConfig as LayoutConfig}>
-      <Outlet />
+      {!lock ? (
+        <Outlet />
+      ) : (
+        <LazyMotion
+          features={async () => (await import('~/lib/features')).default}
+        >
+          <LockScreen
+            lock={lock}
+            sections={customLockContent as Promise<GetEntitiesQuery>}
+          />
+        </LazyMotion>
+      )}
     </Layout>
   );
 }
@@ -124,15 +162,19 @@ export function ErrorBoundary() {
   );
 }
 
+type LayoutContent = LayoutConfig & {blocks: Promise<GetEntitiesQuery> | null};
+
 function getAppearance(
+  context: AppLoadContext,
   lock: Maybe<LockFragment>,
   pageLayout?: LayoutConfigFragment,
-): LayoutConfig {
-  const layoutType: LayoutConfig = {
+): LayoutContent {
+  const layoutType: LayoutContent = {
     header: HeaderStyle.Default,
     footer: FooterStyle.Default,
     id: '',
     theme: null,
+    blocks: null,
   };
   if (lock) {
     if (lock.customLockScreen) {
@@ -141,6 +183,18 @@ function getAppearance(
       layoutType.footer = footerStyle ?? FooterStyle.Default;
       if (id) layoutType.id = id;
       if (theme?.slug) layoutType.theme = theme.slug;
+      const sections = lock.customLockScreen.sections
+        .map((entity) => {
+          const {__typename, id, stage} = entity;
+          return {typename: __typename as EntityTypeName, id, stage};
+        })
+        .filter((e) => !!e.typename);
+      const blocksPromise = sections
+        ? context.hygraph.query(CacheLong()).GetEntities({
+            where: [...sections],
+          })
+        : null;
+      layoutType.blocks = blocksPromise;
     } else {
       layoutType.header = HeaderStyle.MinimalNewsletterCta;
       layoutType.footer = FooterStyle.Minimal;
@@ -154,19 +208,6 @@ function getAppearance(
   }
   return layoutType;
 }
-
-type CollectionInfo = {
-  type: 'collection-info';
-  data: ReturnType<typeof getCollectionHeroes>;
-};
-type CollectionFeed = {
-  type: 'collection-feed';
-  data: ReturnType<typeof getCollectionHeroes>;
-};
-type HygraphProduct = {
-  type: 'product';
-  data: ReturnType<typeof getProducts>;
-};
 
 async function getOnPageShopifyGids(
   context: AppLoadContext,

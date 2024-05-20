@@ -12,3 +12,9 @@ export function getImageLoadingPriority(
 export const HYGRAPH_CACHE_NAME = 'hygraph';
 export const KLAVIYO_BASE_URL = 'https://a.klaviyo.com';
 export const KLAVIYO_COMPANY_ID = 'RDT3xD';
+
+export const EMAILJS_CONTACT_TEMPLATE_ID = 'template_0jee2h8';
+export const EMAILJS_APPOINTMENT_TEMPLATE_ID = 'template_q2yw635';
+export const EMAILJS_SERVICE_ID = 'service_q8ej60l';
+
+export const EMAILJS_PUBKEY = 'hi4FCFs4Sq1Wj6URH';

@@ -183,13 +183,13 @@ export function IconCheck({
 export function IconXMark({
   stroke = 'currentColor',
   title = 'Delete',
-  viewbox = '0 0 25px 24px',
+  viewbox = '0 0 25 24',
   ...props
 }: ComponentProps<typeof Icon> & {title?: string}) {
   return (
     <Icon {...props} fill="transparent" stroke={stroke} viewBox={viewbox}>
       <title>{title}</title>
-      <path stroke="#514F4F" d="M20.335 1.081L1 23m23-2.273L2.517 1"></path>
+      <path d="M20.335 1.081L1 23m23-2.273L2.517 1"></path>
     </Icon>
   );
 }

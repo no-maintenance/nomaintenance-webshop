@@ -1,7 +1,8 @@
 import type {BlockProps} from '~/components/blocks/BlockFactory';
 import {useSettings} from '~/components/blocks/BlockFactory';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm} from 'react-hook-form';
+import type {UseControllerProps} from 'react-hook-form';
+import {useController, useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {
   Form,
@@ -17,18 +18,21 @@ import {Button} from '~/components/ui/button';
 import {Textarea} from '~/components/ui/textarea';
 import {SpacingWrapper} from '~/components/blocks/CustomizedSection';
 import {Sizes} from '~/__generated__/hygraph.generated';
-import {Popover, PopoverContent, PopoverTrigger} from '~/components/ui/popover';
-import {cn} from '~/lib/utils';
-import {CalendarIcon} from 'lucide-react';
-import {format} from 'date-fns';
-import {Calendar} from '~/components/ui/calendar';
 import {Checkbox} from '~/components/ui/checkbox';
 import {Link} from '~/components/Link';
-import React from 'react';
+import React, {forwardRef, useEffect, useRef, useState} from 'react';
 import {InputWrapper} from '~/components/Form';
-import clsx from 'clsx';
-import {KLAVIYO_BASE_URL, KLAVIYO_COMPANY_ID} from '~/lib/const';
 import {toast} from '~/components/ui/use-toast';
+import {
+  EMAILJS_APPOINTMENT_TEMPLATE_ID,
+  EMAILJS_CONTACT_TEMPLATE_ID,
+  EMAILJS_PUBKEY,
+  EMAILJS_SERVICE_ID,
+  KLAVIYO_BASE_URL,
+  KLAVIYO_COMPANY_ID,
+} from '~/lib/const';
+
+import emailjs from '@emailjs/browser';
 
 export function FormBlock({
   type,
@@ -37,7 +41,7 @@ export function FormBlock({
   variant?: 'default' | 'standalone' | 'embedded';
 }) {
   const settings = useSettings();
-  const {horizontalPadding, verticalPadding} = settings;
+  const {horizontalPadding, verticalPadding, id} = settings;
   const FormSwitcher = () => {
     switch (type) {
       case 'contact':
@@ -45,7 +49,7 @@ export function FormBlock({
       case 'appointments':
         return <AppointmentForm />;
       case 'newsletter':
-        return <NewsletterForm />;
+        return <NewsletterForm id={id} />;
       default:
         return null;
     }
@@ -68,12 +72,12 @@ const contactFormSchema = z.object({
   name: z.string({
     required_error: 'Please include a name for us to address you',
   }),
-  email: z
+  contact: z
     .string({
       required_error: 'Please include an email for us to contact you.',
     })
     .email(),
-  order: z.string(),
+  order_number: z.string(),
   subject: z.string(),
   message: z.string(),
 });
@@ -83,17 +87,48 @@ export function ContactForm() {
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: '',
-      email: '',
-      order: '',
+      contact: '',
+      order_number: '',
       subject: '',
       message: '',
     },
   });
-  const onSubmit = () => {};
+  const formRef = useRef<HTMLFormElement>(null);
+  const onSubmit = () => {
+    if (!formRef.current) return;
+    emailjs
+      .sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_CONTACT_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBKEY,
+      )
+      .then(
+        (result) => {
+          form.reset();
+          toast({
+            title: 'Your support request has been submitted.',
+            description: 'We will review your issue and reply shortly',
+          });
+        },
+        (error) => {
+          console.error(error);
+          toast({
+            title: 'Uh oh! Something went wrong.',
+            description:
+              'There was a problem with your request. Please try again later.',
+          });
+        },
+      );
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        ref={formRef}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -109,7 +144,7 @@ export function ContactForm() {
         />
         <FormField
           control={form.control}
-          name="email"
+          name="contact"
           render={({field}) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
@@ -122,7 +157,7 @@ export function ContactForm() {
         />
         <FormField
           control={form.control}
-          name="order"
+          name="order_number"
           render={({field}) => (
             <FormItem>
               <FormLabel>Order Number</FormLabel>
@@ -171,16 +206,16 @@ const appointmentFormSchema = z.object({
   name: z.string({
     required_error: 'Please include a name for us to address you',
   }),
-  email: z
+  contact: z
     .string({
       required_error: 'Please include an email for us to contact you.',
     })
     .email(),
   phone: z.string(),
-  appointment: z.date({
-    required_error: 'A preferred appointment time is required.',
+  unformatted_requested_time: z.string({
+    required_error: 'A requested appointment time is required.',
   }),
-  size: z.string({
+  party_size: z.string({
     required_error:
       'Please include the party size. We can update this value later.',
   }),
@@ -192,17 +227,49 @@ export function AppointmentForm() {
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
       name: '',
-      email: '',
+      contact: '',
       phone: '',
-      size: '',
       message: '',
+      party_size: '',
+      unformatted_requested_time: '',
     },
   });
-  const onSubmit = () => {};
+  const formRef = useRef<HTMLFormElement>(null);
+  const onSubmit = (values: z.infer<typeof appointmentFormSchema>) => {
+    emailjs
+      .sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_APPOINTMENT_TEMPLATE_ID,
+        formRef.current!,
+        EMAILJS_PUBKEY,
+      )
+      .then(
+        (result) => {
+          form.reset();
+          toast({
+            title: 'Your appointment request has been submitted.',
+            description:
+              'We will review your request and confirm your appointment time shortly',
+          });
+        },
+        (error) => {
+          console.error(error);
+          toast({
+            title: 'Uh oh! Something went wrong.',
+            description:
+              'There was a problem with your request. Please try again later.',
+          });
+        },
+      );
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        ref={formRef}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -218,7 +285,7 @@ export function AppointmentForm() {
         />
         <FormField
           control={form.control}
-          name="email"
+          name="contact"
           render={({field}) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
@@ -244,12 +311,12 @@ export function AppointmentForm() {
         />
         <FormField
           control={form.control}
-          name="size"
+          name="party_size"
           render={({field}) => (
             <FormItem>
               <FormLabel>Party Size</FormLabel>
               <FormControl>
-                <Input placeholder="3" {...field} />
+                <Input type={'string'} placeholder="3" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -257,7 +324,7 @@ export function AppointmentForm() {
         />
         <FormField
           control={form.control}
-          name="appointment"
+          name="unformatted_requested_time"
           render={({field}) => (
             <FormItem className="flex flex-col">
               <FormLabel>Availability</FormLabel>
@@ -266,35 +333,7 @@ export function AppointmentForm() {
                 days that you&apos;re available for an appointment, then we will
                 confirm a time for you to come in.
               </FormDescription>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={'outline'}
-                      className={cn(
-                        'pl-3 text-left font-normal capitalize',
-                        !field.value && 'text-muted-foreground',
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+              <DateInput {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -320,15 +359,66 @@ export function AppointmentForm() {
   );
 }
 
+const DateInput = forwardRef<HTMLInputElement, UseControllerProps>(
+  ({name, control}, ref) => {
+    const {field} = useController({name, control});
+
+    const [formattedTime, setFormattedTime] = useState('');
+    const [minDateTime, setMinDateTime] = useState('');
+
+    useEffect(() => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
+      setMinDateTime(formattedNow);
+    }, []);
+
+    const hiddenInputRef = useRef<HTMLInputElement>(null);
+
+    const handleHiddenInputChange = (
+      e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      const selectedDate = e.target.value;
+      const formattedDateTime = new Date(selectedDate).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      });
+      setFormattedTime(formattedDateTime);
+      field.onChange(selectedDate);
+    };
+
+    return (
+      <>
+        <Input
+          className={'block'}
+          min={minDateTime}
+          type="datetime-local"
+          {...field}
+          value={field.value}
+          onChange={handleHiddenInputChange}
+          onClick={(e) => e.currentTarget.showPicker()}
+        />
+        <input type="hidden" name={'requested_time'} value={formattedTime} />
+      </>
+    );
+  },
+);
 const newsletterSchema = z.object({
   email: z
     .string({
       required_error: 'Please include an email for us to contact you.',
     })
     .email(),
-  consent: z.boolean({
-    required_error:
-      'Please review and accept the terms and conditions to continue.',
+  consent: z.boolean().refine((val) => val === true, {
+    message: 'Please review and accept the terms and conditions to continue.',
   }),
 });
 
@@ -348,70 +438,77 @@ export function NewsletterForm({
   });
   const isLoading = false;
 
-  function onSubmit(data: z.infer<typeof newsletterSchema>) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
-  // const onSubmit = (data: z.infer<typeof contactFormSchema>) => {
-  //   const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
-  //   const options = {
-  //     method: 'POST',
-  //     headers: {revision: '2023-02-22', 'content-type': 'application/json'},
-  //     body: JSON.stringify({
-  //       data: {
-  //         type: 'subscription',
-  //         attributes: {
-  //           list_id: 'Wimtnj',
-  //           custom_source: id,
-  //           email: data.email,
-  //         },
-  //       },
-  //     }),
-  //   };
-  //   fetch(url, options)
-  //     .then((res) => {
-  //       if (res.ok) {
-  //         // analytics.trackEvent(AnalyticsFormEvents.MainNewsletterSignup, {
-  //         //   location: 'footer',
-  //         //   componentID: '9c448a26-16bf-4011-ba0a-1d651eebd649',
-  //         // });
-  //         // setSubmissionState('success');
-  //         toast({
-  //           title: 'You have been subscribed to our newsletter.',
-  //           description:
-  //             'We will keep you posted on upcoming promotions and releases.',
-  //         });
-  //       } else {
-  //         toast({
-  //           title: 'Uh oh! Something went wrong.',
-  //           description: 'There was a problem with your request.',
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       toast({
-  //         title: 'Uh oh! Something went wrong.',
-  //         description: 'There was a problem with your request.',
-  //       });
-  //       // @TODO add sentry error
-  //       console.error('error:' + err);
-  //     });
-  // };
+  // function onSubmit(data: z.infer<typeof newsletterSchema>) {
+  //
+  //   toast({
+  //     title: 'You submitted the following values:',
+  //     description: (
+  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
+  //     ),
+  //   });
+  // }
+
+  const onSubmit = (data: z.infer<typeof newsletterSchema>) => {
+    const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
+    const options = {
+      method: 'POST',
+      headers: {revision: '2023-02-22', 'content-type': 'application/json'},
+      body: JSON.stringify({
+        data: {
+          type: 'subscription',
+          attributes: {
+            list_id: 'Wimtnj',
+            custom_source: id,
+            email: data.email,
+          },
+        },
+      }),
+    };
+    fetch(url, options)
+      .then((res) => {
+        if (res.ok) {
+          // analytics.trackEvent(AnalyticsFormEvents.MainNewsletterSignup, {
+          //   location: 'footer',
+          //   componentID: '9c448a26-16bf-4011-ba0a-1d651eebd649',
+          // });
+          // setSubmissionState('success');
+          form.reset();
+          toast({
+            title: 'You have been subscribed to our newsletter.',
+            description:
+              'We will keep you posted on upcoming promotions and releases.',
+          });
+        } else {
+          toast({
+            title: 'Uh oh! Something went wrong.',
+            description:
+              'There was a problem with your request. Please try again later.',
+          });
+        }
+      })
+      .catch((err) => {
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description:
+            'There was a problem with your request. Please try again later.',
+        });
+        // @TODO add sentry error
+        console.error('error:' + err);
+      });
+  };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 lg:h-[122px] h-[111px]"
+      >
         <FormField
           control={form.control}
           name="email"
           render={({field}) => (
             <FormItem>
-              {/*<FormLabel>First, Last Name</FormLabel>*/}
               <FormControl>
                 <div className={'relative'}>
                   <InputWrapper
@@ -432,7 +529,7 @@ export function NewsletterForm({
                       type="submit"
                       disabled={isLoading}
                       className={
-                        'absolute right-0 bottom-0 py-2 lg:pb-[6px] transform px-2'
+                        'absolute right-0 bottom-0 py-2 lg:pb-[6px] transform px-2 outline-offset-0'
                       }
                     >
                       {isLoading ? <p>Loading...</p> : 'Submit'}
@@ -448,26 +545,32 @@ export function NewsletterForm({
           control={form.control}
           name="consent"
           render={({field}) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  I agree to receive the newsletter. See more about our{' '}
-                  <Link className={'underline'} to={'/policies/privacy-policy'}>
-                    Privacy Policy
-                  </Link>
-                  .
-                </FormLabel>
+            <FormItem>
+              <div className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    I agree to receive the newsletter. See more about our{' '}
+                    <Link
+                      className={'underline'}
+                      to={'/policies/privacy-policy'}
+                    >
+                      Privacy Policy
+                    </Link>
+                    .
+                  </FormLabel>
+                </div>
               </div>
               <FormMessage />
             </FormItem>
           )}
         />
+
         {/*<button*/}
         {/*  type="submit"*/}
         {/*  disabled={isLoading}*/}

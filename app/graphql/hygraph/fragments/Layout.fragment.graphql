@@ -1,11 +1,25 @@
 fragment Layout on Layout {
+  ...LayoutConfig
+  ...LayoutContent
+}
+
+fragment LayoutContent on Layout {
   id
   title
   displayTitle
+  mirrorLayout
   heroes {
     ...Heroes
   }
   sections {
-    __typename
+    ... on Entity {
+      ...Entity
+    }
   }
 }
+fragment Entity on Entity {
+  __typename
+  id
+  stage
+}
+

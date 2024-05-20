@@ -50,7 +50,7 @@ export function ProductGallery({media}: {media: MediaFragment[]}) {
       >
         {media.map((data, idx) => (
           <ModalImage
-            key={data.id}
+            key={`modal-image--${data.id}`}
             modalRef={modalRef}
             modalIdx={modalIdx}
             idx={idx + 1}

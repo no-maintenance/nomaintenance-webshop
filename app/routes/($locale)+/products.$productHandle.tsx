@@ -130,7 +130,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
         },
       })
     : null;
-  console.log(await sizeGuidePromise);
   if (!product.selectedVariant) {
     throw redirectToFirstVariant({product, request});
   }
@@ -221,6 +220,7 @@ const settings: ProductDisplaySettings = {
   preselectFirstAvailableVariant: true,
 };
 export default function Product() {
+  console.log('Product');
   const lastData = useRef({});
   const data = useLoaderData<typeof loader>() || lastData.current;
   const {product, shop, recommended, variants, sizeGuide, hasSizeGuide} =
@@ -353,7 +353,7 @@ function ProductVariantSelector({
                 {option.name}
               </Heading>
             )}
-            <div className="flex flex-wrap items-baseline gap-8">
+            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
               {settings.variantSelector === 'listbox' ? (
                 <ProductListbox option={option} />
               ) : (

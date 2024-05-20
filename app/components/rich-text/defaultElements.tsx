@@ -1,5 +1,6 @@
-import React, {Fragment} from 'react';
-import {RichTextProps} from './types';
+import type {ReactElement, ReactNode} from 'react';
+import React, {Fragment, isValidElement} from 'react';
+import type {RichTextProps} from './types';
 
 import {Audio, Class, IFrame, Image, Link, Video} from './elements';
 import type {NodeRendererType} from '~/lib/react-renderer';
@@ -12,6 +13,8 @@ import {Sizes} from '~/__generated__/hygraph.generated';
 import {FormBlock} from '~/components/blocks/FormBlock';
 import {CompactTimer, Countdown, CounterSize} from '~/components/Countdown';
 import {ClientOnly} from '~/lib/client-only';
+
+const __DEV__ = process.env.NODE_ENV;
 
 function FallbackForCustomAsset({mimeType}: {mimeType: string}) {
   if (__DEV__) {
@@ -33,17 +36,7 @@ export const defaultElements: Required<RichTextProps['renderers']> = {
   ul: ({children}) => <ul>{children}</ul>,
   ol: ({children}) => <ol>{children}</ol>,
   li: ({children}) => <li>{children}</li>,
-  p: ({children}) => {
-    if (
-      children?.props?.content.length > 1 ||
-      (children?.props?.content.length === 1 && children?.props?.content?.text)
-    ) {
-      return (
-        <div className={' gap-4 flex flex-wrap md:flex-nowrap'}>{children}</div>
-      );
-    }
-    return <p className={'prose mb-4'}>{children}</p>;
-  },
+  p: ({children}) => <p>{children}</p>,
   h1: ({children}) => <h1>{children}</h1>,
   h2: ({children}) => <h2>{children}</h2>,
   h3: ({children}) => <h3>{children}</h3>,
@@ -117,6 +110,14 @@ export const DEFAULT_RENDERERS: NodeRendererType = {
       {children}
     </Heading>
   ),
+  p: ({children}) => {
+    if (hasReferencesProp(children) && hasAssetReference(children)) {
+      return (
+        <div className={'gap-4 flex flex-wrap md:flex-nowrap'}>{children}</div>
+      );
+    }
+    return <p className={'prose mb-4'}>{children}</p>;
+  },
   img: ({height, width, src, title, altText}) => (
     <img
       src={src}
@@ -142,7 +143,11 @@ export const DEFAULT_RENDERERS: NodeRendererType = {
     Archive: (archive) => {
       return (
         <BlockProvider
-          props={{verticalPadding: Sizes.None, horizontalPadding: Sizes.None}}
+          props={{
+            verticalPadding: Sizes.None,
+            horizontalPadding: Sizes.None,
+            id: archive.id,
+          }}
         >
           <Archive {...archive} />
         </BlockProvider>
@@ -196,3 +201,19 @@ export const DEFAULT_RENDERERS: NodeRendererType = {
   // ),
   // },
 };
+
+// Type predicate to check if a ReactNode is a ReactElement with a 'references' prop
+function hasReferencesProp(
+  node: ReactNode,
+): node is ReactElement<RichTextProps> {
+  return (
+    isValidElement(node) && node.props && Array.isArray(node.props.references)
+  );
+}
+
+// Type predicate to check if any reference has __typename === 'Asset'
+function hasAssetReference(node: ReactElement<RichTextProps>): boolean {
+  return Boolean(
+    node.props.references?.some((ref) => ref.__typename === 'Asset'),
+  );
+}

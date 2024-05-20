@@ -39,6 +39,7 @@ import {
 } from '~/components/ui/theme';
 import {seoPayload} from '~/lib/seo.server';
 import invariant from 'tiny-invariant';
+import {Toaster} from '~/components/ui/toaster';
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -189,6 +190,7 @@ export function Document({
               />
               <ScrollRestoration nonce={nonce} />
               <Scripts nonce={nonce} />
+              <Toaster />
             </body>
           </ThemeConsumer>
         </ChildThemeContext.Provider>

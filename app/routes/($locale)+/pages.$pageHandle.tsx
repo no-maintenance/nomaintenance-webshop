@@ -3,7 +3,8 @@ import {Await, useLoaderData} from '@remix-run/react';
 import React, {Suspense} from 'react';
 
 import {getCriticalPageData} from '~/lib/utils.server';
-import type {
+import {
+  FormTypes,
   GetEntitiesQuery,
   HeroesFragment,
 } from '~/__generated__/hygraph.generated';
@@ -17,6 +18,7 @@ import {CacheLong, getSeoMeta} from '@shopify/hydrogen';
 import {PageHeader} from '~/components/Text';
 import {cn} from '~/lib/utils';
 import {seoPayload} from '~/lib/seo.server';
+import {FormBlock} from '~/components/blocks/FormBlock';
 
 export async function loader({params, context, request}: LoaderFunctionArgs) {
   if (!isValidLocaleServer(context, params)) {

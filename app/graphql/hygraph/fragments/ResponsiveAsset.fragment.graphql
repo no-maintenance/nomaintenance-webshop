@@ -5,6 +5,7 @@ fragment ResponsiveAsset on Asset {
   }
 }
 fragment AssetDetails on Asset {
+  __typename
   id
   alt
   mimeType

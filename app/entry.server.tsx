@@ -20,6 +20,7 @@ export default async function handleRequest(
       'https://cdn.shopify.com',
       'blob:',
       '*.klaviyo.com',
+      'api.emailjs.com',
     ].filter(Boolean),
     imgSrc: [
       "'self'",

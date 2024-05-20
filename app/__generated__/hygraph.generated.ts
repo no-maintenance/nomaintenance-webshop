@@ -1206,25 +1206,15 @@ export type AssetUpdateManyInlineInput = {
 export type AssetUpdateManyInput = {
   /** alt input for default locale (en) */
   alt?: InputMaybe<Scalars['String']['input']>;
-  fileName?: InputMaybe<Scalars['String']['input']>;
   /** Optional updates to localizations */
   localizations?: InputMaybe<AssetUpdateManyLocalizationsInput>;
-  /** Use this to define if its a reupload for the asset */
-  reUpload?: InputMaybe<Scalars['Boolean']['input']>;
   /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']['input']>;
-  /** Optionally the system can upload a file for you, for that you need to provide a publicly accessible url */
-  uploadUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AssetUpdateManyLocalizationDataInput = {
   alt?: InputMaybe<Scalars['String']['input']>;
-  fileName?: InputMaybe<Scalars['String']['input']>;
-  /** Use this to define if its a reupload for the asset */
-  reUpload?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
-  /** Optionally the system can upload a file for you, for that you need to provide a publicly accessible url */
-  uploadUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AssetUpdateManyLocalizationInput = {
@@ -2906,6 +2896,8 @@ export type CombinedListing = Entity & Node & {
   documentInStages: Array<CombinedListing>;
   editorial?: Maybe<Editorial>;
   event: Array<Event>;
+  /** (incomplete) If true, the products linked in this combined listing, will be part of a combined product page.  */
+  hasCombinedProductPage?: Maybe<Scalars['Boolean']['output']>;
   /** List of CombinedListing versions */
   history: Array<Version>;
   /** The unique identifier */
@@ -3037,6 +3029,7 @@ export type CombinedListingCreateInput = {
   description?: InputMaybe<Scalars['RichTextAST']['input']>;
   editorial?: InputMaybe<EditorialCreateOneInlineInput>;
   event?: InputMaybe<EventCreateManyInlineInput>;
+  hasCombinedProductPage?: InputMaybe<Scalars['Boolean']['input']>;
   media?: InputMaybe<AssetCreateManyInlineInput>;
   products?: InputMaybe<ProductCreateManyInlineInput>;
   slug: Scalars['String']['input'];
@@ -3100,6 +3093,9 @@ export type CombinedListingManyWhereInput = {
   event_every?: InputMaybe<EventWhereInput>;
   event_none?: InputMaybe<EventWhereInput>;
   event_some?: InputMaybe<EventWhereInput>;
+  hasCombinedProductPage?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  hasCombinedProductPage_not?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']['input']>;
@@ -3203,6 +3199,8 @@ export type CombinedListingManyWhereInput = {
 export enum CombinedListingOrderByInput {
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
+  HasCombinedProductPageAsc = 'hasCombinedProductPage_ASC',
+  HasCombinedProductPageDesc = 'hasCombinedProductPage_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   PublishedAtAsc = 'publishedAt_ASC',
@@ -3219,6 +3217,7 @@ export type CombinedListingUpdateInput = {
   description?: InputMaybe<Scalars['RichTextAST']['input']>;
   editorial?: InputMaybe<EditorialUpdateOneInlineInput>;
   event?: InputMaybe<EventUpdateManyInlineInput>;
+  hasCombinedProductPage?: InputMaybe<Scalars['Boolean']['input']>;
   media?: InputMaybe<AssetUpdateManyInlineInput>;
   products?: InputMaybe<ProductUpdateManyInlineInput>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -3244,6 +3243,7 @@ export type CombinedListingUpdateManyInlineInput = {
 
 export type CombinedListingUpdateManyInput = {
   description?: InputMaybe<Scalars['RichTextAST']['input']>;
+  hasCombinedProductPage?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3329,6 +3329,9 @@ export type CombinedListingWhereInput = {
   event_every?: InputMaybe<EventWhereInput>;
   event_none?: InputMaybe<EventWhereInput>;
   event_some?: InputMaybe<EventWhereInput>;
+  hasCombinedProductPage?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  hasCombinedProductPage_not?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']['input']>;
@@ -10645,7 +10648,7 @@ export type MixedMediaBodyRichTextReferencesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type MixedMediaBodyRichTextEmbeddedTypes = Asset | Form | Lock | Page;
+export type MixedMediaBodyRichTextEmbeddedTypes = Asset | Collection | Form | Lock | Page | Product;
 
 export type MixedMediaConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -21220,9 +21223,11 @@ export type LockPageLocksWhereUniqueInput = {
     ],
     "MixedMediaBodyRichTextEmbeddedTypes": [
       "Asset",
+      "Collection",
       "Form",
       "Lock",
-      "Page"
+      "Page",
+      "Product"
     ],
     "Node": [
       "Archive",
@@ -21305,19 +21310,19 @@ export type LockPageLocksWhereUniqueInput = {
     
 export type CollectionFragment = { __typename?: 'Collection', gid: string };
 
-export type EditorialContentFragment = { __typename?: 'EditorialMainContentRichText', json: any, references: Array<{ __typename?: 'Archive', id: string, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null }> };
+export type EditorialContentFragment = { __typename?: 'EditorialMainContentRichText', json: any, references: Array<{ __typename?: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null }> };
 
 export type FormFragment = { __typename?: 'Form', id: string, type?: FormTypes | null };
 
 type Heroes_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
 
-type Heroes_Editorial_Fragment = { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null };
+type Heroes_Editorial_Fragment = { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null };
 
-type Heroes_Event_Fragment = { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null };
+type Heroes_Event_Fragment = { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null };
 
-type Heroes_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
+type Heroes_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
 
-type Heroes_Page_Fragment = { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null };
+type Heroes_Page_Fragment = { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null };
 
 type Heroes_Product_Fragment = { __typename: 'Product', id: string, gid: string };
 
@@ -21325,176 +21330,9 @@ export type HeroesFragment = Heroes_Collection_Fragment | Heroes_Editorial_Fragm
 
 export type ProductGidFragment = { __typename?: 'Product', gid: string };
 
-export type LayoutFragment = { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive' } | { __typename: 'Collection' } | { __typename: 'CustomizedSection' } | { __typename: 'Event' } | { __typename: 'Form' } | { __typename: 'Lock' } | { __typename: 'MixedMedia' } | { __typename: 'Product' }> };
+export type LayoutFragment = { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> };
 
-export type LinkFragment = { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null };
-
-export type LockFragment = { __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null } | null };
-
-export type LockSectionFragment = { __typename?: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
-
-export type NavigationFragment = { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> };
-
-export type PersonFragment = { __typename?: 'Person', name: string, role?: string | null };
-
-export type ProductFragment = { __typename?: 'Product', title?: string | null, gid: string };
-
-export type ResponsiveAssetFragment = { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null };
-
-export type AssetDetailsFragment = { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string };
-
-export type SeoFragment = { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null };
-
-export type ThemeFragment = { __typename?: 'Theme', radius?: Sizes | null, id: string, slug: string, foreground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, background?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, card?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, cardForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, primary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, secondary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, muted?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, mutedForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructive?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructiveForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, border?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, ring?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, inputColor?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null };
-
-export type ColorSchemeFragment = { __typename?: 'Theme', foreground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, background?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, card?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, cardForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, primary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, secondary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, muted?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, mutedForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructive?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructiveForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, border?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, ring?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, inputColor?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null };
-
-export type EventBlockFragment = { __typename?: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', raw: any } | null };
-
-export type MixedMediaFragment = { __typename?: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
-
-export type RichTextFragment = { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> };
-
-type Block_Archive_Fragment = { __typename: 'Archive', id: string, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> };
-
-type Block_Asset_Fragment = { __typename?: 'Asset', id: string };
-
-type Block_Block_Fragment = { __typename?: 'Block', id: string };
-
-type Block_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
-
-type Block_ColorScheme_Fragment = { __typename?: 'ColorScheme', id: string };
-
-type Block_CombinedListing_Fragment = { __typename?: 'CombinedListing', id: string };
-
-type Block_CountdownComponent_Fragment = { __typename?: 'CountdownComponent', id: string };
-
-type Block_CustomizedSection_Fragment = { __typename: 'CustomizedSection', id: string, reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null, content?: { __typename: 'Collection', id: string, gid: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | null };
-
-type Block_DisplayOption_Fragment = { __typename?: 'DisplayOption', id: string };
-
-type Block_Editorial_Fragment = { __typename?: 'Editorial', id: string };
-
-type Block_Event_Fragment = { __typename: 'Event', id: string };
-
-type Block_Form_Fragment = { __typename: 'Form', id: string, type?: FormTypes | null };
-
-type Block_Gallery_Fragment = { __typename?: 'Gallery', id: string };
-
-type Block_Grid_Fragment = { __typename?: 'Grid', id: string };
-
-type Block_Layout_Fragment = { __typename?: 'Layout', id: string };
-
-type Block_Link_Fragment = { __typename?: 'Link', id: string };
-
-type Block_Lock_Fragment = { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
-
-type Block_LockedSection_Fragment = { __typename?: 'LockedSection', id: string };
-
-type Block_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
-
-type Block_Navigation_Fragment = { __typename?: 'Navigation', id: string };
-
-type Block_Page_Fragment = { __typename?: 'Page', id: string };
-
-type Block_Person_Fragment = { __typename?: 'Person', id: string };
-
-type Block_Product_Fragment = { __typename: 'Product', id: string, gid: string };
-
-type Block_ScheduledOperation_Fragment = { __typename?: 'ScheduledOperation', id: string };
-
-type Block_ScheduledRelease_Fragment = { __typename?: 'ScheduledRelease', id: string };
-
-type Block_Seo_Fragment = { __typename?: 'Seo', id: string };
-
-type Block_Theme_Fragment = { __typename?: 'Theme', id: string };
-
-type Block_User_Fragment = { __typename?: 'User', id: string };
-
-export type BlockFragment = Block_Archive_Fragment | Block_Asset_Fragment | Block_Block_Fragment | Block_Collection_Fragment | Block_ColorScheme_Fragment | Block_CombinedListing_Fragment | Block_CountdownComponent_Fragment | Block_CustomizedSection_Fragment | Block_DisplayOption_Fragment | Block_Editorial_Fragment | Block_Event_Fragment | Block_Form_Fragment | Block_Gallery_Fragment | Block_Grid_Fragment | Block_Layout_Fragment | Block_Link_Fragment | Block_Lock_Fragment | Block_LockedSection_Fragment | Block_MixedMedia_Fragment | Block_Navigation_Fragment | Block_Page_Fragment | Block_Person_Fragment | Block_Product_Fragment | Block_ScheduledOperation_Fragment | Block_ScheduledRelease_Fragment | Block_Seo_Fragment | Block_Theme_Fragment | Block_User_Fragment;
-
-export type BlockSettingsFragment = { __typename?: 'CustomizedSection', reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null };
-
-export type SpacingFragment = { __typename?: 'CustomizedSection', verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null };
-
-type BlockPrimitive_Archive_Fragment = { __typename: 'Archive', id: string, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> };
-
-type BlockPrimitive_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
-
-type BlockPrimitive_CustomizedSection_Fragment = { __typename: 'CustomizedSection' };
-
-type BlockPrimitive_Event_Fragment = { __typename: 'Event', id: string };
-
-type BlockPrimitive_Form_Fragment = { __typename: 'Form', id: string, type?: FormTypes | null };
-
-type BlockPrimitive_Lock_Fragment = { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
-
-type BlockPrimitive_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
-
-type BlockPrimitive_Product_Fragment = { __typename: 'Product', gid: string, id: string };
-
-export type BlockPrimitiveFragment = BlockPrimitive_Archive_Fragment | BlockPrimitive_Collection_Fragment | BlockPrimitive_CustomizedSection_Fragment | BlockPrimitive_Event_Fragment | BlockPrimitive_Form_Fragment | BlockPrimitive_Lock_Fragment | BlockPrimitive_MixedMedia_Fragment | BlockPrimitive_Product_Fragment;
-
-export type GetEditorialQueryVariables = Exact<{
-  where: EditorialWhereUniqueInput;
-}>;
-
-
-export type GetEditorialQuery = { __typename?: 'Query', editorial?: { __typename?: 'Editorial', title?: string | null, id: string, publishedAt?: any | null, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, credits: Array<{ __typename?: 'Person', name: string, role?: string | null }>, artistStatement?: { __typename?: 'EditorialArtistStatementRichText', json: any, references: Array<{ __typename?: 'Form', id: string, type?: FormTypes | null }> } | null, excerpt?: { __typename?: 'RichText', text: string } | null, mainContent?: { __typename?: 'EditorialMainContentRichText', html: string, json: any, references: Array<{ __typename?: 'Archive', id: string, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null }> } | null } | null };
-
-export type GetEntitiesQueryVariables = Exact<{
-  where: Array<EntityWhereInput> | EntityWhereInput;
-}>;
-
-
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: Array<{ __typename: 'Archive', id: string, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> } | { __typename?: 'Asset', id: string } | { __typename?: 'Block', id: string } | { __typename: 'Collection', id: string, gid: string } | { __typename?: 'ColorScheme', id: string } | { __typename?: 'CombinedListing', id: string } | { __typename?: 'CountdownComponent', id: string } | { __typename: 'CustomizedSection', id: string, reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null, content?: { __typename: 'Collection', id: string, gid: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | null } | { __typename?: 'DisplayOption', id: string } | { __typename?: 'Editorial', id: string } | { __typename: 'Event', id: string } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename?: 'Gallery', id: string } | { __typename?: 'Grid', id: string } | { __typename?: 'Layout', id: string } | { __typename?: 'Link', id: string } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename?: 'LockedSection', id: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string }> } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Navigation', id: string } | { __typename?: 'Page', id: string } | { __typename?: 'Person', id: string } | { __typename: 'Product', id: string, gid: string } | { __typename?: 'ScheduledOperation', id: string } | { __typename?: 'ScheduledRelease', id: string } | { __typename?: 'Seo', id: string } | { __typename?: 'Theme', id: string } | { __typename?: 'User', id: string }> | null };
-
-export type GetGlobalsQueryVariables = Exact<{
-  locksWhere: LockWhereInput;
-  layoutsWhere: LayoutWhereInput;
-}>;
-
-
-export type GetGlobalsQuery = { __typename?: 'Query', locks: Array<{ __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null } | null }>, layouts: Array<{ __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null }> };
-
-export type GetLayoutConfigQueryVariables = Exact<{
-  where: LayoutWhereInput;
-}>;
-
-
-export type GetLayoutConfigQuery = { __typename?: 'Query', layouts: Array<{ __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null }> };
-
-export type LayoutConfigFragment = { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null };
-
-export type GetNavigationQueryVariables = Exact<{
-  where: NavigationWhereUniqueInput;
-}>;
-
-
-export type GetNavigationQuery = { __typename?: 'Query', navigation?: { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> } | null };
-
-export type GetNavigationsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetNavigationsQuery = { __typename?: 'Query', header?: { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> } | null, footer?: { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> } | null };
-
-export type GetOnPageShopDataQueryVariables = Exact<{
-  productsWhere?: InputMaybe<ProductWhereInput>;
-  collectionsInfo?: InputMaybe<CollectionWhereInput>;
-  collectionsFeed?: InputMaybe<CollectionWhereInput>;
-}>;
-
-
-export type GetOnPageShopDataQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', gid: string }>, collectionsInfo: Array<{ __typename?: 'Collection', gid: string }>, collectionsFeed: Array<{ __typename?: 'Collection', gid: string }> };
-
-export type CollectionGidFragment = { __typename?: 'Collection', gid: string };
-
-export type GetPageQueryVariables = Exact<{
-  where: PageWhereUniqueInput;
-}>;
-
-
-export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, layout?: { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename?: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null } | null };
+export type LayoutContentFragment = { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> };
 
 type Entity_Archive_Fragment = { __typename: 'Archive', id: string, stage: Stage };
 
@@ -21554,6 +21392,175 @@ type Entity_User_Fragment = { __typename: 'User', id: string, stage: Stage };
 
 export type EntityFragment = Entity_Archive_Fragment | Entity_Asset_Fragment | Entity_Block_Fragment | Entity_Collection_Fragment | Entity_ColorScheme_Fragment | Entity_CombinedListing_Fragment | Entity_CountdownComponent_Fragment | Entity_CustomizedSection_Fragment | Entity_DisplayOption_Fragment | Entity_Editorial_Fragment | Entity_Event_Fragment | Entity_Form_Fragment | Entity_Gallery_Fragment | Entity_Grid_Fragment | Entity_Layout_Fragment | Entity_Link_Fragment | Entity_Lock_Fragment | Entity_LockedSection_Fragment | Entity_MixedMedia_Fragment | Entity_Navigation_Fragment | Entity_Page_Fragment | Entity_Person_Fragment | Entity_Product_Fragment | Entity_ScheduledOperation_Fragment | Entity_ScheduledRelease_Fragment | Entity_Seo_Fragment | Entity_Theme_Fragment | Entity_User_Fragment;
 
+export type LinkFragment = { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null };
+
+export type LockFragment = { __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null };
+
+export type LockSectionFragment = { __typename?: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
+
+export type NavigationFragment = { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> };
+
+export type PersonFragment = { __typename?: 'Person', name: string, role?: string | null };
+
+export type ProductFragment = { __typename?: 'Product', title?: string | null, gid: string };
+
+export type ResponsiveAssetFragment = { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null };
+
+export type AssetDetailsFragment = { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string };
+
+export type SeoFragment = { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null };
+
+export type ThemeFragment = { __typename?: 'Theme', radius?: Sizes | null, id: string, slug: string, foreground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, background?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, card?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, cardForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, primary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, secondary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, muted?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, mutedForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructive?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructiveForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, border?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, ring?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, inputColor?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null };
+
+export type ColorSchemeFragment = { __typename?: 'Theme', foreground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, background?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, card?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, cardForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, primary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, secondary?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, muted?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, mutedForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructive?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, destructiveForeground?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, border?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, ring?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null, inputColor?: { __typename?: 'Color', rgba: { __typename?: 'RGBA', r: any, g: any, b: any, a: any } } | null };
+
+export type EventBlockFragment = { __typename?: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', raw: any } | null };
+
+export type MixedMediaFragment = { __typename?: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
+
+export type RichTextFragment = { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> };
+
+type Block_Archive_Fragment = { __typename: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> };
+
+type Block_Asset_Fragment = { __typename?: 'Asset', id: string };
+
+type Block_Block_Fragment = { __typename?: 'Block', id: string };
+
+type Block_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
+
+type Block_ColorScheme_Fragment = { __typename?: 'ColorScheme', id: string };
+
+type Block_CombinedListing_Fragment = { __typename?: 'CombinedListing', id: string };
+
+type Block_CountdownComponent_Fragment = { __typename?: 'CountdownComponent', id: string };
+
+type Block_CustomizedSection_Fragment = { __typename: 'CustomizedSection', id: string, reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null, content?: { __typename: 'Collection', id: string, gid: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | null };
+
+type Block_DisplayOption_Fragment = { __typename?: 'DisplayOption', id: string };
+
+type Block_Editorial_Fragment = { __typename?: 'Editorial', id: string };
+
+type Block_Event_Fragment = { __typename: 'Event', id: string };
+
+type Block_Form_Fragment = { __typename: 'Form', id: string, type?: FormTypes | null };
+
+type Block_Gallery_Fragment = { __typename?: 'Gallery', id: string };
+
+type Block_Grid_Fragment = { __typename?: 'Grid', id: string };
+
+type Block_Layout_Fragment = { __typename?: 'Layout', id: string };
+
+type Block_Link_Fragment = { __typename?: 'Link', id: string };
+
+type Block_Lock_Fragment = { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
+
+type Block_LockedSection_Fragment = { __typename?: 'LockedSection', id: string };
+
+type Block_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
+
+type Block_Navigation_Fragment = { __typename?: 'Navigation', id: string };
+
+type Block_Page_Fragment = { __typename?: 'Page', id: string };
+
+type Block_Person_Fragment = { __typename?: 'Person', id: string };
+
+type Block_Product_Fragment = { __typename: 'Product', id: string, gid: string };
+
+type Block_ScheduledOperation_Fragment = { __typename?: 'ScheduledOperation', id: string };
+
+type Block_ScheduledRelease_Fragment = { __typename?: 'ScheduledRelease', id: string };
+
+type Block_Seo_Fragment = { __typename?: 'Seo', id: string };
+
+type Block_Theme_Fragment = { __typename?: 'Theme', id: string };
+
+type Block_User_Fragment = { __typename?: 'User', id: string };
+
+export type BlockFragment = Block_Archive_Fragment | Block_Asset_Fragment | Block_Block_Fragment | Block_Collection_Fragment | Block_ColorScheme_Fragment | Block_CombinedListing_Fragment | Block_CountdownComponent_Fragment | Block_CustomizedSection_Fragment | Block_DisplayOption_Fragment | Block_Editorial_Fragment | Block_Event_Fragment | Block_Form_Fragment | Block_Gallery_Fragment | Block_Grid_Fragment | Block_Layout_Fragment | Block_Link_Fragment | Block_Lock_Fragment | Block_LockedSection_Fragment | Block_MixedMedia_Fragment | Block_Navigation_Fragment | Block_Page_Fragment | Block_Person_Fragment | Block_Product_Fragment | Block_ScheduledOperation_Fragment | Block_ScheduledRelease_Fragment | Block_Seo_Fragment | Block_Theme_Fragment | Block_User_Fragment;
+
+export type BlockSettingsFragment = { __typename?: 'CustomizedSection', reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null };
+
+export type SpacingFragment = { __typename?: 'CustomizedSection', verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null };
+
+type BlockPrimitive_Archive_Fragment = { __typename: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> };
+
+type BlockPrimitive_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
+
+type BlockPrimitive_CustomizedSection_Fragment = { __typename: 'CustomizedSection' };
+
+type BlockPrimitive_Event_Fragment = { __typename: 'Event', id: string };
+
+type BlockPrimitive_Form_Fragment = { __typename: 'Form', id: string, type?: FormTypes | null };
+
+type BlockPrimitive_Lock_Fragment = { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
+
+type BlockPrimitive_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
+
+type BlockPrimitive_Product_Fragment = { __typename: 'Product', gid: string, id: string };
+
+export type BlockPrimitiveFragment = BlockPrimitive_Archive_Fragment | BlockPrimitive_Collection_Fragment | BlockPrimitive_CustomizedSection_Fragment | BlockPrimitive_Event_Fragment | BlockPrimitive_Form_Fragment | BlockPrimitive_Lock_Fragment | BlockPrimitive_MixedMedia_Fragment | BlockPrimitive_Product_Fragment;
+
+export type GetEditorialQueryVariables = Exact<{
+  where: EditorialWhereUniqueInput;
+}>;
+
+
+export type GetEditorialQuery = { __typename?: 'Query', editorial?: { __typename?: 'Editorial', title?: string | null, id: string, publishedAt?: any | null, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, credits: Array<{ __typename?: 'Person', name: string, role?: string | null }>, artistStatement?: { __typename?: 'EditorialArtistStatementRichText', json: any, references: Array<{ __typename?: 'Form', id: string, type?: FormTypes | null }> } | null, excerpt?: { __typename?: 'RichText', text: string } | null, mainContent?: { __typename?: 'EditorialMainContentRichText', html: string, json: any, references: Array<{ __typename?: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null }> } | null } | null };
+
+export type GetEntitiesQueryVariables = Exact<{
+  where: Array<EntityWhereInput> | EntityWhereInput;
+}>;
+
+
+export type GetEntitiesQuery = { __typename?: 'Query', entities?: Array<{ __typename: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> } | { __typename?: 'Asset', id: string } | { __typename?: 'Block', id: string } | { __typename: 'Collection', id: string, gid: string } | { __typename?: 'ColorScheme', id: string } | { __typename?: 'CombinedListing', id: string } | { __typename?: 'CountdownComponent', id: string } | { __typename: 'CustomizedSection', id: string, reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null, content?: { __typename: 'Collection', id: string, gid: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | null } | { __typename?: 'DisplayOption', id: string } | { __typename?: 'Editorial', id: string } | { __typename: 'Event', id: string } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename?: 'Gallery', id: string } | { __typename?: 'Grid', id: string } | { __typename?: 'Layout', id: string } | { __typename?: 'Link', id: string } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename?: 'LockedSection', id: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Navigation', id: string } | { __typename?: 'Page', id: string } | { __typename?: 'Person', id: string } | { __typename: 'Product', id: string, gid: string } | { __typename?: 'ScheduledOperation', id: string } | { __typename?: 'ScheduledRelease', id: string } | { __typename?: 'Seo', id: string } | { __typename?: 'Theme', id: string } | { __typename?: 'User', id: string }> | null };
+
+export type GetGlobalsQueryVariables = Exact<{
+  locksWhere: LockWhereInput;
+  layoutsWhere: LayoutWhereInput;
+}>;
+
+
+export type GetGlobalsQuery = { __typename?: 'Query', locks: Array<{ __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null }>, layouts: Array<{ __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null }> };
+
+export type GetLayoutConfigQueryVariables = Exact<{
+  where: LayoutWhereInput;
+}>;
+
+
+export type GetLayoutConfigQuery = { __typename?: 'Query', layouts: Array<{ __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null }> };
+
+export type LayoutConfigFragment = { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null };
+
+export type GetNavigationQueryVariables = Exact<{
+  where: NavigationWhereUniqueInput;
+}>;
+
+
+export type GetNavigationQuery = { __typename?: 'Query', navigation?: { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> } | null };
+
+export type GetNavigationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetNavigationsQuery = { __typename?: 'Query', header?: { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> } | null, footer?: { __typename?: 'Navigation', slug?: string | null, id: string, title?: string | null, links: Array<{ __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null }> } | null };
+
+export type GetOnPageShopDataQueryVariables = Exact<{
+  productsWhere?: InputMaybe<ProductWhereInput>;
+  collectionsInfo?: InputMaybe<CollectionWhereInput>;
+  collectionsFeed?: InputMaybe<CollectionWhereInput>;
+}>;
+
+
+export type GetOnPageShopDataQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', gid: string }>, collectionsInfo: Array<{ __typename?: 'Collection', gid: string }>, collectionsFeed: Array<{ __typename?: 'Collection', gid: string }> };
+
+export type CollectionGidFragment = { __typename?: 'Collection', gid: string };
+
+export type GetPageQueryVariables = Exact<{
+  where: PageWhereUniqueInput;
+}>;
+
+
+export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, layout?: { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null } | null };
+
 export type GetStaticNavigationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -21571,6 +21578,7 @@ export const CollectionFragmentDoc = gql`
     `;
 export const AssetDetailsFragmentDoc = gql`
     fragment AssetDetails on Asset {
+  __typename
   id
   alt
   mimeType
@@ -21627,6 +21635,16 @@ export const EditorialContentFragmentDoc = gql`
       id
       ...Form
     }
+  }
+}
+    `;
+export const LayoutConfigFragmentDoc = gql`
+    fragment LayoutConfig on Layout {
+  id
+  headerStyle
+  footerStyle
+  theme {
+    slug
   }
 }
     `;
@@ -21724,27 +21742,33 @@ export const HeroesFragmentDoc = gql`
   }
 }
     `;
-export const LayoutFragmentDoc = gql`
-    fragment Layout on Layout {
+export const EntityFragmentDoc = gql`
+    fragment Entity on Entity {
+  __typename
+  id
+  stage
+}
+    `;
+export const LayoutContentFragmentDoc = gql`
+    fragment LayoutContent on Layout {
   id
   title
   displayTitle
+  mirrorLayout
   heroes {
     ...Heroes
   }
   sections {
-    __typename
+    ... on Entity {
+      ...Entity
+    }
   }
 }
     `;
-export const LayoutConfigFragmentDoc = gql`
-    fragment LayoutConfig on Layout {
-  id
-  headerStyle
-  footerStyle
-  theme {
-    slug
-  }
+export const LayoutFragmentDoc = gql`
+    fragment Layout on Layout {
+  ...LayoutConfig
+  ...LayoutContent
 }
     `;
 export const LockFragmentDoc = gql`
@@ -21785,7 +21809,7 @@ export const LockFragmentDoc = gql`
     ...ResponsiveAsset
   }
   customLockScreen {
-    ...LayoutConfig
+    ...Layout
   }
   password
   scheduledUnlockTime
@@ -22089,13 +22113,6 @@ export const CollectionGidFragmentDoc = gql`
   gid
 }
     `;
-export const EntityFragmentDoc = gql`
-    fragment Entity on Entity {
-  __typename
-  id
-  stage
-}
-    `;
 export const GetEditorialDocument = gql`
     query GetEditorial($where: EditorialWhereUniqueInput!) {
   editorial(where: $where) {
@@ -22164,7 +22181,13 @@ export const GetGlobalsDocument = gql`
     ${LockFragmentDoc}
 ${ResponsiveAssetFragmentDoc}
 ${AssetDetailsFragmentDoc}
-${LayoutConfigFragmentDoc}`;
+${LayoutFragmentDoc}
+${LayoutConfigFragmentDoc}
+${LayoutContentFragmentDoc}
+${HeroesFragmentDoc}
+${LinkFragmentDoc}
+${ProductGidFragmentDoc}
+${EntityFragmentDoc}`;
 export const GetLayoutConfigDocument = gql`
     query GetLayoutConfig($where: LayoutWhereInput!) {
   layouts(where: $where) {
@@ -22212,22 +22235,12 @@ export const GetPageDocument = gql`
     }
     id
     layout {
-      id
-      title
-      displayTitle
-      mirrorLayout
-      heroes {
-        ...Heroes
-      }
-      sections {
-        ... on Entity {
-          ...Entity
-        }
-      }
+      ...LayoutContent
     }
   }
 }
     ${SeoFragmentDoc}
+${LayoutContentFragmentDoc}
 ${HeroesFragmentDoc}
 ${LinkFragmentDoc}
 ${ResponsiveAssetFragmentDoc}

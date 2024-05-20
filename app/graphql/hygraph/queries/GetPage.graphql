@@ -5,23 +5,7 @@ query GetPage($where: PageWhereUniqueInput!) {
     }
     id
     layout {
-      id
-      title
-      displayTitle
-      mirrorLayout
-      heroes {
-        ...Heroes
-      }
-      sections {
-        ... on Entity {
-          ...Entity
-        }
-      }
+      ...LayoutContent
     }
   }
-}
-fragment Entity on Entity {
-  __typename
-  id
-  stage
 }

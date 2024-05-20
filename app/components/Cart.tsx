@@ -385,11 +385,17 @@ function ItemRemoveButton({lineId}: {lineId: CartLine['id']}) {
       }}
     >
       <button
-        className="flex items-center justify-center w-10 h-10 border rounded"
+        className="flex items-center justify-center w-10 h-10 border rounded group hover:bg-destructive "
         type="submit"
       >
         <span className="sr-only">{t('layout.cart.actions.removeItem')}</span>
-        <IconRemove aria-hidden="true" />
+        <IconRemove
+          height={'16'}
+          width={'16'}
+          viewBox={'0 0 20 20'}
+          aria-hidden="true"
+          className={'group-hover:stroke-destructive-foreground'}
+        />
       </button>
       <OptimisticInput id={lineId} data={{action: 'remove'}} />
     </CartForm>

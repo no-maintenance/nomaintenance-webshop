@@ -3,6 +3,7 @@ import type {Params} from '@remix-run/react';
 import type {AppSession} from '~/lib/session';
 import type {LockFragment} from '~/__generated__/hygraph.generated';
 import {isAfterDate} from '~/lib/utils';
+import {delocalizePath} from '~/i18n';
 
 enum PageType {
   Page,
@@ -44,6 +45,7 @@ const isActiveLock = (
   const {type, slug} = ctx;
 
   for (const e of exemptions) {
+    console.log('exemptions ', slug, e.slug);
     if (slug === e.slug) return false;
   }
 
@@ -104,18 +106,26 @@ export function findActiveLock(
   return a.length ? a.reduce(selectLockReducer) : null;
 }
 
-export const isHome = (req: Request) =>
-  new URL(req.url).pathname.split('/')[1] === '';
-export function getRouteSlugInfo(req: Request, params: Params): RouteSlugInfo {
+export const isHome = (req: Request, context: AppLoadContext) => {
+  const path = new URL(req.url).pathname;
+  const delocalizedPath = delocalizePath(path, context.i18n);
+  return delocalizedPath === '/';
+};
+export function getRouteSlugInfo(
+  context: AppLoadContext,
+  request: Request,
+  params: Params,
+): RouteSlugInfo {
   let s,
     type = PageType.Unknown;
-  const {slug, editorialHandle, productHandle, collectionHandle} = params;
-  if (isHome(req)) {
+  const {pageHandle, editorialHandle, productHandle, collectionHandle} = params;
+  console.log('params', params);
+  if (isHome(request, context)) {
     s = 'home';
     type = PageType.Page;
   }
-  if (slug) {
-    s = slug;
+  if (pageHandle) {
+    s = pageHandle;
     type = PageType.Page;
   }
   if (editorialHandle) {
@@ -130,6 +140,7 @@ export function getRouteSlugInfo(req: Request, params: Params): RouteSlugInfo {
     s = collectionHandle;
     type = PageType.Collection;
   }
+  console.log({slug: s, type});
   return {slug: s, type};
 }
 
@@ -139,7 +150,7 @@ export function getLock(
   params: Params,
   locks: LockFragment[],
 ) {
-  const routeCtx = getRouteSlugInfo(request, params);
+  const routeCtx = getRouteSlugInfo(context, request, params);
   // const locks = [];
   // const globalTheme = null;
   return findActiveLock(locks, routeCtx, context.session);

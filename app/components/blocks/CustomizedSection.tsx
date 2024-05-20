@@ -1,10 +1,9 @@
 import type {ElementType, ReactNode} from 'react';
-import {useContext} from 'react';
 import clsx from 'clsx';
 
 import type {BlockProps} from '~/components/blocks/BlockFactory';
 import {Block, BlockProvider} from '~/components/blocks/BlockFactory';
-import {ThemeConsumer, ChildThemeContext} from '~/components/ui/theme';
+import {ChildThemeContext, ThemeConsumer} from '~/components/ui/theme';
 import type {Maybe, SpacingFragment} from '~/__generated__/hygraph.generated';
 import {Sizes} from '~/__generated__/hygraph.generated';
 import {Slot} from '@radix-ui/react-slot';
@@ -31,6 +30,7 @@ export function CustomizedSection({
   return (
     <BlockProvider
       props={{
+        id,
         reverseLayout,
         horizontalPadding,
         alternateLayout,

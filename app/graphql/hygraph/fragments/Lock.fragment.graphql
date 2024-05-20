@@ -35,7 +35,7 @@ fragment Lock on Lock {
     ...ResponsiveAsset
   }
   customLockScreen {
-    ...LayoutConfig
+    ...Layout
   }
   password
   scheduledUnlockTime

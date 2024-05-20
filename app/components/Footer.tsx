@@ -1,5 +1,4 @@
-import {Section} from '~/components/Text';
-// import {KlaviyoNewsletter} from '~/components/KlavivyoForm';
+import {Section} from '~/components/Text'; // import {KlaviyoNewsletter} from '~/components/KlavivyoForm';
 import type {
   LinkFragment,
   Maybe,
@@ -7,13 +6,17 @@ import type {
 } from '~/__generated__/hygraph.generated';
 import {FooterStyle} from '~/__generated__/hygraph.generated';
 import {HygraphLink} from '~/components/blocks/fragment/HygraphLink';
+import {NewsletterForm} from '~/components/blocks/FormBlock';
+import {cn} from '~/lib/utils';
 
 export function Footer({
   menu,
   style,
+  location,
 }: {
   menu?: Maybe<NavigationFragment>;
   style: FooterStyle;
+  location: 'footer' | 'hamburger';
 }) {
   if (style === FooterStyle.Minimal) return <></>;
 
@@ -22,12 +25,15 @@ export function Footer({
       padding={'x'}
       as="footer"
       role="contentinfo"
-      className={`grid sm:mt-8 items-center w-full pt-8 pb-6 px-gutter gap-2 md:gap-4 grid-cols-1 md:grid-cols-2`}
+      className={cn(
+        location === 'footer' && 'sm:mt-8',
+        'grid items-center w-full pt-8 pb-6 px-gutter gap-2 md:gap-4 grid-cols-1 md:grid-cols-2',
+      )}
     >
       {menu && <FooterMenu menu={menu} />}
       <div className={'col-span-2 sm:col-span-1 flex sm:justify-center'}>
-        <div className={'sm:max-w-xs w-full max-w-[295px]'}>
-          {/*<KlaviyoNewsletter hasSubmitBtn={true} />*/}
+        <div className={'sm:max-w-md md:max-w-sm w-full max-w-[295px]'}>
+          <NewsletterForm id={'footer'} />
         </div>
       </div>
       <h6

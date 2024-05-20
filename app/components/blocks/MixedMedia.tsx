@@ -68,16 +68,18 @@ export function DuplexHygraph({
               maxHeight,
             )}
           >
-            {media.length > 1 && link ? (
+            {link ? (
               <HygraphLink hygraphLink={link}>
                 <HygraphMultiMedia
                   className={cn('w-full', maxHeight)}
                   aspect={mediaAspectRatio}
                   media={media}
+                  hasCarousel
                 />
               </HygraphLink>
             ) : (
               <HygraphMultiMedia
+                hasCarousel
                 className={cn('w-full', maxHeight)}
                 media={media}
                 aspect={mediaAspectRatio}

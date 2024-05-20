@@ -61,7 +61,14 @@ export default defineConfig({
   ],
   ssr: {
     optimizeDeps: {
-      include: ['cross-fetch', '@sentry/react', 'react-use', 'escape-html'],
+      include: [
+        'cross-fetch',
+        '@sentry/react',
+        'react-use',
+        'escape-html',
+        '@notionhq/client',
+        '@emailjs/client',
+      ],
     },
   },
 });

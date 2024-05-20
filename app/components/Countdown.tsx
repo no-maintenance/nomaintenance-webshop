@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {useMemo, useEffect, useState, createElement, Fragment} from 'react';
+import {createElement, Fragment, useEffect, useMemo, useState} from 'react';
 
 import {cn} from '~/lib/utils';
 import {Heading} from '~/components/Text';
@@ -25,10 +25,12 @@ type CountdownProps = {
 export enum TimerVariants {
   Ticker,
 }
+
 export enum CounterSize {
   Small,
   Large,
 }
+
 type TimerProps = {
   time: Time;
   variant?: TimerVariants;
@@ -39,39 +41,44 @@ export const Countdown = ({
   isLiveAtInit,
   children,
 }: CountdownProps) => {
-  const calculateTimeLeft = () => {
-    const difference = +new Date(launchDate) - +new Date();
-    const timeLeft: {
-      days: number;
-      hours: number;
-      minutes: number;
-      seconds: number;
-    } =
-      difference > 0
-        ? {
-            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-            minutes: Math.floor((difference / 1000 / 60) % 60),
-            seconds: Math.floor((difference / 1000) % 60),
-          }
-        : {
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-          };
-    return timeLeft;
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft().timeLeft);
   const [isLive, setIsLive] = useState<boolean>(isLiveAtInit);
   useEffect(() => {
     const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+      const {timeLeft, isLive} = calculateTimeLeft();
+      setTimeLeft(timeLeft);
+      setIsLive(isLive);
     }, 1000);
 
     return () => clearTimeout(timer);
   });
+  function calculateTimeLeft() {
+    const difference = +new Date(launchDate) - +new Date();
+    let isLive = false;
+    let timeLeft: {
+      days: number;
+      hours: number;
+      minutes: number;
+      seconds: number;
+    };
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    } else {
+      isLive = true;
+      timeLeft = {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+    }
+    return {timeLeft, isLive};
+  }
   return createElement(
     Fragment,
     null,
@@ -92,6 +99,7 @@ export function Timer({
       return <VerboseTimer time={time} size={size} />;
   }
 }
+
 function VerboseTimer({time, size}: Omit<TimerProps, 'variant'>) {
   const {days, hours, minutes, seconds} = time;
   const labelStyles = cn('hidden', CounterSize.Large === size && 'lg:inline');
@@ -105,19 +113,19 @@ function VerboseTimer({time, size}: Omit<TimerProps, 'variant'>) {
         'flex justify-center py-2 md:pb-8 flex-nowrap text-white font-bold timer',
       )}
     >
-      <div>
-        {days ? (
-          <>
+      {days ? (
+        <>
+          <div>
             <h3 className={'uppercase pt-2 lg:pt-1 whitespace-nowrap'}>
               {addZeroes(days)}
               <span className={labelStyles}>{days === 1 ? 'Day' : 'Days'}</span>
             </h3>
-            <div className={separatorStyles}>:</div>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
+          </div>
+          <div className={separatorStyles}>:</div>
+        </>
+      ) : (
+        <></>
+      )}
       <div>
         <h3 className={'uppercase pt-2 lg:pt-1 whitespace-nowrap'}>
           {addZeroes(hours)}
@@ -143,6 +151,7 @@ function VerboseTimer({time, size}: Omit<TimerProps, 'variant'>) {
     </div>
   );
 }
+
 export function CompactTimer({time, size}: Omit<TimerProps, 'variant'>) {
   return (
     <div>

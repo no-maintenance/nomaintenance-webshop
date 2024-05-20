@@ -98,11 +98,21 @@ export function Layout({
             {children}
           </main>
           <Suspense
-            fallback={<Footer style={layoutConfig?.footer} menu={null} />}
+            fallback={
+              <Footer
+                location={'footer'}
+                style={layoutConfig?.footer}
+                menu={null}
+              />
+            }
           >
             <Await resolve={navigations}>
               {(nav) => (
-                <Footer style={layoutConfig?.footer} menu={nav.footer} />
+                <Footer
+                  location={'footer'}
+                  style={layoutConfig?.footer}
+                  menu={nav.footer}
+                />
               )}
             </Await>
           </Suspense>

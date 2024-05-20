@@ -20,6 +20,7 @@ export type BlockProps<T extends BlockFragment['__typename']> = Extract<
   BlockFragment,
   {__typename: T}
 >;
+type BlockSettings = BlockSettingsFragment & {id?: string};
 const DEFAULT_BLOCK_SETTINGS = {
   reverseLayout: false,
   verticalPadding: Sizes.Default,
@@ -37,7 +38,7 @@ export function BlockFactory({blocks}: {blocks: GetEntitiesQuery}) {
       {entities &&
         entities.map((props) => {
           return (
-            <BlockProvider key={props.id}>
+            <BlockProvider id={props.id} key={props.id}>
               <Block {...props} />
             </BlockProvider>
           );
@@ -70,17 +71,18 @@ export function Block(props: BlockFragment) {
 }
 export function BlockProvider({
   children,
+  id,
   props = DEFAULT_BLOCK_SETTINGS,
 }: {
   children: ReactNode;
-  props?: Partial<BlockSettingsFragment>;
+  id: string;
+  props?: Partial<BlockSettings>;
 }) {
+  const settings = {id, ...props};
   return (
-    <BlockContext.Provider value={props}>{children}</BlockContext.Provider>
+    <BlockContext.Provider value={settings}>{children}</BlockContext.Provider>
   );
 }
 
-const BlockContext = createContext<BlockSettingsFragment>(
-  DEFAULT_BLOCK_SETTINGS,
-);
+const BlockContext = createContext<BlockSettings>(DEFAULT_BLOCK_SETTINGS);
 export const useSettings = () => useContext(BlockContext);

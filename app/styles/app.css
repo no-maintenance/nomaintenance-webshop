@@ -419,6 +419,10 @@ ul[role='listbox'] {
 }
 
 @layer components {
+  button > p.mb-4 {
+    @apply mb-0;
+  }
+
   .timer {
     &.timer-large {
       h3,

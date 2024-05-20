@@ -1,6 +1,5 @@
 import {Await, useLocation, useParams} from '@remix-run/react';
-import {ReactNode, RefObject, useEffect} from 'react';
-import {Suspense, useEffect, useMemo, useRef, useState, Fragment} from 'react';
+import {Fragment, Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {CartForm} from '@shopify/hydrogen';
 import {
   clearAllBodyScrollLocks,
@@ -43,6 +42,7 @@ import {
 import {LocaleSelector} from '~/components/LocaleSelector';
 import {Button} from '~/components/ui/button';
 import {Transition} from '@headlessui/react';
+import logo from '~/assets/logo.png?url';
 
 export function Header({
   title,
@@ -90,7 +90,7 @@ function MinimalHeader({headerStyle}: {headerStyle: HeaderStyle}) {
         className={
           'absolute top-0 md:left-0 left-1/2 md:-translate-x-0 -translate-x-1/2 w-[200px] sm:w-[250px] md:w-[300px] lg:w-[350px] z-10'
         }
-        src={'/logo.png'}
+        src={logo}
       />
       {headerStyle === HeaderStyle.MinimalNewsletterCta && (
         <div
@@ -175,7 +175,9 @@ function DesktopHeader({
       className={cn(
         'h-nav flex items-center bg-background sticky z-40 top-0 justify-between w-full gap-8 gutter py-8 transition-colors duration-500',
         isFluidHeader && 'bg-transparent',
-        isFluidHeader && !isOpen(DropdownState.HAMBURGER)
+        isFluidHeader &&
+          !isOpen(DropdownState.HAMBURGER) &&
+          !isOpen(DropdownState.SEARCH)
           ? 'text-background'
           : 'text-foreground',
       )}
@@ -207,17 +209,28 @@ function DesktopHeader({
         <nav className={'flex-1 z-60'}>
           <ul
             className={
-              ' flex justify-end items-center uppercase gap-4 md:gap-10'
+              ' flex justify-end items-center uppercase gap-4 sm:gap-6 md:gap-10'
             }
           >
-            <li className={'w-6 h-6 block sm-max:order-2'}>
+            <li
+              className={cn(
+                'w-6 h-6 sm:block',
+                DropdownState.HAMBURGER !== openDropdown ? 'hidden' : 'block',
+              )}
+            >
+              <LocaleSelector
+                open={DropdownState.COUNTRYSELECTOR === openDropdown}
+                onChange={() => toggle(DropdownState.COUNTRYSELECTOR)}
+              />
+            </li>
+            <li className={'w-6 h-6 block '}>
               <button onClick={() => toggle(DropdownState.SEARCH)}>
                 <IconSearch strokeWidth={1} width={'100%'} height={'100%'} />
               </button>
               {openDropdown === DropdownState.SEARCH && (
                 <div
                   className={
-                    'absolute w-full left-0 px-gutter bg-background z-50 top-0'
+                    'absolute w-full left-0  bg-background z-50 top-0 px-0 lg:px-gutter'
                   }
                 >
                   <PredictiveSearchForm>
@@ -270,7 +283,10 @@ function DesktopHeader({
                               'h-screen-no-nav overflow-auto hiddenScroll'
                             }
                           >
-                            <div ref={predictiveSearchRef}>
+                            <div
+                              ref={predictiveSearchRef}
+                              className={'px-gutter lg:px-0'}
+                            >
                               <PredictiveSearchResults />
                             </div>
                           </div>
@@ -281,18 +297,7 @@ function DesktopHeader({
                 </div>
               )}
             </li>
-            <li
-              className={cn(
-                'w-6 h-6 sm:block',
-                DropdownState.HAMBURGER !== openDropdown ? 'hidden' : 'block',
-              )}
-            >
-              <LocaleSelector
-                open={DropdownState.COUNTRYSELECTOR === openDropdown}
-                onChange={() => toggle(DropdownState.COUNTRYSELECTOR)}
-              />
-            </li>
-            <li className={'w-6 h-6 hidden sm-max:order-1 md:block'}>
+            <li className={'w-6 h-6 hidden md:block'}>
               <AccountLink />
             </li>
             <li className={'w-6 h-6'}>
@@ -415,12 +420,16 @@ const FullScreenNav = ({open, menu}: FullScreenNavProps) => {
               'flex-shrink-0 w-full hidden sm:flex justify-end flex-col'
             }
           >
-            <div className={'flex-1 border-b md:border-b-0'}></div>
+            <div className={'flex-1'}></div>
             <Suspense>
               <Await resolve={navigations}>
                 {(res) => {
                   return (
-                    <Footer style={FooterStyle.Default} menu={res.footer} />
+                    <Footer
+                      location={'hamburger'}
+                      style={FooterStyle.Default}
+                      menu={res.footer}
+                    />
                   );
                 }}
               </Await>

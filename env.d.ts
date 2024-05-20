@@ -12,8 +12,8 @@ import type {
   HydrogenSessionData,
 } from '@shopify/hydrogen';
 import type {AppSession} from '~/lib/session';
-import { createHygraphClient } from "~/lib/createHygraphClient.server";
-import { I18n } from "~/i18n";
+import {createHygraphClient} from '~/lib/createHygraphClient.server';
+import {I18n} from '~/i18n';
 
 declare global {
   /**
@@ -38,6 +38,7 @@ declare global {
     HYGRAPH_PROD_TOKEN: string;
     HYGRAPH_URL: string;
     KV_URL: string;
+    NOTION_TOKEN: string;
   }
 }
 
@@ -53,7 +54,8 @@ declare module '@shopify/remix-oxygen' {
     session: AppSession;
     waitUntil: ExecutionContext['waitUntil'];
     i18n: I18n;
-    hygraph: ReturnType<typeof createHygraphClient>}
+    hygraph: ReturnType<typeof createHygraphClient>;
+  }
 
   /**
    * Declare local additions to the Remix session data.

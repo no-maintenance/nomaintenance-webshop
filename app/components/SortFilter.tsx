@@ -1,12 +1,12 @@
 import type {SyntheticEvent} from 'react';
 import {useMemo, useState} from 'react';
-import {Menu, Disclosure} from '@headlessui/react';
+import {Disclosure} from '@headlessui/react';
 import type {Location} from '@remix-run/react';
 import {
   Link,
   useLocation,
-  useSearchParams,
   useNavigate,
+  useSearchParams,
 } from '@remix-run/react';
 import {useDebounce} from 'react-use';
 import type {
@@ -25,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import {Badge} from '~/components/ui/badge';
 
 export type AppliedFilter = {
   label: string;
@@ -170,13 +171,10 @@ function AppliedFilters({filters = []}: {filters: AppliedFilter[]}) {
           return (
             <Link
               to={getAppliedFilterLink(filter, params, location)}
-              className="flex px-2 border rounded-full gap"
+              className="flex px-2 rounded-full gap"
               key={`${filter.label}-${JSON.stringify(filter.filter)}`}
             >
-              <span className="flex-grow">{filter.label}</span>
-              <span>
-                <IconXMark />
-              </span>
+              <Badge>{filter.label}</Badge>
             </Link>
           );
         })}
