@@ -11,8 +11,7 @@ import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
 import {cn, isAfterDate} from '~/lib/utils';
 import {ClientOnly} from '~/lib/client-only';
 import {Countdown, CounterSize, Timer} from '~/components/Countdown';
-import {RichText} from '~/lib/react-renderer';
-import type {HeroComponentProps} from '~/components/Hero';
+import {RichText} from '~/components/rich-text/RichText';
 
 export function EventBlock() {
   return null;

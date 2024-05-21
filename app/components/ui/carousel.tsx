@@ -178,7 +178,7 @@ const CarouselWithCounter = React.forwardRef<
       <LazyMotion
         features={async () => (await import('~/lib/features')).default}
       >
-        <div className="my-1 flex gap-2 flex-row justify-center relative">
+        <div className="flex gap-2 flex-row justify-center relative">
           {[...Array(count)].map((_, idx) => {
             const i = idx + 1;
             return (

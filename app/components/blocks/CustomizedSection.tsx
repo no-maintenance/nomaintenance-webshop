@@ -29,8 +29,8 @@ export function CustomizedSection({
     );
   return (
     <BlockProvider
-      props={{
-        id,
+      id={id}
+      settings={{
         reverseLayout,
         horizontalPadding,
         alternateLayout,

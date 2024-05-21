@@ -9,23 +9,6 @@ import {SpacingWrapper} from '~/components/blocks/CustomizedSection';
 export function Archive({entries, id, media}: BlockProps<'Archive'>) {
   const settings = useSettings();
   const {verticalPadding, horizontalPadding} = settings;
-  if (media.length) {
-    return (
-      <SpacingWrapper spacing={{verticalPadding, horizontalPadding}}>
-        <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
-          {media.map((asset) => {
-            return (
-              <HygraphMultiMedia
-                key={asset.id}
-                media={[asset]}
-                className={'col-span-1'}
-              />
-            );
-          })}
-        </div>
-      </SpacingWrapper>
-    );
-  }
   if (!entries) return null;
   return (
     <SpacingWrapper spacing={{verticalPadding, horizontalPadding}}>

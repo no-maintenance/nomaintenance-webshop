@@ -12,7 +12,8 @@ import type {
 import type {ReactNode} from 'react';
 import {HygraphLink} from '~/components/blocks/fragment/HygraphLink';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
-import {DEFAULT_RENDERERS, RichText} from '~/components/rich-text';
+import {RichText} from '~/components/rich-text/RichText';
+import {DEFAULT_RENDERERS} from '~/components/rich-text/defaultElements';
 
 export function MixedMedia({
   __typename,
@@ -68,13 +69,12 @@ export function DuplexHygraph({
               maxHeight,
             )}
           >
-            {link ? (
+            {link && media.length < 2 ? (
               <HygraphLink hygraphLink={link}>
                 <HygraphMultiMedia
                   className={cn('w-full', maxHeight)}
                   aspect={mediaAspectRatio}
                   media={media}
-                  hasCarousel
                 />
               </HygraphLink>
             ) : (

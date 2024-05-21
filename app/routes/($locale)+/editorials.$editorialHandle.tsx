@@ -2,7 +2,8 @@ import {LoaderFunctionArgs, MetaArgs, json} from '@shopify/remix-oxygen';
 import {isValidLocaleServer} from '~/i18n/isValidLocaleServer';
 import {useLoaderData} from '@remix-run/react';
 import {PageHeader, Section} from '~/components/Text';
-import {DEFAULT_RENDERERS, RichText} from '~/components/rich-text';
+import {RichText} from '~/components/rich-text/RichText';
+import {DEFAULT_RENDERERS} from '~/components/rich-text/defaultElements';
 import {getSeoMeta} from '@shopify/hydrogen';
 import {seoPayload} from '~/lib/seo.server';
 

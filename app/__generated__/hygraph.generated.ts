@@ -2718,173 +2718,6 @@ export type ColorInput = {
   rgba?: InputMaybe<RgbaInput>;
 };
 
-export type ColorScheme = Entity & {
-  __typename?: 'ColorScheme';
-  /** The unique identifier */
-  id: Scalars['ID']['output'];
-  /** System stage field */
-  stage: Stage;
-};
-
-/** A connection to a list of items. */
-export type ColorSchemeConnection = {
-  __typename?: 'ColorSchemeConnection';
-  aggregate: Aggregate;
-  /** A list of edges. */
-  edges: Array<ColorSchemeEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-export type ColorSchemeCreateInput = {
-  /** No fields in create input */
-  _?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ColorSchemeCreateWithPositionInput = {
-  /** Document to create */
-  data: ColorSchemeCreateInput;
-  /** Position in the list of existing component instances, will default to appending at the end of list */
-  position?: InputMaybe<ConnectPositionInput>;
-};
-
-/** An edge in a connection. */
-export type ColorSchemeEdge = {
-  __typename?: 'ColorSchemeEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String']['output'];
-  /** The item at the end of the edge. */
-  node: ColorScheme;
-};
-
-/** Identifies documents */
-export type ColorSchemeManyWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: InputMaybe<Array<ColorSchemeWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: InputMaybe<Array<ColorSchemeWhereInput>>;
-  /** Logical OR on all given filters. */
-  OR?: InputMaybe<Array<ColorSchemeWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  _search?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  /** All values containing the given string. */
-  id_contains?: InputMaybe<Scalars['ID']['input']>;
-  /** All values ending with the given string. */
-  id_ends_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values that are contained in given list. */
-  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  id_not?: InputMaybe<Scalars['ID']['input']>;
-  /** All values not containing the given string. */
-  id_not_contains?: InputMaybe<Scalars['ID']['input']>;
-  /** All values not ending with the given string */
-  id_not_ends_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values that are not contained in given list. */
-  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
-  /** All values not starting with the given string. */
-  id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values starting with the given string. */
-  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
-};
-
-export enum ColorSchemeOrderByInput {
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC'
-}
-
-export type ColorSchemeUpdateInput = {
-  /** No fields in update input */
-  _?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ColorSchemeUpdateManyInput = {
-  /** No fields in updateMany data input */
-  _?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ColorSchemeUpdateManyWithNestedWhereInput = {
-  /** Update many input */
-  data: ColorSchemeUpdateManyInput;
-  /** Document search */
-  where: ColorSchemeWhereInput;
-};
-
-export type ColorSchemeUpdateWithNestedWhereUniqueAndPositionInput = {
-  /** Document to update */
-  data?: InputMaybe<ColorSchemeUpdateInput>;
-  /** Position in the list of existing component instances, will default to appending at the end of list */
-  position?: InputMaybe<ConnectPositionInput>;
-  /** Unique component instance search */
-  where: ColorSchemeWhereUniqueInput;
-};
-
-export type ColorSchemeUpdateWithNestedWhereUniqueInput = {
-  /** Document to update */
-  data: ColorSchemeUpdateInput;
-  /** Unique document search */
-  where: ColorSchemeWhereUniqueInput;
-};
-
-export type ColorSchemeUpsertInput = {
-  /** Create document if it didn't exist */
-  create: ColorSchemeCreateInput;
-  /** Update document if it exists */
-  update: ColorSchemeUpdateInput;
-};
-
-export type ColorSchemeUpsertWithNestedWhereUniqueAndPositionInput = {
-  /** Document to upsert */
-  data?: InputMaybe<ColorSchemeUpsertInput>;
-  /** Position in the list of existing component instances, will default to appending at the end of list */
-  position?: InputMaybe<ConnectPositionInput>;
-  /** Unique component instance search */
-  where: ColorSchemeWhereUniqueInput;
-};
-
-export type ColorSchemeUpsertWithNestedWhereUniqueInput = {
-  /** Upsert data */
-  data: ColorSchemeUpsertInput;
-  /** Unique document search */
-  where: ColorSchemeWhereUniqueInput;
-};
-
-/** Identifies documents */
-export type ColorSchemeWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: InputMaybe<Array<ColorSchemeWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: InputMaybe<Array<ColorSchemeWhereInput>>;
-  /** Logical OR on all given filters. */
-  OR?: InputMaybe<Array<ColorSchemeWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  _search?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  /** All values containing the given string. */
-  id_contains?: InputMaybe<Scalars['ID']['input']>;
-  /** All values ending with the given string. */
-  id_ends_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values that are contained in given list. */
-  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  id_not?: InputMaybe<Scalars['ID']['input']>;
-  /** All values not containing the given string. */
-  id_not_contains?: InputMaybe<Scalars['ID']['input']>;
-  /** All values not ending with the given string */
-  id_not_ends_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values that are not contained in given list. */
-  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
-  /** All values not starting with the given string. */
-  id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values starting with the given string. */
-  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
-};
-
-/** References ColorScheme record uniquely */
-export type ColorSchemeWhereUniqueInput = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type CombinedListing = Entity & Node & {
   __typename?: 'CombinedListing';
   /** The time the document was created */
@@ -5188,7 +5021,7 @@ export type EditorialMainContentRichTextReferencesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type EditorialMainContentRichTextEmbeddedTypes = Archive | Asset | Form;
+export type EditorialMainContentRichTextEmbeddedTypes = Asset | Form | Gallery;
 
 /** Identifies documents */
 export type EditorialManyWhereInput = {
@@ -5644,7 +5477,6 @@ export enum EntityTypeName {
   Asset = 'Asset',
   Block = 'Block',
   Collection = 'Collection',
-  ColorScheme = 'ColorScheme',
   CombinedListing = 'CombinedListing',
   CountdownComponent = 'CountdownComponent',
   /** Override the default appearance of a section using the available options */
@@ -5654,7 +5486,7 @@ export enum EntityTypeName {
   Event = 'Event',
   Form = 'Form',
   Gallery = 'Gallery',
-  Grid = 'Grid',
+  Hero = 'Hero',
   Layout = 'Layout',
   Link = 'Link',
   Lock = 'Lock',
@@ -6911,6 +6743,7 @@ export type Gallery = Entity & Node & {
   /** The unique identifier */
   id: Scalars['ID']['output'];
   internalName?: Maybe<Scalars['String']['output']>;
+  layouts: Array<Layout>;
   media: Array<Asset>;
   /** The time the document was published. Null on documents in draft stage. */
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6943,6 +6776,18 @@ export type GalleryHistoryArgs = {
   limit?: Scalars['Int']['input'];
   skip?: Scalars['Int']['input'];
   stageOverride?: InputMaybe<Stage>;
+};
+
+
+export type GalleryLayoutsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  locales?: InputMaybe<Array<Locale>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<LayoutWhereInput>;
 };
 
 
@@ -7002,6 +6847,7 @@ export type GalleryConnection = {
 export type GalleryCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   internalName?: InputMaybe<Scalars['String']['input']>;
+  layouts?: InputMaybe<LayoutCreateManyInlineInput>;
   media?: InputMaybe<AssetCreateManyInlineInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -7096,6 +6942,9 @@ export type GalleryManyWhereInput = {
   internalName_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   /** All values starting with the given string. */
   internalName_starts_with?: InputMaybe<Scalars['String']['input']>;
+  layouts_every?: InputMaybe<LayoutWhereInput>;
+  layouts_none?: InputMaybe<LayoutWhereInput>;
+  layouts_some?: InputMaybe<LayoutWhereInput>;
   media_every?: InputMaybe<AssetWhereInput>;
   media_none?: InputMaybe<AssetWhereInput>;
   media_some?: InputMaybe<AssetWhereInput>;
@@ -7151,6 +7000,7 @@ export enum GalleryOrderByInput {
 
 export type GalleryUpdateInput = {
   internalName?: InputMaybe<Scalars['String']['input']>;
+  layouts?: InputMaybe<LayoutUpdateManyInlineInput>;
   media?: InputMaybe<AssetUpdateManyInlineInput>;
 };
 
@@ -7291,6 +7141,9 @@ export type GalleryWhereInput = {
   internalName_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   /** All values starting with the given string. */
   internalName_starts_with?: InputMaybe<Scalars['String']['input']>;
+  layouts_every?: InputMaybe<LayoutWhereInput>;
+  layouts_none?: InputMaybe<LayoutWhereInput>;
+  layouts_some?: InputMaybe<LayoutWhereInput>;
   media_every?: InputMaybe<AssetWhereInput>;
   media_none?: InputMaybe<AssetWhereInput>;
   media_some?: InputMaybe<AssetWhereInput>;
@@ -7354,399 +7207,70 @@ export enum Global {
   Global = 'global'
 }
 
-export type Grid = Entity & Node & {
-  __typename?: 'Grid';
-  /** Sets the number of columns in the grid. Between 1 - 4 */
-  columns: Scalars['Int']['output'];
-  /** The time the document was created */
-  createdAt: Scalars['DateTime']['output'];
-  /** User that created this document */
-  createdBy?: Maybe<User>;
-  /** Get the document in other stages */
-  documentInStages: Array<Grid>;
-  /** List of Grid versions */
-  history: Array<Version>;
-  /** The unique identifier */
-  id: Scalars['ID']['output'];
-  internalName?: Maybe<Scalars['String']['output']>;
-  /** Defines how the grid is presented in the UI. Defaults to "sticky" */
-  presentation?: Maybe<GridTypes>;
-  /** The time the document was published. Null on documents in draft stage. */
-  publishedAt?: Maybe<Scalars['DateTime']['output']>;
-  /** User that last published this document */
-  publishedBy?: Maybe<User>;
-  scheduledIn: Array<ScheduledOperation>;
-  /** System stage field */
-  stage: Stage;
-  /** The time the document was updated */
-  updatedAt: Scalars['DateTime']['output'];
-  /** User that last updated this document */
-  updatedBy?: Maybe<User>;
-};
-
-
-export type GridCreatedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
-  locales?: InputMaybe<Array<Locale>>;
-};
-
-
-export type GridDocumentInStagesArgs = {
-  includeCurrent?: Scalars['Boolean']['input'];
-  inheritLocale?: Scalars['Boolean']['input'];
-  stages?: Array<Stage>;
-};
-
-
-export type GridHistoryArgs = {
-  limit?: Scalars['Int']['input'];
-  skip?: Scalars['Int']['input'];
-  stageOverride?: InputMaybe<Stage>;
-};
-
-
-export type GridPublishedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
-  locales?: InputMaybe<Array<Locale>>;
-};
-
-
-export type GridScheduledInArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  locales?: InputMaybe<Array<Locale>>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<ScheduledOperationWhereInput>;
-};
-
-
-export type GridUpdatedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
-  locales?: InputMaybe<Array<Locale>>;
-};
-
-export type GridConnectInput = {
-  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
-  position?: InputMaybe<ConnectPositionInput>;
-  /** Document to connect */
-  where: GridWhereUniqueInput;
-};
-
-/** A connection to a list of items. */
-export type GridConnection = {
-  __typename?: 'GridConnection';
-  aggregate: Aggregate;
-  /** A list of edges. */
-  edges: Array<GridEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-export type GridCreateInput = {
-  columns: Scalars['Int']['input'];
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  internalName?: InputMaybe<Scalars['String']['input']>;
-  presentation?: InputMaybe<GridTypes>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type GridCreateManyInlineInput = {
-  /** Connect multiple existing Grid documents */
-  connect?: InputMaybe<Array<GridWhereUniqueInput>>;
-  /** Create and connect multiple existing Grid documents */
-  create?: InputMaybe<Array<GridCreateInput>>;
-};
-
-export type GridCreateOneInlineInput = {
-  /** Connect one existing Grid document */
-  connect?: InputMaybe<GridWhereUniqueInput>;
-  /** Create and connect one Grid document */
-  create?: InputMaybe<GridCreateInput>;
-};
-
-/** An edge in a connection. */
-export type GridEdge = {
-  __typename?: 'GridEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String']['output'];
-  /** The item at the end of the edge. */
-  node: Grid;
-};
-
-/** Identifies documents */
-export type GridManyWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: InputMaybe<Array<GridWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: InputMaybe<Array<GridWhereInput>>;
-  /** Logical OR on all given filters. */
-  OR?: InputMaybe<Array<GridWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  _search?: InputMaybe<Scalars['String']['input']>;
-  columns?: InputMaybe<Scalars['Int']['input']>;
-  /** All values greater than the given value. */
-  columns_gt?: InputMaybe<Scalars['Int']['input']>;
-  /** All values greater than or equal the given value. */
-  columns_gte?: InputMaybe<Scalars['Int']['input']>;
-  /** All values that are contained in given list. */
-  columns_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  /** All values less than the given value. */
-  columns_lt?: InputMaybe<Scalars['Int']['input']>;
-  /** All values less than or equal the given value. */
-  columns_lte?: InputMaybe<Scalars['Int']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  columns_not?: InputMaybe<Scalars['Int']['input']>;
-  /** All values that are not contained in given list. */
-  columns_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than the given value. */
-  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than or equal the given value. */
-  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are contained in given list. */
-  createdAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  /** All values less than the given value. */
-  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values less than or equal the given value. */
-  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  createdAt_not?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are not contained in given list. */
-  createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  createdBy?: InputMaybe<UserWhereInput>;
-  documentInStages_every?: InputMaybe<GridWhereStageInput>;
-  documentInStages_none?: InputMaybe<GridWhereStageInput>;
-  documentInStages_some?: InputMaybe<GridWhereStageInput>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  /** All values containing the given string. */
-  id_contains?: InputMaybe<Scalars['ID']['input']>;
-  /** All values ending with the given string. */
-  id_ends_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values that are contained in given list. */
-  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  id_not?: InputMaybe<Scalars['ID']['input']>;
-  /** All values not containing the given string. */
-  id_not_contains?: InputMaybe<Scalars['ID']['input']>;
-  /** All values not ending with the given string */
-  id_not_ends_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values that are not contained in given list. */
-  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
-  /** All values not starting with the given string. */
-  id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
-  /** All values starting with the given string. */
-  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
-  internalName?: InputMaybe<Scalars['String']['input']>;
-  /** All values containing the given string. */
-  internalName_contains?: InputMaybe<Scalars['String']['input']>;
-  /** All values ending with the given string. */
-  internalName_ends_with?: InputMaybe<Scalars['String']['input']>;
-  /** All values that are contained in given list. */
-  internalName_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  internalName_not?: InputMaybe<Scalars['String']['input']>;
-  /** All values not containing the given string. */
-  internalName_not_contains?: InputMaybe<Scalars['String']['input']>;
-  /** All values not ending with the given string */
-  internalName_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  /** All values that are not contained in given list. */
-  internalName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** All values not starting with the given string. */
-  internalName_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  /** All values starting with the given string. */
-  internalName_starts_with?: InputMaybe<Scalars['String']['input']>;
-  presentation?: InputMaybe<GridTypes>;
-  /** All values that are contained in given list. */
-  presentation_in?: InputMaybe<Array<InputMaybe<GridTypes>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  presentation_not?: InputMaybe<GridTypes>;
-  /** All values that are not contained in given list. */
-  presentation_not_in?: InputMaybe<Array<InputMaybe<GridTypes>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than the given value. */
-  publishedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than or equal the given value. */
-  publishedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are contained in given list. */
-  publishedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  /** All values less than the given value. */
-  publishedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values less than or equal the given value. */
-  publishedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  publishedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are not contained in given list. */
-  publishedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  publishedBy?: InputMaybe<UserWhereInput>;
-  scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than the given value. */
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than or equal the given value. */
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are contained in given list. */
-  updatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  /** All values less than the given value. */
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values less than or equal the given value. */
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  updatedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are not contained in given list. */
-  updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-export enum GridOrderByInput {
-  ColumnsAsc = 'columns_ASC',
-  ColumnsDesc = 'columns_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  InternalNameAsc = 'internalName_ASC',
-  InternalNameDesc = 'internalName_DESC',
-  PresentationAsc = 'presentation_ASC',
-  PresentationDesc = 'presentation_DESC',
-  PublishedAtAsc = 'publishedAt_ASC',
-  PublishedAtDesc = 'publishedAt_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC'
-}
-
 export enum GridTypes {
   Spaced = 'spaced',
   Sticky = 'sticky',
   Tiles = 'tiles'
 }
 
-export type GridUpdateInput = {
-  columns?: InputMaybe<Scalars['Int']['input']>;
-  internalName?: InputMaybe<Scalars['String']['input']>;
-  presentation?: InputMaybe<GridTypes>;
+/** Customize the behaviour of the header. */
+export enum HeaderStyle {
+  Default = 'default',
+  Fluid = 'fluid',
+  Minimal = 'minimal',
+  MinimalNewsletterCta = 'minimalNewsletterCta',
+  None = 'none'
+}
+
+export type Hero = Entity & {
+  __typename?: 'Hero';
+  /** The unique identifier */
+  id: Scalars['ID']['output'];
+  /** System stage field */
+  stage: Stage;
 };
 
-export type GridUpdateManyInlineInput = {
-  /** Connect multiple existing Grid documents */
-  connect?: InputMaybe<Array<GridConnectInput>>;
-  /** Create and connect multiple Grid documents */
-  create?: InputMaybe<Array<GridCreateInput>>;
-  /** Delete multiple Grid documents */
-  delete?: InputMaybe<Array<GridWhereUniqueInput>>;
-  /** Disconnect multiple Grid documents */
-  disconnect?: InputMaybe<Array<GridWhereUniqueInput>>;
-  /** Override currently-connected documents with multiple existing Grid documents */
-  set?: InputMaybe<Array<GridWhereUniqueInput>>;
-  /** Update multiple Grid documents */
-  update?: InputMaybe<Array<GridUpdateWithNestedWhereUniqueInput>>;
-  /** Upsert multiple Grid documents */
-  upsert?: InputMaybe<Array<GridUpsertWithNestedWhereUniqueInput>>;
+/** A connection to a list of items. */
+export type HeroConnection = {
+  __typename?: 'HeroConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<HeroEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-export type GridUpdateManyInput = {
-  columns?: InputMaybe<Scalars['Int']['input']>;
-  internalName?: InputMaybe<Scalars['String']['input']>;
-  presentation?: InputMaybe<GridTypes>;
+export type HeroCreateInput = {
+  /** No fields in create input */
+  _?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type GridUpdateManyWithNestedWhereInput = {
-  /** Update many input */
-  data: GridUpdateManyInput;
-  /** Document search */
-  where: GridWhereInput;
+export type HeroCreateWithPositionInput = {
+  /** Document to create */
+  data: HeroCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
 };
 
-export type GridUpdateOneInlineInput = {
-  /** Connect existing Grid document */
-  connect?: InputMaybe<GridWhereUniqueInput>;
-  /** Create and connect one Grid document */
-  create?: InputMaybe<GridCreateInput>;
-  /** Delete currently connected Grid document */
-  delete?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Disconnect currently connected Grid document */
-  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Update single Grid document */
-  update?: InputMaybe<GridUpdateWithNestedWhereUniqueInput>;
-  /** Upsert single Grid document */
-  upsert?: InputMaybe<GridUpsertWithNestedWhereUniqueInput>;
-};
-
-export type GridUpdateWithNestedWhereUniqueInput = {
-  /** Document to update */
-  data: GridUpdateInput;
-  /** Unique document search */
-  where: GridWhereUniqueInput;
-};
-
-export type GridUpsertInput = {
-  /** Create document if it didn't exist */
-  create: GridCreateInput;
-  /** Update document if it exists */
-  update: GridUpdateInput;
-};
-
-export type GridUpsertWithNestedWhereUniqueInput = {
-  /** Upsert data */
-  data: GridUpsertInput;
-  /** Unique document search */
-  where: GridWhereUniqueInput;
-};
-
-/** This contains a set of filters that can be used to compare values internally */
-export type GridWhereComparatorInput = {
-  /** This field can be used to request to check if the entry is outdated by internal comparison */
-  outdated_to?: InputMaybe<Scalars['Boolean']['input']>;
+/** An edge in a connection. */
+export type HeroEdge = {
+  __typename?: 'HeroEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Hero;
 };
 
 /** Identifies documents */
-export type GridWhereInput = {
+export type HeroManyWhereInput = {
   /** Logical AND on all given filters. */
-  AND?: InputMaybe<Array<GridWhereInput>>;
+  AND?: InputMaybe<Array<HeroWhereInput>>;
   /** Logical NOT on all given filters combined by AND. */
-  NOT?: InputMaybe<Array<GridWhereInput>>;
+  NOT?: InputMaybe<Array<HeroWhereInput>>;
   /** Logical OR on all given filters. */
-  OR?: InputMaybe<Array<GridWhereInput>>;
+  OR?: InputMaybe<Array<HeroWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']['input']>;
-  columns?: InputMaybe<Scalars['Int']['input']>;
-  /** All values greater than the given value. */
-  columns_gt?: InputMaybe<Scalars['Int']['input']>;
-  /** All values greater than or equal the given value. */
-  columns_gte?: InputMaybe<Scalars['Int']['input']>;
-  /** All values that are contained in given list. */
-  columns_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  /** All values less than the given value. */
-  columns_lt?: InputMaybe<Scalars['Int']['input']>;
-  /** All values less than or equal the given value. */
-  columns_lte?: InputMaybe<Scalars['Int']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  columns_not?: InputMaybe<Scalars['Int']['input']>;
-  /** All values that are not contained in given list. */
-  columns_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than the given value. */
-  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than or equal the given value. */
-  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are contained in given list. */
-  createdAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  /** All values less than the given value. */
-  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values less than or equal the given value. */
-  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  createdAt_not?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are not contained in given list. */
-  createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  createdBy?: InputMaybe<UserWhereInput>;
-  documentInStages_every?: InputMaybe<GridWhereStageInput>;
-  documentInStages_none?: InputMaybe<GridWhereStageInput>;
-  documentInStages_some?: InputMaybe<GridWhereStageInput>;
   id?: InputMaybe<Scalars['ID']['input']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']['input']>;
@@ -7766,95 +7290,104 @@ export type GridWhereInput = {
   id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
   /** All values starting with the given string. */
   id_starts_with?: InputMaybe<Scalars['ID']['input']>;
-  internalName?: InputMaybe<Scalars['String']['input']>;
-  /** All values containing the given string. */
-  internalName_contains?: InputMaybe<Scalars['String']['input']>;
-  /** All values ending with the given string. */
-  internalName_ends_with?: InputMaybe<Scalars['String']['input']>;
-  /** All values that are contained in given list. */
-  internalName_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  internalName_not?: InputMaybe<Scalars['String']['input']>;
-  /** All values not containing the given string. */
-  internalName_not_contains?: InputMaybe<Scalars['String']['input']>;
-  /** All values not ending with the given string */
-  internalName_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  /** All values that are not contained in given list. */
-  internalName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** All values not starting with the given string. */
-  internalName_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  /** All values starting with the given string. */
-  internalName_starts_with?: InputMaybe<Scalars['String']['input']>;
-  presentation?: InputMaybe<GridTypes>;
-  /** All values that are contained in given list. */
-  presentation_in?: InputMaybe<Array<InputMaybe<GridTypes>>>;
-  /** Any other value that exists and is not equal to the given value. */
-  presentation_not?: InputMaybe<GridTypes>;
-  /** All values that are not contained in given list. */
-  presentation_not_in?: InputMaybe<Array<InputMaybe<GridTypes>>>;
-  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than the given value. */
-  publishedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than or equal the given value. */
-  publishedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are contained in given list. */
-  publishedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  /** All values less than the given value. */
-  publishedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values less than or equal the given value. */
-  publishedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  publishedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are not contained in given list. */
-  publishedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  publishedBy?: InputMaybe<UserWhereInput>;
-  scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than the given value. */
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values greater than or equal the given value. */
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are contained in given list. */
-  updatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  /** All values less than the given value. */
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values less than or equal the given value. */
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  /** Any other value that exists and is not equal to the given value. */
-  updatedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
-  /** All values that are not contained in given list. */
-  updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
-  updatedBy?: InputMaybe<UserWhereInput>;
 };
 
-/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
-export type GridWhereStageInput = {
+export enum HeroOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC'
+}
+
+export type HeroUpdateInput = {
+  /** No fields in update input */
+  _?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type HeroUpdateManyInput = {
+  /** No fields in updateMany data input */
+  _?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type HeroUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: HeroUpdateManyInput;
+  /** Document search */
+  where: HeroWhereInput;
+};
+
+export type HeroUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  data?: InputMaybe<HeroUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: HeroWhereUniqueInput;
+};
+
+export type HeroUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: HeroUpdateInput;
+  /** Unique document search */
+  where: HeroWhereUniqueInput;
+};
+
+export type HeroUpsertInput = {
+  /** Create document if it didn't exist */
+  create: HeroCreateInput;
+  /** Update document if it exists */
+  update: HeroUpdateInput;
+};
+
+export type HeroUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  data?: InputMaybe<HeroUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: HeroWhereUniqueInput;
+};
+
+export type HeroUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: HeroUpsertInput;
+  /** Unique document search */
+  where: HeroWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type HeroWhereInput = {
   /** Logical AND on all given filters. */
-  AND?: InputMaybe<Array<GridWhereStageInput>>;
+  AND?: InputMaybe<Array<HeroWhereInput>>;
   /** Logical NOT on all given filters combined by AND. */
-  NOT?: InputMaybe<Array<GridWhereStageInput>>;
+  NOT?: InputMaybe<Array<HeroWhereInput>>;
   /** Logical OR on all given filters. */
-  OR?: InputMaybe<Array<GridWhereStageInput>>;
-  /** This field contains fields which can be set as true or false to specify an internal comparison */
-  compareWithParent?: InputMaybe<GridWhereComparatorInput>;
-  /** Specify the stage to compare with */
-  stage?: InputMaybe<Stage>;
+  OR?: InputMaybe<Array<HeroWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']['input']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']['input']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
 };
 
-/** References Grid record uniquely */
-export type GridWhereUniqueInput = {
+/** References Hero record uniquely */
+export type HeroWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
-
-/** Customize the behaviour of the header. */
-export enum HeaderStyle {
-  Default = 'default',
-  Fluid = 'fluid',
-  Minimal = 'minimal',
-  MinimalNewsletterCta = 'minimalNewsletterCta'
-}
 
 export type ImageBlurInput = {
   /** The amount of blurring to apply to the image. The value must be an integer from 1 to 20. */
@@ -8444,7 +7977,7 @@ export enum LayoutOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC'
 }
 
-export type LayoutSections = Archive | Collection | CustomizedSection | Event | Form | Lock | MixedMedia | Product;
+export type LayoutSections = Archive | Collection | CustomizedSection | Event | Form | Gallery | Lock | MixedMedia | Product;
 
 export type LayoutSectionsConnectInput = {
   Archive?: InputMaybe<ArchiveConnectInput>;
@@ -8452,6 +7985,7 @@ export type LayoutSectionsConnectInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionConnectInput>;
   Event?: InputMaybe<EventConnectInput>;
   Form?: InputMaybe<FormConnectInput>;
+  Gallery?: InputMaybe<GalleryConnectInput>;
   Lock?: InputMaybe<LockConnectInput>;
   MixedMedia?: InputMaybe<MixedMediaConnectInput>;
   Product?: InputMaybe<ProductConnectInput>;
@@ -8463,6 +7997,7 @@ export type LayoutSectionsCreateInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionCreateInput>;
   Event?: InputMaybe<EventCreateInput>;
   Form?: InputMaybe<FormCreateInput>;
+  Gallery?: InputMaybe<GalleryCreateInput>;
   Lock?: InputMaybe<LockCreateInput>;
   MixedMedia?: InputMaybe<MixedMediaCreateInput>;
   Product?: InputMaybe<ProductCreateInput>;
@@ -8488,6 +8023,7 @@ export type LayoutSectionsUpdateInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionUpdateInput>;
   Event?: InputMaybe<EventUpdateInput>;
   Form?: InputMaybe<FormUpdateInput>;
+  Gallery?: InputMaybe<GalleryUpdateInput>;
   Lock?: InputMaybe<LockUpdateInput>;
   MixedMedia?: InputMaybe<MixedMediaUpdateInput>;
   Product?: InputMaybe<ProductUpdateInput>;
@@ -8516,6 +8052,7 @@ export type LayoutSectionsUpdateManyWithNestedWhereInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionUpdateManyWithNestedWhereInput>;
   Event?: InputMaybe<EventUpdateManyWithNestedWhereInput>;
   Form?: InputMaybe<FormUpdateManyWithNestedWhereInput>;
+  Gallery?: InputMaybe<GalleryUpdateManyWithNestedWhereInput>;
   Lock?: InputMaybe<LockUpdateManyWithNestedWhereInput>;
   MixedMedia?: InputMaybe<MixedMediaUpdateManyWithNestedWhereInput>;
   Product?: InputMaybe<ProductUpdateManyWithNestedWhereInput>;
@@ -8542,6 +8079,7 @@ export type LayoutSectionsUpdateWithNestedWhereUniqueInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionUpdateWithNestedWhereUniqueInput>;
   Event?: InputMaybe<EventUpdateWithNestedWhereUniqueInput>;
   Form?: InputMaybe<FormUpdateWithNestedWhereUniqueInput>;
+  Gallery?: InputMaybe<GalleryUpdateWithNestedWhereUniqueInput>;
   Lock?: InputMaybe<LockUpdateWithNestedWhereUniqueInput>;
   MixedMedia?: InputMaybe<MixedMediaUpdateWithNestedWhereUniqueInput>;
   Product?: InputMaybe<ProductUpdateWithNestedWhereUniqueInput>;
@@ -8553,6 +8091,7 @@ export type LayoutSectionsUpsertWithNestedWhereUniqueInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionUpsertWithNestedWhereUniqueInput>;
   Event?: InputMaybe<EventUpsertWithNestedWhereUniqueInput>;
   Form?: InputMaybe<FormUpsertWithNestedWhereUniqueInput>;
+  Gallery?: InputMaybe<GalleryUpsertWithNestedWhereUniqueInput>;
   Lock?: InputMaybe<LockUpsertWithNestedWhereUniqueInput>;
   MixedMedia?: InputMaybe<MixedMediaUpsertWithNestedWhereUniqueInput>;
   Product?: InputMaybe<ProductUpsertWithNestedWhereUniqueInput>;
@@ -8564,6 +8103,7 @@ export type LayoutSectionsWhereInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionWhereInput>;
   Event?: InputMaybe<EventWhereInput>;
   Form?: InputMaybe<FormWhereInput>;
+  Gallery?: InputMaybe<GalleryWhereInput>;
   Lock?: InputMaybe<LockWhereInput>;
   MixedMedia?: InputMaybe<MixedMediaWhereInput>;
   Product?: InputMaybe<ProductWhereInput>;
@@ -8575,6 +8115,7 @@ export type LayoutSectionsWhereUniqueInput = {
   CustomizedSection?: InputMaybe<CustomizedSectionWhereUniqueInput>;
   Event?: InputMaybe<EventWhereUniqueInput>;
   Form?: InputMaybe<FormWhereUniqueInput>;
+  Gallery?: InputMaybe<GalleryWhereUniqueInput>;
   Lock?: InputMaybe<LockWhereUniqueInput>;
   MixedMedia?: InputMaybe<MixedMediaWhereUniqueInput>;
   Product?: InputMaybe<ProductWhereUniqueInput>;
@@ -8872,12 +8413,12 @@ export type LayoutWhereUniqueInput = {
 
 export type Link = Entity & {
   __typename?: 'Link';
-  /** Pass any arbitrary URL to use for the link . If "Target (Internal)" is assigned, that will be used by default. */
+  /** Pass any arbitrary URL to use for the link . If an entry is also linked, it will take precedence over the URL */
   externalTarget?: Maybe<Scalars['String']['output']>;
   hasTargetBlank: Scalars['Boolean']['output'];
   /** The unique identifier */
   id: Scalars['ID']['output'];
-  /** Links to an internal page */
+  /** Reference an existing content entry as a page link */
   internalTarget?: Maybe<LinkInternalTarget>;
   label?: Maybe<Scalars['String']['output']>;
   /** System Locale field */
@@ -11096,8 +10637,6 @@ export type Mutation = {
   createForm?: Maybe<Form>;
   /** Create one gallery */
   createGallery?: Maybe<Gallery>;
-  /** Create one grid */
-  createGrid?: Maybe<Grid>;
   /** Create one layout */
   createLayout?: Maybe<Layout>;
   /** Create one lock */
@@ -11136,8 +10675,6 @@ export type Mutation = {
   deleteForm?: Maybe<Form>;
   /** Delete one gallery from _all_ existing stages. Returns deleted document. */
   deleteGallery?: Maybe<Gallery>;
-  /** Delete one grid from _all_ existing stages. Returns deleted document. */
-  deleteGrid?: Maybe<Grid>;
   /** Delete one layout from _all_ existing stages. Returns deleted document. */
   deleteLayout?: Maybe<Layout>;
   /** Delete one lock from _all_ existing stages. Returns deleted document. */
@@ -11205,13 +10742,6 @@ export type Mutation = {
   deleteManyGalleries: BatchPayload;
   /** Delete many Gallery documents, return deleted documents */
   deleteManyGalleriesConnection: GalleryConnection;
-  /**
-   * Delete many Grid documents
-   * @deprecated Please use the new paginated many mutation (deleteManyGridsConnection)
-   */
-  deleteManyGrids: BatchPayload;
-  /** Delete many Grid documents, return deleted documents */
-  deleteManyGridsConnection: GridConnection;
   /**
    * Delete many Layout documents
    * @deprecated Please use the new paginated many mutation (deleteManyLayoutsConnection)
@@ -11311,8 +10841,6 @@ export type Mutation = {
   publishForm?: Maybe<Form>;
   /** Publish one gallery */
   publishGallery?: Maybe<Gallery>;
-  /** Publish one grid */
-  publishGrid?: Maybe<Grid>;
   /** Publish one layout */
   publishLayout?: Maybe<Layout>;
   /** Publish one lock */
@@ -11380,13 +10908,6 @@ export type Mutation = {
   publishManyGalleries: BatchPayload;
   /** Publish many Gallery documents */
   publishManyGalleriesConnection: GalleryConnection;
-  /**
-   * Publish many Grid documents
-   * @deprecated Please use the new paginated many mutation (publishManyGridsConnection)
-   */
-  publishManyGrids: BatchPayload;
-  /** Publish many Grid documents */
-  publishManyGridsConnection: GridConnection;
   /**
    * Publish many Layout documents
    * @deprecated Please use the new paginated many mutation (publishManyLayoutsConnection)
@@ -11482,8 +11003,6 @@ export type Mutation = {
   schedulePublishForm?: Maybe<Form>;
   /** Schedule to publish one gallery */
   schedulePublishGallery?: Maybe<Gallery>;
-  /** Schedule to publish one grid */
-  schedulePublishGrid?: Maybe<Grid>;
   /** Schedule to publish one layout */
   schedulePublishLayout?: Maybe<Layout>;
   /** Schedule to publish one lock */
@@ -11520,8 +11039,6 @@ export type Mutation = {
   scheduleUnpublishForm?: Maybe<Form>;
   /** Unpublish one gallery from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   scheduleUnpublishGallery?: Maybe<Gallery>;
-  /** Unpublish one grid from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  scheduleUnpublishGrid?: Maybe<Grid>;
   /** Unpublish one layout from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   scheduleUnpublishLayout?: Maybe<Layout>;
   /** Unpublish one lock from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -11558,8 +11075,6 @@ export type Mutation = {
   unpublishForm?: Maybe<Form>;
   /** Unpublish one gallery from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   unpublishGallery?: Maybe<Gallery>;
-  /** Unpublish one grid from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  unpublishGrid?: Maybe<Grid>;
   /** Unpublish one layout from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   unpublishLayout?: Maybe<Layout>;
   /** Unpublish one lock from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -11627,13 +11142,6 @@ export type Mutation = {
   unpublishManyGalleries: BatchPayload;
   /** Find many Gallery documents that match criteria in specified stage and unpublish from target stages */
   unpublishManyGalleriesConnection: GalleryConnection;
-  /**
-   * Unpublish many Grid documents
-   * @deprecated Please use the new paginated many mutation (unpublishManyGridsConnection)
-   */
-  unpublishManyGrids: BatchPayload;
-  /** Find many Grid documents that match criteria in specified stage and unpublish from target stages */
-  unpublishManyGridsConnection: GridConnection;
   /**
    * Unpublish many Layout documents
    * @deprecated Please use the new paginated many mutation (unpublishManyLayoutsConnection)
@@ -11729,8 +11237,6 @@ export type Mutation = {
   updateForm?: Maybe<Form>;
   /** Update one gallery */
   updateGallery?: Maybe<Gallery>;
-  /** Update one grid */
-  updateGrid?: Maybe<Grid>;
   /** Update one layout */
   updateLayout?: Maybe<Layout>;
   /** Update one lock */
@@ -11798,13 +11304,6 @@ export type Mutation = {
   updateManyGalleries: BatchPayload;
   /** Update many Gallery documents */
   updateManyGalleriesConnection: GalleryConnection;
-  /**
-   * Update many grids
-   * @deprecated Please use the new paginated many mutation (updateManyGridsConnection)
-   */
-  updateManyGrids: BatchPayload;
-  /** Update many Grid documents */
-  updateManyGridsConnection: GridConnection;
   /**
    * Update many layouts
    * @deprecated Please use the new paginated many mutation (updateManyLayoutsConnection)
@@ -11902,8 +11401,6 @@ export type Mutation = {
   upsertForm?: Maybe<Form>;
   /** Upsert one gallery */
   upsertGallery?: Maybe<Gallery>;
-  /** Upsert one grid */
-  upsertGrid?: Maybe<Grid>;
   /** Upsert one layout */
   upsertLayout?: Maybe<Layout>;
   /** Upsert one lock */
@@ -11967,11 +11464,6 @@ export type MutationCreateFormArgs = {
 
 export type MutationCreateGalleryArgs = {
   data: GalleryCreateInput;
-};
-
-
-export type MutationCreateGridArgs = {
-  data: GridCreateInput;
 };
 
 
@@ -12067,11 +11559,6 @@ export type MutationDeleteFormArgs = {
 
 export type MutationDeleteGalleryArgs = {
   where: GalleryWhereUniqueInput;
-};
-
-
-export type MutationDeleteGridArgs = {
-  where: GridWhereUniqueInput;
 };
 
 
@@ -12217,21 +11704,6 @@ export type MutationDeleteManyGalleriesConnectionArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<GalleryManyWhereInput>;
-};
-
-
-export type MutationDeleteManyGridsArgs = {
-  where?: InputMaybe<GridManyWhereInput>;
-};
-
-
-export type MutationDeleteManyGridsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']['input']>;
-  before?: InputMaybe<Scalars['ID']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<GridManyWhereInput>;
 };
 
 
@@ -12481,12 +11953,6 @@ export type MutationPublishGalleryArgs = {
 };
 
 
-export type MutationPublishGridArgs = {
-  to?: Array<Stage>;
-  where: GridWhereUniqueInput;
-};
-
-
 export type MutationPublishLayoutArgs = {
   locales?: InputMaybe<Array<Locale>>;
   publishBase?: InputMaybe<Scalars['Boolean']['input']>;
@@ -12685,24 +12151,6 @@ export type MutationPublishManyGalleriesConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   to?: Array<Stage>;
   where?: InputMaybe<GalleryManyWhereInput>;
-};
-
-
-export type MutationPublishManyGridsArgs = {
-  to?: Array<Stage>;
-  where?: InputMaybe<GridManyWhereInput>;
-};
-
-
-export type MutationPublishManyGridsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']['input']>;
-  before?: InputMaybe<Scalars['ID']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  from?: InputMaybe<Stage>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  to?: Array<Stage>;
-  where?: InputMaybe<GridManyWhereInput>;
 };
 
 
@@ -13027,14 +12475,6 @@ export type MutationSchedulePublishGalleryArgs = {
 };
 
 
-export type MutationSchedulePublishGridArgs = {
-  releaseAt?: InputMaybe<Scalars['DateTime']['input']>;
-  releaseId?: InputMaybe<Scalars['String']['input']>;
-  to?: Array<Stage>;
-  where: GridWhereUniqueInput;
-};
-
-
 export type MutationSchedulePublishLayoutArgs = {
   locales?: InputMaybe<Array<Locale>>;
   publishBase?: InputMaybe<Scalars['Boolean']['input']>;
@@ -13199,14 +12639,6 @@ export type MutationScheduleUnpublishGalleryArgs = {
 };
 
 
-export type MutationScheduleUnpublishGridArgs = {
-  from?: Array<Stage>;
-  releaseAt?: InputMaybe<Scalars['DateTime']['input']>;
-  releaseId?: InputMaybe<Scalars['String']['input']>;
-  where: GridWhereUniqueInput;
-};
-
-
 export type MutationScheduleUnpublishLayoutArgs = {
   from?: Array<Stage>;
   locales?: InputMaybe<Array<Locale>>;
@@ -13346,12 +12778,6 @@ export type MutationUnpublishFormArgs = {
 export type MutationUnpublishGalleryArgs = {
   from?: Array<Stage>;
   where: GalleryWhereUniqueInput;
-};
-
-
-export type MutationUnpublishGridArgs = {
-  from?: Array<Stage>;
-  where: GridWhereUniqueInput;
 };
 
 
@@ -13544,24 +12970,6 @@ export type MutationUnpublishManyGalleriesConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   stage?: InputMaybe<Stage>;
   where?: InputMaybe<GalleryManyWhereInput>;
-};
-
-
-export type MutationUnpublishManyGridsArgs = {
-  from?: Array<Stage>;
-  where?: InputMaybe<GridManyWhereInput>;
-};
-
-
-export type MutationUnpublishManyGridsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']['input']>;
-  before?: InputMaybe<Scalars['ID']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  from?: Array<Stage>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  stage?: InputMaybe<Stage>;
-  where?: InputMaybe<GridManyWhereInput>;
 };
 
 
@@ -13845,12 +13253,6 @@ export type MutationUpdateGalleryArgs = {
 };
 
 
-export type MutationUpdateGridArgs = {
-  data: GridUpdateInput;
-  where: GridWhereUniqueInput;
-};
-
-
 export type MutationUpdateLayoutArgs = {
   data: LayoutUpdateInput;
   where: LayoutWhereUniqueInput;
@@ -14013,23 +13415,6 @@ export type MutationUpdateManyGalleriesConnectionArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<GalleryManyWhereInput>;
-};
-
-
-export type MutationUpdateManyGridsArgs = {
-  data: GridUpdateManyInput;
-  where?: InputMaybe<GridManyWhereInput>;
-};
-
-
-export type MutationUpdateManyGridsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']['input']>;
-  before?: InputMaybe<Scalars['ID']['input']>;
-  data: GridUpdateManyInput;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<GridManyWhereInput>;
 };
 
 
@@ -14285,12 +13670,6 @@ export type MutationUpsertFormArgs = {
 export type MutationUpsertGalleryArgs = {
   upsert: GalleryUpsertInput;
   where: GalleryWhereUniqueInput;
-};
-
-
-export type MutationUpsertGridArgs = {
-  upsert: GridUpsertInput;
-  where: GridWhereUniqueInput;
 };
 
 
@@ -16823,14 +16202,6 @@ export type Query = {
   gallery?: Maybe<Gallery>;
   /** Retrieve document version */
   galleryVersion?: Maybe<DocumentVersion>;
-  /** Retrieve a single grid */
-  grid?: Maybe<Grid>;
-  /** Retrieve document version */
-  gridVersion?: Maybe<DocumentVersion>;
-  /** Retrieve multiple grids */
-  grids: Array<Grid>;
-  /** Retrieve multiple grids using the Relay connection interface */
-  gridsConnection: GridConnection;
   /** Retrieve a single layout */
   layout?: Maybe<Layout>;
   /** Retrieve document version */
@@ -17271,44 +16642,6 @@ export type QueryGalleryArgs = {
 
 export type QueryGalleryVersionArgs = {
   where: VersionWhereInput;
-};
-
-
-export type QueryGridArgs = {
-  locales?: Array<Locale>;
-  stage?: Stage;
-  where: GridWhereUniqueInput;
-};
-
-
-export type QueryGridVersionArgs = {
-  where: VersionWhereInput;
-};
-
-
-export type QueryGridsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  locales?: Array<Locale>;
-  orderBy?: InputMaybe<GridOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  stage?: Stage;
-  where?: InputMaybe<GridWhereInput>;
-};
-
-
-export type QueryGridsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  locales?: Array<Locale>;
-  orderBy?: InputMaybe<GridOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  stage?: Stage;
-  where?: InputMaybe<GridWhereInput>;
 };
 
 
@@ -17871,7 +17204,7 @@ export type ScheduledOperationUpdatedByArgs = {
   locales?: InputMaybe<Array<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Archive | Asset | Collection | CombinedListing | CustomizedSection | Editorial | Event | Form | Gallery | Grid | Layout | Lock | MixedMedia | Navigation | Page | Person | Product | Seo | Theme;
+export type ScheduledOperationAffectedDocument = Archive | Asset | Collection | CombinedListing | CustomizedSection | Editorial | Event | Form | Gallery | Layout | Lock | MixedMedia | Navigation | Page | Person | Product | Seo | Theme;
 
 export type ScheduledOperationConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -20640,12 +19973,11 @@ export type ArchiveEntriesWhereUniqueInput = {
   Editorial?: InputMaybe<EditorialWhereUniqueInput>;
 };
 
-export type ContentContent = Form | Gallery | Grid | Lock | MixedMedia;
+export type ContentContent = Form | Gallery | Lock | MixedMedia;
 
 export type ContentContentConnectInput = {
   Form?: InputMaybe<FormConnectInput>;
   Gallery?: InputMaybe<GalleryConnectInput>;
-  Grid?: InputMaybe<GridConnectInput>;
   Lock?: InputMaybe<LockConnectInput>;
   MixedMedia?: InputMaybe<MixedMediaConnectInput>;
 };
@@ -20653,7 +19985,6 @@ export type ContentContentConnectInput = {
 export type ContentContentCreateInput = {
   Form?: InputMaybe<FormCreateInput>;
   Gallery?: InputMaybe<GalleryCreateInput>;
-  Grid?: InputMaybe<GridCreateInput>;
   Lock?: InputMaybe<LockCreateInput>;
   MixedMedia?: InputMaybe<MixedMediaCreateInput>;
 };
@@ -20675,7 +20006,6 @@ export type ContentContentCreateOneInlineInput = {
 export type ContentContentUpdateInput = {
   Form?: InputMaybe<FormUpdateInput>;
   Gallery?: InputMaybe<GalleryUpdateInput>;
-  Grid?: InputMaybe<GridUpdateInput>;
   Lock?: InputMaybe<LockUpdateInput>;
   MixedMedia?: InputMaybe<MixedMediaUpdateInput>;
 };
@@ -20700,7 +20030,6 @@ export type ContentContentUpdateManyInlineInput = {
 export type ContentContentUpdateManyWithNestedWhereInput = {
   Form?: InputMaybe<FormUpdateManyWithNestedWhereInput>;
   Gallery?: InputMaybe<GalleryUpdateManyWithNestedWhereInput>;
-  Grid?: InputMaybe<GridUpdateManyWithNestedWhereInput>;
   Lock?: InputMaybe<LockUpdateManyWithNestedWhereInput>;
   MixedMedia?: InputMaybe<MixedMediaUpdateManyWithNestedWhereInput>;
 };
@@ -20723,7 +20052,6 @@ export type ContentContentUpdateOneInlineInput = {
 export type ContentContentUpdateWithNestedWhereUniqueInput = {
   Form?: InputMaybe<FormUpdateWithNestedWhereUniqueInput>;
   Gallery?: InputMaybe<GalleryUpdateWithNestedWhereUniqueInput>;
-  Grid?: InputMaybe<GridUpdateWithNestedWhereUniqueInput>;
   Lock?: InputMaybe<LockUpdateWithNestedWhereUniqueInput>;
   MixedMedia?: InputMaybe<MixedMediaUpdateWithNestedWhereUniqueInput>;
 };
@@ -20731,7 +20059,6 @@ export type ContentContentUpdateWithNestedWhereUniqueInput = {
 export type ContentContentUpsertWithNestedWhereUniqueInput = {
   Form?: InputMaybe<FormUpsertWithNestedWhereUniqueInput>;
   Gallery?: InputMaybe<GalleryUpsertWithNestedWhereUniqueInput>;
-  Grid?: InputMaybe<GridUpsertWithNestedWhereUniqueInput>;
   Lock?: InputMaybe<LockUpsertWithNestedWhereUniqueInput>;
   MixedMedia?: InputMaybe<MixedMediaUpsertWithNestedWhereUniqueInput>;
 };
@@ -20739,7 +20066,6 @@ export type ContentContentUpsertWithNestedWhereUniqueInput = {
 export type ContentContentWhereInput = {
   Form?: InputMaybe<FormWhereInput>;
   Gallery?: InputMaybe<GalleryWhereInput>;
-  Grid?: InputMaybe<GridWhereInput>;
   Lock?: InputMaybe<LockWhereInput>;
   MixedMedia?: InputMaybe<MixedMediaWhereInput>;
 };
@@ -20747,7 +20073,6 @@ export type ContentContentWhereInput = {
 export type ContentContentWhereUniqueInput = {
   Form?: InputMaybe<FormWhereUniqueInput>;
   Gallery?: InputMaybe<GalleryWhereUniqueInput>;
-  Grid?: InputMaybe<GridWhereUniqueInput>;
   Lock?: InputMaybe<LockWhereUniqueInput>;
   MixedMedia?: InputMaybe<MixedMediaWhereUniqueInput>;
 };
@@ -21158,16 +20483,15 @@ export type LockPageLocksWhereUniqueInput = {
       "Form"
     ],
     "EditorialMainContentRichTextEmbeddedTypes": [
-      "Archive",
       "Asset",
-      "Form"
+      "Form",
+      "Gallery"
     ],
     "Entity": [
       "Archive",
       "Asset",
       "Block",
       "Collection",
-      "ColorScheme",
       "CombinedListing",
       "CountdownComponent",
       "CustomizedSection",
@@ -21176,7 +20500,7 @@ export type LockPageLocksWhereUniqueInput = {
       "Event",
       "Form",
       "Gallery",
-      "Grid",
+      "Hero",
       "Layout",
       "Link",
       "Lock",
@@ -21206,6 +20530,7 @@ export type LockPageLocksWhereUniqueInput = {
       "CustomizedSection",
       "Event",
       "Form",
+      "Gallery",
       "Lock",
       "MixedMedia",
       "Product"
@@ -21239,7 +20564,6 @@ export type LockPageLocksWhereUniqueInput = {
       "Event",
       "Form",
       "Gallery",
-      "Grid",
       "Layout",
       "Lock",
       "MixedMedia",
@@ -21263,7 +20587,6 @@ export type LockPageLocksWhereUniqueInput = {
       "Event",
       "Form",
       "Gallery",
-      "Grid",
       "Layout",
       "Lock",
       "MixedMedia",
@@ -21280,7 +20603,6 @@ export type LockPageLocksWhereUniqueInput = {
     "contentContent": [
       "Form",
       "Gallery",
-      "Grid",
       "Lock",
       "MixedMedia"
     ],
@@ -21310,9 +20632,11 @@ export type LockPageLocksWhereUniqueInput = {
     
 export type CollectionFragment = { __typename?: 'Collection', gid: string };
 
-export type EditorialContentFragment = { __typename?: 'EditorialMainContentRichText', json: any, references: Array<{ __typename?: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null }> };
+export type EditorialContentFragment = { __typename?: 'EditorialMainContentRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null } | { __typename?: 'Gallery', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> }> };
 
 export type FormFragment = { __typename?: 'Form', id: string, type?: FormTypes | null };
+
+export type GalleryFragment = { __typename?: 'Gallery', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
 
 type Heroes_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
 
@@ -21330,9 +20654,9 @@ export type HeroesFragment = Heroes_Collection_Fragment | Heroes_Editorial_Fragm
 
 export type ProductGidFragment = { __typename?: 'Product', gid: string };
 
-export type LayoutFragment = { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> };
+export type LayoutFragment = { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Gallery', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> };
 
-export type LayoutContentFragment = { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> };
+export type LayoutContentFragment = { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Gallery', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> };
 
 type Entity_Archive_Fragment = { __typename: 'Archive', id: string, stage: Stage };
 
@@ -21341,8 +20665,6 @@ type Entity_Asset_Fragment = { __typename: 'Asset', id: string, stage: Stage };
 type Entity_Block_Fragment = { __typename: 'Block', id: string, stage: Stage };
 
 type Entity_Collection_Fragment = { __typename: 'Collection', id: string, stage: Stage };
-
-type Entity_ColorScheme_Fragment = { __typename: 'ColorScheme', id: string, stage: Stage };
 
 type Entity_CombinedListing_Fragment = { __typename: 'CombinedListing', id: string, stage: Stage };
 
@@ -21360,7 +20682,7 @@ type Entity_Form_Fragment = { __typename: 'Form', id: string, stage: Stage };
 
 type Entity_Gallery_Fragment = { __typename: 'Gallery', id: string, stage: Stage };
 
-type Entity_Grid_Fragment = { __typename: 'Grid', id: string, stage: Stage };
+type Entity_Hero_Fragment = { __typename: 'Hero', id: string, stage: Stage };
 
 type Entity_Layout_Fragment = { __typename: 'Layout', id: string, stage: Stage };
 
@@ -21390,11 +20712,11 @@ type Entity_Theme_Fragment = { __typename: 'Theme', id: string, stage: Stage };
 
 type Entity_User_Fragment = { __typename: 'User', id: string, stage: Stage };
 
-export type EntityFragment = Entity_Archive_Fragment | Entity_Asset_Fragment | Entity_Block_Fragment | Entity_Collection_Fragment | Entity_ColorScheme_Fragment | Entity_CombinedListing_Fragment | Entity_CountdownComponent_Fragment | Entity_CustomizedSection_Fragment | Entity_DisplayOption_Fragment | Entity_Editorial_Fragment | Entity_Event_Fragment | Entity_Form_Fragment | Entity_Gallery_Fragment | Entity_Grid_Fragment | Entity_Layout_Fragment | Entity_Link_Fragment | Entity_Lock_Fragment | Entity_LockedSection_Fragment | Entity_MixedMedia_Fragment | Entity_Navigation_Fragment | Entity_Page_Fragment | Entity_Person_Fragment | Entity_Product_Fragment | Entity_ScheduledOperation_Fragment | Entity_ScheduledRelease_Fragment | Entity_Seo_Fragment | Entity_Theme_Fragment | Entity_User_Fragment;
+export type EntityFragment = Entity_Archive_Fragment | Entity_Asset_Fragment | Entity_Block_Fragment | Entity_Collection_Fragment | Entity_CombinedListing_Fragment | Entity_CountdownComponent_Fragment | Entity_CustomizedSection_Fragment | Entity_DisplayOption_Fragment | Entity_Editorial_Fragment | Entity_Event_Fragment | Entity_Form_Fragment | Entity_Gallery_Fragment | Entity_Hero_Fragment | Entity_Layout_Fragment | Entity_Link_Fragment | Entity_Lock_Fragment | Entity_LockedSection_Fragment | Entity_MixedMedia_Fragment | Entity_Navigation_Fragment | Entity_Page_Fragment | Entity_Person_Fragment | Entity_Product_Fragment | Entity_ScheduledOperation_Fragment | Entity_ScheduledRelease_Fragment | Entity_Seo_Fragment | Entity_Theme_Fragment | Entity_User_Fragment;
 
 export type LinkFragment = { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null };
 
-export type LockFragment = { __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null };
+export type LockFragment = { __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Gallery', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null };
 
 export type LockSectionFragment = { __typename?: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
 
@@ -21428,8 +20750,6 @@ type Block_Block_Fragment = { __typename?: 'Block', id: string };
 
 type Block_Collection_Fragment = { __typename: 'Collection', id: string, gid: string };
 
-type Block_ColorScheme_Fragment = { __typename?: 'ColorScheme', id: string };
-
 type Block_CombinedListing_Fragment = { __typename?: 'CombinedListing', id: string };
 
 type Block_CountdownComponent_Fragment = { __typename?: 'CountdownComponent', id: string };
@@ -21444,9 +20764,9 @@ type Block_Event_Fragment = { __typename: 'Event', id: string };
 
 type Block_Form_Fragment = { __typename: 'Form', id: string, type?: FormTypes | null };
 
-type Block_Gallery_Fragment = { __typename?: 'Gallery', id: string };
+type Block_Gallery_Fragment = { __typename: 'Gallery', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
 
-type Block_Grid_Fragment = { __typename?: 'Grid', id: string };
+type Block_Hero_Fragment = { __typename?: 'Hero', id: string };
 
 type Block_Layout_Fragment = { __typename?: 'Layout', id: string };
 
@@ -21476,7 +20796,7 @@ type Block_Theme_Fragment = { __typename?: 'Theme', id: string };
 
 type Block_User_Fragment = { __typename?: 'User', id: string };
 
-export type BlockFragment = Block_Archive_Fragment | Block_Asset_Fragment | Block_Block_Fragment | Block_Collection_Fragment | Block_ColorScheme_Fragment | Block_CombinedListing_Fragment | Block_CountdownComponent_Fragment | Block_CustomizedSection_Fragment | Block_DisplayOption_Fragment | Block_Editorial_Fragment | Block_Event_Fragment | Block_Form_Fragment | Block_Gallery_Fragment | Block_Grid_Fragment | Block_Layout_Fragment | Block_Link_Fragment | Block_Lock_Fragment | Block_LockedSection_Fragment | Block_MixedMedia_Fragment | Block_Navigation_Fragment | Block_Page_Fragment | Block_Person_Fragment | Block_Product_Fragment | Block_ScheduledOperation_Fragment | Block_ScheduledRelease_Fragment | Block_Seo_Fragment | Block_Theme_Fragment | Block_User_Fragment;
+export type BlockFragment = Block_Archive_Fragment | Block_Asset_Fragment | Block_Block_Fragment | Block_Collection_Fragment | Block_CombinedListing_Fragment | Block_CountdownComponent_Fragment | Block_CustomizedSection_Fragment | Block_DisplayOption_Fragment | Block_Editorial_Fragment | Block_Event_Fragment | Block_Form_Fragment | Block_Gallery_Fragment | Block_Hero_Fragment | Block_Layout_Fragment | Block_Link_Fragment | Block_Lock_Fragment | Block_LockedSection_Fragment | Block_MixedMedia_Fragment | Block_Navigation_Fragment | Block_Page_Fragment | Block_Person_Fragment | Block_Product_Fragment | Block_ScheduledOperation_Fragment | Block_ScheduledRelease_Fragment | Block_Seo_Fragment | Block_Theme_Fragment | Block_User_Fragment;
 
 export type BlockSettingsFragment = { __typename?: 'CustomizedSection', reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null };
 
@@ -21492,27 +20812,29 @@ type BlockPrimitive_Event_Fragment = { __typename: 'Event', id: string };
 
 type BlockPrimitive_Form_Fragment = { __typename: 'Form', id: string, type?: FormTypes | null };
 
+type BlockPrimitive_Gallery_Fragment = { __typename: 'Gallery', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
+
 type BlockPrimitive_Lock_Fragment = { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean };
 
 type BlockPrimitive_MixedMedia_Fragment = { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> };
 
 type BlockPrimitive_Product_Fragment = { __typename: 'Product', gid: string, id: string };
 
-export type BlockPrimitiveFragment = BlockPrimitive_Archive_Fragment | BlockPrimitive_Collection_Fragment | BlockPrimitive_CustomizedSection_Fragment | BlockPrimitive_Event_Fragment | BlockPrimitive_Form_Fragment | BlockPrimitive_Lock_Fragment | BlockPrimitive_MixedMedia_Fragment | BlockPrimitive_Product_Fragment;
+export type BlockPrimitiveFragment = BlockPrimitive_Archive_Fragment | BlockPrimitive_Collection_Fragment | BlockPrimitive_CustomizedSection_Fragment | BlockPrimitive_Event_Fragment | BlockPrimitive_Form_Fragment | BlockPrimitive_Gallery_Fragment | BlockPrimitive_Lock_Fragment | BlockPrimitive_MixedMedia_Fragment | BlockPrimitive_Product_Fragment;
 
 export type GetEditorialQueryVariables = Exact<{
   where: EditorialWhereUniqueInput;
 }>;
 
 
-export type GetEditorialQuery = { __typename?: 'Query', editorial?: { __typename?: 'Editorial', title?: string | null, id: string, publishedAt?: any | null, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, credits: Array<{ __typename?: 'Person', name: string, role?: string | null }>, artistStatement?: { __typename?: 'EditorialArtistStatementRichText', json: any, references: Array<{ __typename?: 'Form', id: string, type?: FormTypes | null }> } | null, excerpt?: { __typename?: 'RichText', text: string } | null, mainContent?: { __typename?: 'EditorialMainContentRichText', html: string, json: any, references: Array<{ __typename?: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null }> } | null } | null };
+export type GetEditorialQuery = { __typename?: 'Query', editorial?: { __typename?: 'Editorial', title?: string | null, id: string, publishedAt?: any | null, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, credits: Array<{ __typename?: 'Person', name: string, role?: string | null }>, artistStatement?: { __typename?: 'EditorialArtistStatementRichText', json: any, references: Array<{ __typename?: 'Form', id: string, type?: FormTypes | null }> } | null, excerpt?: { __typename?: 'RichText', text: string } | null, mainContent?: { __typename?: 'EditorialMainContentRichText', html: string, json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename?: 'Form', id: string, type?: FormTypes | null } | { __typename?: 'Gallery', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> }> } | null } | null };
 
 export type GetEntitiesQueryVariables = Exact<{
   where: Array<EntityWhereInput> | EntityWhereInput;
 }>;
 
 
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: Array<{ __typename: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> } | { __typename?: 'Asset', id: string } | { __typename?: 'Block', id: string } | { __typename: 'Collection', id: string, gid: string } | { __typename?: 'ColorScheme', id: string } | { __typename?: 'CombinedListing', id: string } | { __typename?: 'CountdownComponent', id: string } | { __typename: 'CustomizedSection', id: string, reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null, content?: { __typename: 'Collection', id: string, gid: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | null } | { __typename?: 'DisplayOption', id: string } | { __typename?: 'Editorial', id: string } | { __typename: 'Event', id: string } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename?: 'Gallery', id: string } | { __typename?: 'Grid', id: string } | { __typename?: 'Layout', id: string } | { __typename?: 'Link', id: string } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename?: 'LockedSection', id: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Navigation', id: string } | { __typename?: 'Page', id: string } | { __typename?: 'Person', id: string } | { __typename: 'Product', id: string, gid: string } | { __typename?: 'ScheduledOperation', id: string } | { __typename?: 'ScheduledRelease', id: string } | { __typename?: 'Seo', id: string } | { __typename?: 'Theme', id: string } | { __typename?: 'User', id: string }> | null };
+export type GetEntitiesQuery = { __typename?: 'Query', entities?: Array<{ __typename: 'Archive', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }>, entries: Array<{ __typename?: 'Editorial', id: string, title?: string | null, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null }> } | { __typename?: 'Asset', id: string } | { __typename?: 'Block', id: string } | { __typename: 'Collection', id: string, gid: string } | { __typename?: 'CombinedListing', id: string } | { __typename?: 'CountdownComponent', id: string } | { __typename: 'CustomizedSection', id: string, reverseLayout?: boolean | null, alternateLayout?: AlternateSectionLayout | null, heading?: string | null, verticalPadding?: Sizes | null, horizontalPadding?: Sizes | null, theme?: { __typename?: 'Theme', slug: string } | null, content?: { __typename: 'Collection', id: string, gid: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | null } | { __typename?: 'DisplayOption', id: string } | { __typename?: 'Editorial', id: string } | { __typename: 'Event', id: string } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Gallery', id: string, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Hero', id: string } | { __typename?: 'Layout', id: string } | { __typename?: 'Link', id: string } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename?: 'LockedSection', id: string } | { __typename: 'MixedMedia', id: string, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, body?: { __typename?: 'MixedMediaBodyRichText', json: any, references: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | { __typename: 'Collection' } | { __typename: 'Form', id: string, type?: FormTypes | null } | { __typename: 'Lock', id: string, isEnabled: boolean, isGlobal: boolean, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean } | { __typename: 'Page', id: string } | { __typename: 'Product' }> } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename?: 'Navigation', id: string } | { __typename?: 'Page', id: string } | { __typename?: 'Person', id: string } | { __typename: 'Product', id: string, gid: string } | { __typename?: 'ScheduledOperation', id: string } | { __typename?: 'ScheduledRelease', id: string } | { __typename?: 'Seo', id: string } | { __typename?: 'Theme', id: string } | { __typename?: 'User', id: string }> | null };
 
 export type GetGlobalsQueryVariables = Exact<{
   locksWhere: LockWhereInput;
@@ -21520,7 +20842,7 @@ export type GetGlobalsQueryVariables = Exact<{
 }>;
 
 
-export type GetGlobalsQuery = { __typename?: 'Query', locks: Array<{ __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null }>, layouts: Array<{ __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null }> };
+export type GetGlobalsQuery = { __typename?: 'Query', locks: Array<{ __typename?: 'Lock', slug: string, id: string, isEnabled: boolean, isGlobal: boolean, password?: string | null, scheduledUnlockTime?: any | null, alwaysUnlockForAuthenticatedUser: boolean, alwaysUnlockOnTime: boolean, pageLocks: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, exemptions: Array<{ __typename?: 'Collection', slug: string } | { __typename?: 'Editorial', slug: string } | { __typename?: 'Page', slug: string } | { __typename?: 'Product', slug: string }>, background?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, customLockScreen?: { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, theme?: { __typename?: 'Theme', slug: string } | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Gallery', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null }>, layouts: Array<{ __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null }> };
 
 export type GetLayoutConfigQueryVariables = Exact<{
   where: LayoutWhereInput;
@@ -21559,7 +20881,7 @@ export type GetPageQueryVariables = Exact<{
 }>;
 
 
-export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, layout?: { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null } | null };
+export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, seo?: { __typename?: 'Seo', title: string, hasTitleTemplate?: boolean | null, description: string, noIndex: boolean, image?: { __typename?: 'Asset', url: string, height?: number | null, width?: number | null, alt?: string | null } | null } | null, layout?: { __typename?: 'Layout', id: string, title?: string | null, displayTitle?: boolean | null, mirrorLayout?: boolean | null, heroes: Array<{ __typename: 'Collection', id: string, gid: string } | { __typename: 'Editorial', id: string, title?: string | null, slug: string, excerpt?: { __typename?: 'RichText', html: string } | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Event', id: string, title?: string | null, date?: any | null, hasReleasePage: boolean, slug: string, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null, excerpt?: { __typename?: 'RichText', html: string } | null } | { __typename: 'MixedMedia', id: string, title?: string | null, link?: { __typename?: 'Link', label?: string | null, title?: string | null, id: string, rel?: string | null, hasTargetBlank: boolean, externalTarget?: string | null, internalTarget?: { __typename: 'Collection', slug: string } | { __typename: 'Editorial', slug: string } | { __typename: 'Event', slug: string } | { __typename: 'Page', slug: string, staticPage?: StaticPage | null } | { __typename: 'Product', slug: string } | null } | null, excerpt?: { __typename?: 'MixedMediaBodyRichText', html: string } | null, media: Array<{ __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null }> } | { __typename: 'Page', id: string, title?: string | null, slug: string, staticPage?: StaticPage | null, featuredMedia?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string, portrait?: { __typename: 'Asset', id: string, alt?: string | null, mimeType?: string | null, height?: number | null, width?: number | null, url: string, thumbnail: string, small: string, medium: string, large: string, xlarge: string } | null } | null } | { __typename: 'Product', id: string, gid: string }>, sections: Array<{ __typename: 'Archive', id: string, stage: Stage } | { __typename: 'Collection', id: string, stage: Stage } | { __typename: 'CustomizedSection', id: string, stage: Stage } | { __typename: 'Event', id: string, stage: Stage } | { __typename: 'Form', id: string, stage: Stage } | { __typename: 'Gallery', id: string, stage: Stage } | { __typename: 'Lock', id: string, stage: Stage } | { __typename: 'MixedMedia', id: string, stage: Stage } | { __typename: 'Product', id: string, stage: Stage }> } | null } | null };
 
 export type GetStaticNavigationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21612,6 +20934,14 @@ export const ResponsiveAssetFragmentDoc = gql`
   }
 }
     `;
+export const GalleryFragmentDoc = gql`
+    fragment Gallery on Gallery {
+  id
+  media(first: 50) {
+    ...ResponsiveAsset
+  }
+}
+    `;
 export const FormFragmentDoc = gql`
     fragment Form on Form {
   id
@@ -21625,11 +20955,8 @@ export const EditorialContentFragmentDoc = gql`
     ... on Asset {
       ...ResponsiveAsset
     }
-    ... on Archive {
-      id
-      media {
-        ...ResponsiveAsset
-      }
+    ... on Gallery {
+      ...Gallery
     }
     ... on Form {
       id
@@ -22053,6 +21380,9 @@ export const BlockPrimitiveFragmentDoc = gql`
     id
     ...MixedMedia
   }
+  ... on Gallery {
+    ...Gallery
+  }
   ... on Archive {
     id
     media {
@@ -22151,7 +21481,8 @@ ${ResponsiveAssetFragmentDoc}
 ${AssetDetailsFragmentDoc}
 ${PersonFragmentDoc}
 ${FormFragmentDoc}
-${EditorialContentFragmentDoc}`;
+${EditorialContentFragmentDoc}
+${GalleryFragmentDoc}`;
 export const GetEntitiesDocument = gql`
     query GetEntities($where: [EntityWhereInput!]!) {
   entities(where: $where) {
@@ -22167,6 +21498,7 @@ ${RichTextFragmentDoc}
 ${ResponsiveAssetFragmentDoc}
 ${AssetDetailsFragmentDoc}
 ${FormFragmentDoc}
+${GalleryFragmentDoc}
 ${BlockSettingsFragmentDoc}
 ${SpacingFragmentDoc}`;
 export const GetGlobalsDocument = gql`

@@ -17,6 +17,7 @@ import {FormBlock} from '~/components/blocks/FormBlock';
 import {MixedMedia} from '~/components/blocks/MixedMedia';
 import {Lock} from '~/components/blocks/LockBlock';
 import {ProductBlock} from '~/components/blocks/ProductBlock';
+import {Gallery} from '~/components/blocks/Gallery';
 
 export type BlockProps<T extends BlockFragment['__typename']> = Extract<
   BlockFragment,
@@ -30,9 +31,11 @@ const DEFAULT_BLOCK_SETTINGS = {
   alternateLayout: AlternateSectionLayout.Default,
   heading: null,
 };
+
 export function BlockSkeletonFactory({outline}: {outline: EntityWhereInput[]}) {
   return null;
 }
+
 export function BlockFactory({blocks}: {blocks: GetEntitiesQuery}) {
   const {entities} = blocks;
   return (
@@ -48,6 +51,7 @@ export function BlockFactory({blocks}: {blocks: GetEntitiesQuery}) {
     </div>
   );
 }
+
 export function Block(props: BlockFragment) {
   switch (props.__typename) {
     case 'Collection':
@@ -64,6 +68,8 @@ export function Block(props: BlockFragment) {
       return <MixedMedia {...props} />;
     case 'Product':
       return <ProductBlock {...props} />;
+    case 'Gallery':
+      return <Gallery {...props} />;
     case 'CustomizedSection':
       return <CustomizedSection {...props} />;
     default:
@@ -71,18 +77,20 @@ export function Block(props: BlockFragment) {
       return null; // Return null or a placeholder component for unhandled types
   }
 }
+
 export function BlockProvider({
   children,
   id,
-  props = DEFAULT_BLOCK_SETTINGS,
+  settings = DEFAULT_BLOCK_SETTINGS,
 }: {
   children: ReactNode;
   id: string;
-  props?: Partial<BlockSettings>;
+  settings?: Partial<BlockSettings>;
 }) {
-  const settings = {id, ...props};
   return (
-    <BlockContext.Provider value={settings}>{children}</BlockContext.Provider>
+    <BlockContext.Provider value={{id, ...settings}}>
+      {children}
+    </BlockContext.Provider>
   );
 }
 

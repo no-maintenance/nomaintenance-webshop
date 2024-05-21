@@ -61,13 +61,7 @@ export default defineConfig({
   ],
   ssr: {
     optimizeDeps: {
-      include: [
-        'cross-fetch',
-        '@sentry/react',
-        'react-use',
-        'escape-html',
-        '@emailjs/client',
-      ],
+      include: ['cross-fetch', '@sentry/react', 'react-use', 'escape-html'],
     },
   },
 });

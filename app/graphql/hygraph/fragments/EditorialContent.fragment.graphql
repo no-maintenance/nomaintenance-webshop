@@ -4,11 +4,8 @@ fragment EditorialContent on EditorialMainContentRichText {
     ... on Asset {
       ...ResponsiveAsset
     }
-    ... on Archive {
-      id
-      media {
-        ...ResponsiveAsset
-      }
+    ... on Gallery {
+      ...Gallery
     }
     ... on Form {
       id

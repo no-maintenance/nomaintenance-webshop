@@ -7,11 +7,10 @@ import {Heading} from '~/components/Text';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
 import {cn, isAfterDate} from '~/lib/utils';
 import {Archive} from '~/components/blocks/Archive';
-import {BlockProvider} from '~/components/blocks/BlockFactory';
-import {Sizes} from '~/__generated__/hygraph.generated';
 import {FormBlock} from '~/components/blocks/FormBlock';
 import {CompactTimer, Countdown, CounterSize} from '~/components/Countdown';
 import {ClientOnly} from '~/lib/client-only';
+import {Gallery} from '~/components/blocks/Gallery';
 
 const __DEV__ = process.env.NODE_ENV;
 
@@ -139,18 +138,9 @@ export const DEFAULT_RENDERERS: NodeRendererType = {
     },
   },
   embed: {
+    Gallery: (data) => <Gallery {...data} />,
     Archive: (archive) => {
-      return (
-        <BlockProvider
-          props={{
-            verticalPadding: Sizes.None,
-            horizontalPadding: Sizes.None,
-            id: archive.id,
-          }}
-        >
-          <Archive {...archive} />
-        </BlockProvider>
-      );
+      return <Archive {...archive} />;
     },
     Form: (form) => {
       return <FormBlock variant={'embedded'} {...form} />;

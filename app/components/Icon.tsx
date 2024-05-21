@@ -256,9 +256,19 @@ export function IconGlobe(props: IconProps) {
   );
 }
 
-export function IconAccount(props: IconProps) {
+export function IconAccount({
+  height = '100%',
+  width = '100%',
+  ...props
+}: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon
+      {...props}
+      fill="transparent"
+      height={height}
+      width={width}
+      stroke={props.stroke || 'currentColor'}
+    >
       <title>Account</title>
       <path
         stroke="currentColor"
@@ -271,9 +281,19 @@ export function IconAccount(props: IconProps) {
   );
 }
 
-export function IconCart(props: IconProps) {
+export function IconCart({
+  height = '100%',
+  width = '100%',
+  ...props
+}: IconProps) {
   return (
-    <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
+    <Icon
+      {...props}
+      fill="transparent"
+      height={height}
+      width={width}
+      stroke={props.stroke || 'currentColor'}
+    >
       <title>Cart</title>
       <path
         stroke="currentColor"

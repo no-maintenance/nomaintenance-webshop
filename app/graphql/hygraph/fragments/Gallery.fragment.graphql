@@ -1,0 +1,6 @@
+fragment Gallery on Gallery {
+    id
+    media(first: 50) {
+        ...ResponsiveAsset
+    }
+}

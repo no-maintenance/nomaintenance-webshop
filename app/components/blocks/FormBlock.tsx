@@ -329,9 +329,8 @@ export function AppointmentForm() {
             <FormItem className="flex flex-col">
               <FormLabel>Availability</FormLabel>
               <FormDescription>
-                We are available from 9 - 5 every day. Please provide 1 or more
-                days that you&apos;re available for an appointment, then we will
-                confirm a time for you to come in.
+                Please select a date and time for your appointment. We will send
+                you a confirmation email once your appointment is booked.
               </FormDescription>
               <DateInput {...field} />
               <FormMessage />
