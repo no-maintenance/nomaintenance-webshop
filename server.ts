@@ -87,7 +87,6 @@ export default {
       });
       const m = await fetch(env.KV_URL + '/get');
       const lastModified = await m.text();
-      console.log('lastModified', lastModified);
       const hygraph = createHygraphClient({
         env,
         cache: await caches.open(HYGRAPH_CACHE_NAME),

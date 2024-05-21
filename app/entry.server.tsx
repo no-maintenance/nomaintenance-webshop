@@ -1,4 +1,4 @@
-import type {EntryContext} from '@shopify/remix-oxygen';
+import type {AppLoadContext, EntryContext} from '@shopify/remix-oxygen';
 import {RemixServer} from '@remix-run/react';
 import isbot from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
@@ -10,12 +10,17 @@ export default async function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
+  context: AppLoadContext,
 ) {
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
+    shop: {
+      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
+      storeDomain: context.env.PUBLIC_STORE_DOMAIN,
+    },
     connectSrc: [
       MODE === 'development' ? 'ws:' : null,
       MODE === 'development' ? 'testing.nomaintenance.us' : null,
-      process.env.SENTRY_DSN ? '*.sentry.io' : null,
+      context.env.SENTRY_DSN ? '*.sentry.io' : null,
       "'self'",
       'https://cdn.shopify.com',
       'blob:',
@@ -41,6 +46,7 @@ export default async function handleRequest(
       'https://unpkg.com',
       'https://cdn.shopify.com',
       MODE === 'development' ? 'testing.nomaintenance.us' : null,
+      'googletagmanager.com',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com'],
   });

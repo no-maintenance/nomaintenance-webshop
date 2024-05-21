@@ -168,7 +168,7 @@ function product({
     product?.seo?.description ?? product?.description ?? '',
   );
   return {
-    title: product?.seo?.title ?? product?.title,
+    title: `${product?.seo?.title ?? product?.title} | No Maintenance`,
     description,
     media: selectedVariant?.image,
     jsonLd: productJsonLd({product, selectedVariant, url}),

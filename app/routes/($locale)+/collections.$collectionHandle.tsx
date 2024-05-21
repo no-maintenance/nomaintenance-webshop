@@ -13,6 +13,7 @@ import {
   flattenConnection,
   getPaginationVariables,
   getSeoMeta,
+  UNSTABLE_Analytics as Analytics,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 
@@ -188,6 +189,14 @@ export default function Collection() {
           )}
         </Pagination>
       </SortFilter>
+      <Analytics.CollectionView
+        data={{
+          collection: {
+            id: collection.id,
+            handle: collection.handle,
+          },
+        }}
+      />
     </Section>
   );
 }

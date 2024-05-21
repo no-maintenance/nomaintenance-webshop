@@ -20,7 +20,9 @@ declare global {
    * A global `process` object is only available during build to access NODE_ENV.
    */
   const process: {env: {NODE_ENV: 'production' | 'development'}};
-
+  interface Window {
+    klaviyo: any;
+  }
   /**
    * Declare expected Env parameter in fetch handler.
    */
@@ -39,6 +41,9 @@ declare global {
     HYGRAPH_URL: string;
     KV_URL: string;
     NOTION_TOKEN: string;
+    SENTRY_DSN: string;
+    GOOGLE_TAG_MANAGER_ID: string;
+    KLAVIYO_COMPANY_ID: string;
   }
 }
 

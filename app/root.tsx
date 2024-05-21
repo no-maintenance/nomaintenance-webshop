@@ -3,25 +3,26 @@ import {
   CacheLong,
   getSeoMeta,
   getShopAnalytics,
+  UNSTABLE_Analytics as Analytics,
   useNonce,
 } from '@shopify/hydrogen';
-import {defer} from '@shopify/remix-oxygen';
 import type {
+  LoaderFunctionArgs,
   MetaArgs,
-  type SerializeFrom,
-  type LoaderFunctionArgs,
+  SerializeFrom,
 } from '@shopify/remix-oxygen';
+import {defer} from '@shopify/remix-oxygen';
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
+  ScrollRestoration,
+  type ShouldRevalidateFunction,
+  useLoaderData,
   useMatches,
   useRouteError,
-  useLoaderData,
-  ScrollRestoration,
-  isRouteErrorResponse,
-  type ShouldRevalidateFunction,
 } from '@remix-run/react';
 import appStyles from './styles/app.css?url';
 import customFont from './styles/custom-font.css?url';
@@ -30,16 +31,29 @@ import chromeShortcutIcon from './assets/android-chrome-512x512.png';
 import favicon32 from './assets/favicon-32x32.png';
 import type {GetThemesQuery} from '~/__generated__/hygraph.generated';
 import {
+  ChildThemeContext,
   createRootThemeCss,
+  DEFAULT_CHILD_THEME,
   GLOBAL_DEFAULT_VALUE,
   GlobalThemeContext,
-  ChildThemeContext,
-  DEFAULT_CHILD_THEME,
   ThemeConsumer,
 } from '~/components/ui/theme';
 import {seoPayload} from '~/lib/seo.server';
 import invariant from 'tiny-invariant';
 import {Toaster} from '~/components/ui/toaster';
+import {CustomAnalytics} from '~/components/analytics/CustomAnalytics';
+import {Partytown} from '@builder.io/partytown/react';
+import {cloneDeep, maybeProxyRequest} from '~/lib/utils';
+import {
+  useIsPresent,
+  m,
+  AnimatePresence,
+  domAnimation,
+  LazyMotion,
+} from 'framer-motion';
+import {forwardRef, useContext, useRef} from 'react';
+
+// import {parseAcceptLanguage} from 'intl-parse-accept-language';
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -130,18 +144,45 @@ export async function loader({context, request}: LoaderFunctionArgs) {
         checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
         storefrontAccessToken: context.env.PUBLIC_STOREFRONT_API_TOKEN,
       },
+      analyticsTokens: {
+        gtm: context.env.GOOGLE_TAG_MANAGER_ID,
+        klaviyo: context.env.KLAVIYO_COMPANY_ID,
+      },
     },
     {
       headers: {
         'Set-Cookie': await context.session.commit(),
+        // enable partytown atomic mode
+        // @see: https://partytown.builder.io/atomics
+        'Cross-Origin-Embedder-Policy': 'credentialless',
+        'Cross-Origin-Opener-Policy': 'same-origin',
       },
     },
   );
 }
+
 export const meta = ({data}: MetaArgs<typeof loader>) => {
   return getSeoMeta(data!.seo as SeoConfig);
 };
 
+export default function App() {
+  const nonce = useNonce();
+  const data = useLoaderData<typeof loader>();
+  return (
+    <Document
+      nonce={nonce}
+      lang={data.i18n.language.code}
+      themes={data?.themes}
+    >
+      <Outlet />
+      {/*<LazyMotion features={domAnimation}>*/}
+      {/*  <AnimatePresence mode="popLayout">*/}
+      {/*    <AnimatedOutlet key={nextMatch.id} />*/}
+      {/*  </AnimatePresence>*/}
+      {/*</LazyMotion>*/}
+    </Document>
+  );
+}
 export function Document({
   children,
   nonce = '',
@@ -160,6 +201,7 @@ export function Document({
   direction?: 'ltr' | 'rtl';
 }) {
   const t = createRootThemeCss(themes);
+  const data = useLoaderData<typeof loader>();
   return (
     <html dir={direction} lang={lang} className={`h-full`}>
       <head>
@@ -172,6 +214,63 @@ export function Document({
         {allowIndexing ? null : (
           <meta name="robots" content="noindex, nofollow" />
         )}
+        {/* GTM script fallback if js is disabled */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${data?.analyticsTokens?.gtm}`}
+            height="0"
+            width="0"
+            style={{display: 'none', visibility: 'hidden'}}
+          />
+        </noscript>
+        <Partytown
+          debug={true}
+          forward={[
+            'dataLayer.push',
+            'gtag',
+            'fbq',
+            'klaviyo.push',
+            'klaviyo.method',
+            'klaviyo.identify',
+          ]}
+          resolveUrl={maybeProxyRequest}
+        />
+        <script
+          type="text/partytown"
+          src={`https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=${data?.analyticsTokens?.klaviyo}`}
+        ></script>
+
+        {/* init GTM dataLayer container */}
+        {/*<script*/}
+        {/*  dangerouslySetInnerHTML={{*/}
+        {/*    __html: `*/}
+        {/*      dataLayer = window.dataLayer || [];*/}
+
+        {/*      function gtag(){*/}
+        {/*        dataLayer.push(arguments)*/}
+        {/*      };*/}
+
+        {/*      gtag('js', new Date());*/}
+        {/*      gtag('config', "${data?.analyticsTokens?.gtm}");*/}
+        {/*    `,*/}
+        {/*  }}*/}
+        {/*/>*/}
+
+        {/*/!* GTM script — loaded via a Partytown Web Worker *!/*/}
+        {/*<script*/}
+        {/*  type="text/partytown"*/}
+        {/*  dangerouslySetInnerHTML={{*/}
+        {/*    __html: `*/}
+        {/*    console.log('Loaded GTM script via partytown 🎉');*/}
+        {/*    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':*/}
+        {/*    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],*/}
+        {/*    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=*/}
+        {/*    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);*/}
+        {/*    })(window,document,'script','dataLayer', "${data?.analyticsTokens?.gtm}");*/}
+        {/*  `,*/}
+        {/*  }}*/}
+        {/*/>*/}
+
         <Meta />
         <Links />
       </head>
@@ -181,35 +280,29 @@ export function Document({
         >
           <ThemeConsumer asChild>
             <body>
-              {children}
-              <script
-                nonce={nonce}
-                dangerouslySetInnerHTML={{
-                  __html: `window.ENV = ${JSON.stringify(env)}`,
-                }}
-              />
+              <Analytics.Provider
+                cart={data?.cart}
+                shop={data?.shop}
+                consent={data?.consent}
+              >
+                {children}
+                <script
+                  nonce={nonce}
+                  dangerouslySetInnerHTML={{
+                    __html: `window.ENV = ${JSON.stringify(env)}`,
+                  }}
+                />
+
+                <Toaster />
+                <CustomAnalytics />
+              </Analytics.Provider>
               <ScrollRestoration nonce={nonce} />
               <Scripts nonce={nonce} />
-              <Toaster />
             </body>
           </ThemeConsumer>
         </ChildThemeContext.Provider>
       </GlobalThemeContext.Provider>
     </html>
-  );
-}
-
-export default function App() {
-  const nonce = useNonce();
-  const data = useLoaderData<typeof loader>();
-  return (
-    <Document
-      nonce={nonce}
-      lang={data.i18n.language.code}
-      themes={data?.themes}
-    >
-      <Outlet />
-    </Document>
   );
 }
 
@@ -246,6 +339,27 @@ export function ErrorBoundary() {
   );
 }
 
+// const AnimatedOutlet = forwardRef<HTMLDivElement>((_, ref) => {
+//   const RouterContext = getRouterContext();
+//
+//   const routerContext = useContext(RouterContext);
+//
+//   const renderedContext = useRef(routerContext);
+//
+//   const isPresent = useIsPresent();
+//
+//   if (isPresent) {
+//     renderedContext.current = cloneDeep(routerContext);
+//   }
+//
+//   return (
+//     <m.div ref={ref} {...transitionProps}>
+//       <RouterContext.Provider value={renderedContext.current}>
+//         <Outlet />
+//       </RouterContext.Provider>
+//     </m.div>
+//   );
+// });
 const LAYOUT_QUERY = `#graphql
 query layout(
     $language: LanguageCode
@@ -253,7 +367,7 @@ query layout(
     shop {
         ...Shop
     }
-   
+
 }
 fragment Shop on Shop {
     id

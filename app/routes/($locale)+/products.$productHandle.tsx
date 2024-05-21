@@ -1206,3 +1206,9 @@ query SizeGuide($language: LanguageCode, $id: ID!)
     }
 }
 ` as const;
+export const getFirstAvailableVariant = (v: ProductVariant[]) => {
+  for (let i = 0; i < v.length; i++) {
+    if (v[i].availableForSale) return v[i];
+  }
+  return v[0];
+};

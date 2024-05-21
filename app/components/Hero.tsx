@@ -109,6 +109,8 @@ function StickyHero({
 }) {
   const [stickyHero, ...gridHeroes] = heroes;
   const layout = useContext(LayoutContext);
+  // @todo investigate hydration error
+  // To reproduce go to `/cart` then goback to the home page (while homepage layout has a Default Header)
   const isFluid = layout.header === HeaderStyle.Fluid;
   return (
     <section className={'grid grid-cols-1 md:grid-cols-2 w-full gap-0'}>

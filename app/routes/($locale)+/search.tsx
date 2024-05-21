@@ -3,10 +3,14 @@
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, Form, useLoaderData} from '@remix-run/react';
 import {Suspense} from 'react';
-import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
+import {
+  getPaginationVariables,
+  Pagination,
+  UNSTABLE_Analytics as Analytics,
+} from '@shopify/hydrogen';
 import {useInView} from 'react-intersection-observer';
 
-import {PageHeader, Text, Section, Heading} from '~/components/Text';
+import {Heading, PageHeader, Section, Text} from '~/components/Text';
 import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
 import {seoPayload} from '~/lib/seo.server';
@@ -16,9 +20,8 @@ import {Grid} from '~/components/Grid';
 import {Button} from '~/components/ui/button';
 import {ProductSwimlane} from '~/components/ProductSwimlane';
 
-import {getFeaturedData, type FeaturedData} from '~/routes/featured-products';
+import {type FeaturedData, getFeaturedData} from '~/routes/featured-products';
 import {FeaturedCollections} from '~/components/FeaturedShopifyContent';
-import {Label} from '@radix-ui/react-select';
 import type {BaseI18n} from '~/i18n';
 
 export async function loader({
@@ -135,6 +138,7 @@ export default function Search() {
               );
             }}
           </Pagination>
+          <Analytics.SearchView data={{searchTerm, searchResults}} />
         </Section>
       )}
     </>

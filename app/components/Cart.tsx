@@ -8,6 +8,7 @@ import {
   Image,
   Money,
   OptimisticInput,
+  UNSTABLE_Analytics as Analytics,
   useOptimisticData,
 } from '@shopify/hydrogen';
 import type {
@@ -43,6 +44,7 @@ export function Cart({
     <>
       <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
       <CartDetails cart={cart} layout={layout} />
+      <Analytics.CartView />
     </>
   );
 }
@@ -219,7 +221,7 @@ function CartSummary({
   layout: Layouts;
 }) {
   const summary = {
-    drawer: ' grid gap-6 pt-6 pb-6 px-4 md:px-6',
+    drawer: 'grid-cols-1 grid gap-6 pt-6 pb-6 px-4 md:px-6',
     page: ' sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background rounded w-full',
   };
   const {t} = useTranslation();
@@ -254,15 +256,7 @@ function CartSummary({
             {t('layout.cart.calculatedAt')}
           </Text>
         </div>
-        {/* @todo add country selector */}
-        {/*  <Text as="dt" className={' whitespace-nowrap flex-1'}>*/}
-        {/*<div className="flex items-center justify-between font-medium">*/}
-        {/*    {t('layout.cart.shippingCountry')}*/}
-        {/*  </Text>*/}
-        {/*  <Text as="dd" className={'underline w-full ml-6 flex-initial'}>*/}
-        {/*    <CountrySelector />*/}
-        {/*  </Text>*/}
-        {/*</div>*/}
+
         <div className="flex items-center justify-between font-medium">
           <div className={'flex flex-wrap'}>
             <Text
@@ -298,7 +292,7 @@ function CartSummary({
         </div>
       </dl>
       {children}
-      <div></div>
+      <div className={'grow'}></div>
     </section>
   );
 }
