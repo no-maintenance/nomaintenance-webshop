@@ -192,6 +192,7 @@ export function Document({
   allowIndexing = true,
   direction = 'ltr',
   themes,
+  tokens,
 }: {
   themes?: GetThemesQuery;
   children: React.ReactNode;
