@@ -45,7 +45,6 @@ const isActiveLock = (
   const {type, slug} = ctx;
 
   for (const e of exemptions) {
-    console.log('exemptions ', slug, e.slug);
     if (slug === e.slug) return false;
   }
 
@@ -119,7 +118,6 @@ export function getRouteSlugInfo(
   let s,
     type = PageType.Unknown;
   const {pageHandle, editorialHandle, productHandle, collectionHandle} = params;
-  console.log('params', params);
   if (isHome(request, context)) {
     s = 'home';
     type = PageType.Page;
@@ -140,7 +138,6 @@ export function getRouteSlugInfo(
     s = collectionHandle;
     type = PageType.Collection;
   }
-  console.log({slug: s, type});
   return {slug: s, type};
 }
 

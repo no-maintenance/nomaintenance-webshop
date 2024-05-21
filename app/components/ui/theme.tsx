@@ -1,5 +1,5 @@
 import type {CSSProperties, ReactNode} from 'react';
-import {createContext, useContext, useState} from 'react';
+import {createContext, useContext} from 'react';
 
 import type {
   GetThemesQuery,
@@ -129,6 +129,7 @@ export const createRootThemeCss = (query?: GetThemesQuery) => {
   if (!query) return;
   const {themes, normal, light, dark} = query;
   const themeCSS: Record<string, Record<string, string>> = {};
+  if (!themes.length) return;
   for (const t of themes) {
     themeCSS[t.slug] = getThemeStyles(t);
   }

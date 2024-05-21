@@ -169,7 +169,6 @@ function NoResults({
           {(result) => {
             if (!result) return null;
             const {featuredCollections, featuredProducts} = result;
-            console.log('featuredCollections', featuredCollections);
             return (
               <Section padding={'y'}>
                 <FeaturedCollections

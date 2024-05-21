@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect} from 'react';
 import {ArrowLeftIcon, ArrowRightIcon} from '@radix-ui/react-icons';
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
@@ -7,7 +8,6 @@ import useEmblaCarousel, {
 import {cn} from '~/lib/utils';
 import {Button} from '~/components/ui/button';
 import {LazyMotion, m} from 'framer-motion';
-import {useEffect} from 'react';
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -266,7 +266,7 @@ const CarouselPrevious = React.forwardRef<
           onClick={scrollPrev}
           disabled={!canScrollPrev}
           ref={ref}
-          className={cn('absolute left-0 top-0 w-40 h-full', className)}
+          className={cn('absolute left-0 top-0 md:w-40 w-12 h-full', className)}
           {...props}
         ></button>
       );
@@ -309,7 +309,10 @@ const CarouselNext = React.forwardRef<
           onClick={scrollNext}
           disabled={!canScrollNext}
           ref={ref}
-          className={cn('absolute right-0 top-0 w-40 h-full', className)}
+          className={cn(
+            'absolute right-0 top-0 md:w-40 w-12 h-full',
+            className,
+          )}
           {...props}
         ></button>
       );

@@ -20,7 +20,6 @@ export async function getFeaturedData(
   i18n: BaseI18n,
   variables: {pageBy?: number} = {},
 ) {
-  console.log(i18n.language.code);
   const data = await storefront.query(FEATURED_ITEMS_QUERY, {
     variables: {
       pageBy: PAGINATION_SIZE,

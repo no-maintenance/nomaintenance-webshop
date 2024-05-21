@@ -317,6 +317,9 @@ export default function Product() {
               vendor: product.vendor,
               variantId: selectedVariant?.id || '',
               variantTitle: selectedVariant?.title || '',
+              image: selectedVariant.image.url,
+              handle: product.handle,
+              compareAtPrice: selectedVariant.compareAtPrice,
               quantity: 1,
             },
           ],
@@ -756,7 +759,6 @@ function SupportPopup() {
   const handleCopy = (text: string) => () => {
     copy(text)
       .then(() => {
-        console.log('Copied!', {text});
         setTooltipText('Copied to Clipboard!');
       })
       .catch((error) => {

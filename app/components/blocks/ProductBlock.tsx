@@ -276,7 +276,7 @@ function ProductVariantSelector({
   variants: ProductVariantFragmentFragment[];
   product: Product;
   setSelectedVariant: Dispatch<SetStateAction<ProductVariant>>;
-  selectedVariant;
+  selectedVariant: ProductVariant;
 }) {
   return (
     <VariantSelector

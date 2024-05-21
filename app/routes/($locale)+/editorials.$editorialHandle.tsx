@@ -18,7 +18,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     throw new Response(null, {status: 404});
   }
   const {seo, ...editorial} = page;
-  console.log('article', seoPayload.article({article: page, url: request.url}));
   return json({
     editorial,
     seo: seoPayload.article({article: page, url: request.url}),

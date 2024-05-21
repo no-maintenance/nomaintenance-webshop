@@ -22,6 +22,7 @@ declare global {
   const process: {env: {NODE_ENV: 'production' | 'development'}};
   interface Window {
     klaviyo: any;
+    fbq: any;
   }
   /**
    * Declare expected Env parameter in fetch handler.
@@ -44,6 +45,7 @@ declare global {
     SENTRY_DSN: string;
     GOOGLE_TAG_MANAGER_ID: string;
     KLAVIYO_COMPANY_ID: string;
+    META_PIXEL_ID: string;
   }
 }
 

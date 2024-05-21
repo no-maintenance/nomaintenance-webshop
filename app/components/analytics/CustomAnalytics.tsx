@@ -1,13 +1,16 @@
-import {unstable_useAnalytics as useAnalytics} from '@shopify/hydrogen';
+import {
+  getCustomerPrivacy,
+  unstable_useAnalytics as useAnalytics,
+} from '@shopify/hydrogen';
 import {useEffect} from 'react';
 import {
-  trackAddedToCart as klaviyoTrackAddedToCart,
   trackViewedProduct as klaviyoTrackViewedProduct,
+  trackAddedToCart as klaviyoTrackAddedToCart,
 } from '~/components/analytics/Klaviyo';
+import {metaAddToCart, trackMetaEvent} from '~/components/analytics/Meta';
 
 export function CustomAnalytics() {
-  const {subscribe} = useAnalytics();
-
+  const {subscribe, canTrack} = useAnalytics();
   useEffect(() => {
     // Standard events
     subscribe('page_viewed', (data) => {
@@ -23,13 +26,16 @@ export function CustomAnalytics() {
     subscribe('cart_viewed', (data) => {
       console.log('CustomAnalytics - Cart viewed:', data);
     });
+    subscribe('product_added_to_cart', (data) => {
+      console.log('CustomAnalytics - Product Added to Cart', data);
+      klaviyoTrackAddedToCart(data);
+      trackMetaEvent(metaAddToCart, data);
+    });
     subscribe('cart_updated', (data) => {
-      console.log('CustomAnalytics - Cart updated:', data);
-      const newQuantity = data.cart?.totalQuantity;
-      const oldQuantity = data.prevCart?.totalQuantity || 0;
-      if (newQuantity > oldQuantity) {
-        klaviyoTrackAddedToCart(data);
-      }
+      // const newQuantity = data.cart?.totalQuantity || 0;
+      // const oldQuantity = data.prevCart?.totalQuantity || 0;
+      // if (newQuantity > oldQuantity) {
+      // }
     });
 
     // Custom events

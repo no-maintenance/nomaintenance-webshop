@@ -43,15 +43,7 @@ import invariant from 'tiny-invariant';
 import {Toaster} from '~/components/ui/toaster';
 import {CustomAnalytics} from '~/components/analytics/CustomAnalytics';
 import {Partytown} from '@builder.io/partytown/react';
-import {cloneDeep, maybeProxyRequest} from '~/lib/utils';
-import {
-  useIsPresent,
-  m,
-  AnimatePresence,
-  domAnimation,
-  LazyMotion,
-} from 'framer-motion';
-import {forwardRef, useContext, useRef} from 'react';
+import {maybeProxyRequest} from '~/lib/utils'; // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
@@ -173,8 +165,16 @@ export default function App() {
       nonce={nonce}
       lang={data.i18n.language.code}
       themes={data?.themes}
+      tokens={data?.analyticsTokens}
     >
-      <Outlet />
+      <Analytics.Provider
+        cart={data?.cart}
+        shop={data?.shop}
+        consent={data?.consent}
+      >
+        <Outlet />
+        <CustomAnalytics />
+      </Analytics.Provider>
       {/*<LazyMotion features={domAnimation}>*/}
       {/*  <AnimatePresence mode="popLayout">*/}
       {/*    <AnimatedOutlet key={nextMatch.id} />*/}
@@ -183,6 +183,7 @@ export default function App() {
     </Document>
   );
 }
+
 export function Document({
   children,
   nonce = '',
@@ -199,9 +200,13 @@ export function Document({
   env?: Record<string, string>;
   allowIndexing?: boolean;
   direction?: 'ltr' | 'rtl';
+  tokens?: {
+    gtm?: string;
+    klaviyo?: string;
+    meta?: string;
+  };
 }) {
   const t = createRootThemeCss(themes);
-  const data = useLoaderData<typeof loader>();
   return (
     <html dir={direction} lang={lang} className={`h-full`}>
       <head>
@@ -214,15 +219,6 @@ export function Document({
         {allowIndexing ? null : (
           <meta name="robots" content="noindex, nofollow" />
         )}
-        {/* GTM script fallback if js is disabled */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${data?.analyticsTokens?.gtm}`}
-            height="0"
-            width="0"
-            style={{display: 'none', visibility: 'hidden'}}
-          />
-        </noscript>
         <Partytown
           debug={true}
           forward={[
@@ -233,44 +229,87 @@ export function Document({
             'klaviyo.method',
             'klaviyo.identify',
           ]}
+          nonce={nonce}
           resolveUrl={maybeProxyRequest}
         />
-        <script
-          type="text/partytown"
-          src={`https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=${data?.analyticsTokens?.klaviyo}`}
-        ></script>
+        {process.env.NODE_ENV === 'development' || !tokens?.gtm ? null : (
+          <>
+            <noscript>
+              <iframe
+                title={'google tag manager noscript'}
+                src={`https://www.googletagmanager.com/ns.html?id=${tokens?.gtm}`}
+                height="0"
+                width="0"
+                style={{display: 'none', visibility: 'hidden'}}
+              />
+            </noscript>
 
-        {/* init GTM dataLayer container */}
-        {/*<script*/}
-        {/*  dangerouslySetInnerHTML={{*/}
-        {/*    __html: `*/}
-        {/*      dataLayer = window.dataLayer || [];*/}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                dataLayer = window.dataLayer || [];
 
-        {/*      function gtag(){*/}
-        {/*        dataLayer.push(arguments)*/}
-        {/*      };*/}
+                function gtag(){
+                  dataLayer.push(arguments)
+                };
 
-        {/*      gtag('js', new Date());*/}
-        {/*      gtag('config', "${data?.analyticsTokens?.gtm}");*/}
-        {/*    `,*/}
-        {/*  }}*/}
-        {/*/>*/}
+                gtag('js', new Date());
+                gtag('config', "${tokens?.gtm}");
+              `,
+              }}
+            />
 
-        {/*/!* GTM script — loaded via a Partytown Web Worker *!/*/}
-        {/*<script*/}
-        {/*  type="text/partytown"*/}
-        {/*  dangerouslySetInnerHTML={{*/}
-        {/*    __html: `*/}
-        {/*    console.log('Loaded GTM script via partytown 🎉');*/}
-        {/*    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':*/}
-        {/*    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],*/}
-        {/*    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=*/}
-        {/*    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);*/}
-        {/*    })(window,document,'script','dataLayer', "${data?.analyticsTokens?.gtm}");*/}
-        {/*  `,*/}
-        {/*  }}*/}
-        {/*/>*/}
+            <script
+              type="text/partytown"
+              dangerouslySetInnerHTML={{
+                __html: `
+              console.log('Loaded GTM script via partytown 🎉');
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer', "${tokens?.gtm}");
+            `,
+              }}
+            />
+          </>
+        )}
+        {process.env.NODE_ENV === 'development' || !tokens?.klaviyo ? null : (
+          <script
+            type="text/partytown"
+            src={`https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=${tokens?.klaviyo}`}
+          ></script>
+        )}
+        {process.env.NODE_ENV === 'development' || !tokens?.meta ? null : (
+          <>
+            <noscript>
+              <img
+                height="1"
+                width="1"
+                style="display:none"
+                src={`https://www.facebook.com/tr?id=${tokens.meta}&ev=PageView&noscript=1`}
+              />
+            </noscript>
 
+            <script
+              type={'text/partytown'}
+              dangerouslySetInnerHTML={{
+                __html: `
+          !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '${tokens.meta}');
+        fbq('track', 'PageView');
+          `,
+              }}
+            ></script>
+          </>
+        )}
         <Meta />
         <Links />
       </head>
@@ -280,22 +319,16 @@ export function Document({
         >
           <ThemeConsumer asChild>
             <body>
-              <Analytics.Provider
-                cart={data?.cart}
-                shop={data?.shop}
-                consent={data?.consent}
-              >
-                {children}
-                <script
-                  nonce={nonce}
-                  dangerouslySetInnerHTML={{
-                    __html: `window.ENV = ${JSON.stringify(env)}`,
-                  }}
-                />
+              {children}
+              <script
+                nonce={nonce}
+                dangerouslySetInnerHTML={{
+                  __html: `window.ENV = ${JSON.stringify(env)}`,
+                }}
+              />
 
-                <Toaster />
-                <CustomAnalytics />
-              </Analytics.Provider>
+              <Toaster />
+
               <ScrollRestoration nonce={nonce} />
               <Scripts nonce={nonce} />
             </body>
