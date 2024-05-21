@@ -138,7 +138,7 @@ export default function Search() {
               );
             }}
           </Pagination>
-          <Analytics.SearchView data={{searchTerm, searchResults}} />
+          <Analytics.SearchView data={{searchTerm, searchResults: products}} />
         </Section>
       )}
     </>

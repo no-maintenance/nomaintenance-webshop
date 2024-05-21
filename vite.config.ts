@@ -4,7 +4,7 @@ import {oxygen} from '@shopify/mini-oxygen/vite';
 import {vitePlugin as remix} from '@remix-run/dev';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {flatRoutes} from 'remix-flat-routes';
-import {visualizer} from 'rollup-plugin-visualizer';
+// import {visualizer} from 'rollup-plugin-visualizer';
 
 const MODE = process.env.NODE_ENV;
 export default defineConfig({
@@ -48,16 +48,17 @@ export default defineConfig({
       buildDirectory: 'dist',
     }),
     tsconfigPaths(),
-    visualizer({
-      emitFile: true,
-      // template: 'network',
-      // template: 'raw-data',
-      // template: 'list',
-      // template: 'flamegraph',
-      // template: 'sunburst',
-      brotliSize: true,
-      gzipSize: true,
-    }),
+
+    // visualizer({
+    //   emitFile: true,
+    //   // template: 'network',
+    //   // template: 'raw-data',
+    //   // template: 'list',
+    //   // template: 'flamegraph',
+    //   // template: 'sunburst',
+    //   brotliSize: true,
+    //   gzipSize: true,
+    // }),
   ],
   ssr: {
     optimizeDeps: {
