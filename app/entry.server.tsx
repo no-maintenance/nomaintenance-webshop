@@ -39,7 +39,7 @@ export default async function handleRequest(
       'https://cdn.shopify.com',
       "'self'",
     ],
-    fontSrc: ["'self'"],
+    fontSrc: ["'self'", 'cdn.shopify.com'],
     frameSrc: ["'self'"],
     scriptSrc: [
       "'self'",
