@@ -26,6 +26,7 @@ export default async function handleRequest(
       'blob:',
       '*.klaviyo.com',
       'api.emailjs.com',
+      'preview.nomaintenance.us',
     ].filter(Boolean),
     imgSrc: [
       "'self'",
@@ -46,6 +47,7 @@ export default async function handleRequest(
       'https://unpkg.com',
       'https://cdn.shopify.com',
       MODE === 'development' ? 'testing.nomaintenance.us' : null,
+      'preview.nomaintenance.us',
       'googletagmanager.com',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com'],
