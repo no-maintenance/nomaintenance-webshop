@@ -233,11 +233,43 @@ fragment ProductVariantFragment on ProductVariant {
 `;
 
 export const PRODUCT_WIDGET_BY_IDS = `#graphql
-${PRODUCT_CARD_FRAGMENT}
 query FeaturedProductsByIds($ids: [ID!]!, $country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language)  {
     nodes(ids: $ids) {
         ... on Product {
-            ...ProductCard
+            id
+            title
+            publishedAt
+            handle
+            vendor
+            descriptionHtml
+            media(first: 6) {
+                nodes {
+                    ...Media
+                }
+            }
+            variants(first: 10) {
+                nodes {
+                    title
+                    id
+                    availableForSale
+                    price {
+                        amount
+                        currencyCode
+                    }
+                    compareAtPrice {
+                        amount
+                        currencyCode
+                    }
+                    selectedOptions {
+                        name
+                        value
+                    }
+                    product {
+                        handle
+                        title
+                    }
+                }
+            }
             options {
                 name
                 values
@@ -246,6 +278,7 @@ query FeaturedProductsByIds($ids: [ID!]!, $country: CountryCode, $language: Lang
         }
     }
 }
+${MEDIA_FRAGMENT}
 `;
 export const COLLECTION_FEED_QUERY = `#graphql
 query CollectionFeed(

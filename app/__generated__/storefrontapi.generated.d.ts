@@ -8,19 +8,35 @@ export type HomepageFeaturedCollectionsQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
+export type HomepageFeaturedCollectionsQuery = {
+  collections: {
+    nodes: Array<
+      Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle'> & {
+        image?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'altText' | 'width' | 'height' | 'url'>
+        >;
+      }
+    >;
+  };
+};
 
-export type HomepageFeaturedCollectionsQuery = { collections: { nodes: Array<(
-      Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle'>
-      & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'altText' | 'width' | 'height' | 'url'>> }
-    )> } };
-
-export type OrderCardFragment = (
-  Pick<StorefrontAPI.Order, 'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'>
-  & { currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, lineItems: { edges: Array<{ node: (
-        Pick<StorefrontAPI.OrderLineItem, 'title'>
-        & { variant?: StorefrontAPI.Maybe<{ image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>> }> }
-      ) }> } }
-);
+export type OrderCardFragment = Pick<
+  StorefrontAPI.Order,
+  'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'
+> & {
+  currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+  lineItems: {
+    edges: Array<{
+      node: Pick<StorefrontAPI.OrderLineItem, 'title'> & {
+        variant?: StorefrontAPI.Maybe<{
+          image?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>
+          >;
+        }>;
+      };
+    }>;
+  };
+};
 
 export type CollectionInfoQueryVariables = StorefrontAPI.Exact<{
   id: StorefrontAPI.Scalars['ID']['input'];
@@ -28,126 +44,338 @@ export type CollectionInfoQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
+export type CollectionInfoQuery = {
+  collection?: StorefrontAPI.Maybe<
+    Pick<
+      StorefrontAPI.Collection,
+      'id' | 'handle' | 'title' | 'descriptionHtml'
+    > & {
+      image?: StorefrontAPI.Maybe<
+        Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height' | 'altText'>
+      >;
+    }
+  >;
+};
 
-export type CollectionInfoQuery = { collection?: StorefrontAPI.Maybe<(
-    Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title' | 'descriptionHtml'>
-    & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height' | 'altText'>> }
-  )> };
+export type MoneyFragment = Pick<
+  StorefrontAPI.MoneyV2,
+  'currencyCode' | 'amount'
+>;
 
-export type MoneyFragment = Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+export type CartLineFragment = Pick<
+  StorefrontAPI.CartLine,
+  'id' | 'quantity'
+> & {
+  attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>;
+  cost: {
+    totalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+    amountPerQuantity: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+    compareAtAmountPerQuantity?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
+    >;
+  };
+  merchandise: Pick<
+    StorefrontAPI.ProductVariant,
+    'id' | 'availableForSale' | 'requiresShipping' | 'title'
+  > & {
+    compareAtPrice?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
+    >;
+    price: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>
+    >;
+    product: Pick<StorefrontAPI.Product, 'handle' | 'title' | 'id' | 'vendor'>;
+    selectedOptions: Array<
+      Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+    >;
+  };
+};
 
-export type CartLineFragment = (
-  Pick<StorefrontAPI.CartLine, 'id' | 'quantity'>
-  & { attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>, cost: { totalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, amountPerQuantity: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, compareAtAmountPerQuantity?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>> }, merchandise: (
-    Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale' | 'requiresShipping' | 'title'>
-    & { compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>>, price: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title' | 'id' | 'vendor'>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>> }
-  ) }
-);
+export type CartApiQueryFragment = Pick<
+  StorefrontAPI.Cart,
+  'updatedAt' | 'id' | 'checkoutUrl' | 'totalQuantity' | 'note'
+> & {
+  buyerIdentity: Pick<
+    StorefrontAPI.CartBuyerIdentity,
+    'countryCode' | 'email' | 'phone'
+  > & {
+    customer?: StorefrontAPI.Maybe<
+      Pick<
+        StorefrontAPI.Customer,
+        'id' | 'email' | 'firstName' | 'lastName' | 'displayName'
+      >
+    >;
+  };
+  lines: {
+    nodes: Array<
+      Pick<StorefrontAPI.CartLine, 'id' | 'quantity'> & {
+        attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>;
+        cost: {
+          totalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+          amountPerQuantity: Pick<
+            StorefrontAPI.MoneyV2,
+            'currencyCode' | 'amount'
+          >;
+          compareAtAmountPerQuantity?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
+          >;
+        };
+        merchandise: Pick<
+          StorefrontAPI.ProductVariant,
+          'id' | 'availableForSale' | 'requiresShipping' | 'title'
+        > & {
+          compareAtPrice?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
+          >;
+          price: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+          image?: StorefrontAPI.Maybe<
+            Pick<
+              StorefrontAPI.Image,
+              'id' | 'url' | 'altText' | 'width' | 'height'
+            >
+          >;
+          product: Pick<
+            StorefrontAPI.Product,
+            'handle' | 'title' | 'id' | 'vendor'
+          >;
+          selectedOptions: Array<
+            Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+          >;
+        };
+      }
+    >;
+  };
+  cost: {
+    subtotalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+    totalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>;
+    totalDutyAmount?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
+    >;
+    totalTaxAmount?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>
+    >;
+  };
+  attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>;
+  discountCodes: Array<
+    Pick<StorefrontAPI.CartDiscountCode, 'code' | 'applicable'>
+  >;
+};
 
-export type CartApiQueryFragment = (
-  Pick<StorefrontAPI.Cart, 'updatedAt' | 'id' | 'checkoutUrl' | 'totalQuantity' | 'note'>
-  & { buyerIdentity: (
-    Pick<StorefrontAPI.CartBuyerIdentity, 'countryCode' | 'email' | 'phone'>
-    & { customer?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Customer, 'id' | 'email' | 'firstName' | 'lastName' | 'displayName'>> }
-  ), lines: { nodes: Array<(
-      Pick<StorefrontAPI.CartLine, 'id' | 'quantity'>
-      & { attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>, cost: { totalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, amountPerQuantity: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, compareAtAmountPerQuantity?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>> }, merchandise: (
-        Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale' | 'requiresShipping' | 'title'>
-        & { compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>>, price: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title' | 'id' | 'vendor'>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>> }
-      ) }
-    )> }, cost: { subtotalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, totalAmount: Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>, totalDutyAmount?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>>, totalTaxAmount?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'currencyCode' | 'amount'>> }, attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>, discountCodes: Array<Pick<StorefrontAPI.CartDiscountCode, 'code' | 'applicable'>> }
-);
+type Media_ExternalVideo_Fragment = {__typename: 'ExternalVideo'} & Pick<
+  StorefrontAPI.ExternalVideo,
+  'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+> & {previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>};
 
-type Media_ExternalVideo_Fragment = (
-  { __typename: 'ExternalVideo' }
-  & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-  & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-);
+type Media_MediaImage_Fragment = {__typename: 'MediaImage'} & Pick<
+  StorefrontAPI.MediaImage,
+  'id' | 'mediaContentType' | 'alt'
+> & {
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+    >;
+    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
+  };
 
-type Media_MediaImage_Fragment = (
-  { __typename: 'MediaImage' }
-  & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-  & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-);
+type Media_Model3d_Fragment = {__typename: 'Model3d'} & Pick<
+  StorefrontAPI.Model3d,
+  'id' | 'mediaContentType' | 'alt'
+> & {
+    sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>;
+    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
+  };
 
-type Media_Model3d_Fragment = (
-  { __typename: 'Model3d' }
-  & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-  & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-);
+type Media_Video_Fragment = {__typename: 'Video'} & Pick<
+  StorefrontAPI.Video,
+  'id' | 'mediaContentType' | 'alt'
+> & {
+    sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>;
+    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
+  };
 
-type Media_Video_Fragment = (
-  { __typename: 'Video' }
-  & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-  & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-);
+export type MediaFragment =
+  | Media_ExternalVideo_Fragment
+  | Media_MediaImage_Fragment
+  | Media_Model3d_Fragment
+  | Media_Video_Fragment;
 
-export type MediaFragment = Media_ExternalVideo_Fragment | Media_MediaImage_Fragment | Media_Model3d_Fragment | Media_Video_Fragment;
+export type ProductCardFragment = Pick<
+  StorefrontAPI.Product,
+  'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
+> & {
+  media: {
+    nodes: Array<
+      | ({__typename: 'ExternalVideo'} & Pick<
+          StorefrontAPI.ExternalVideo,
+          'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+        > & {
+            previewImage?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Image, 'url'>
+            >;
+          })
+      | ({__typename: 'MediaImage'} & Pick<
+          StorefrontAPI.MediaImage,
+          'id' | 'mediaContentType' | 'alt'
+        > & {
+            image?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+            >;
+            previewImage?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Image, 'url'>
+            >;
+          })
+      | ({__typename: 'Model3d'} & Pick<
+          StorefrontAPI.Model3d,
+          'id' | 'mediaContentType' | 'alt'
+        > & {
+            sources: Array<
+              Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+            >;
+            previewImage?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Image, 'url'>
+            >;
+          })
+      | ({__typename: 'Video'} & Pick<
+          StorefrontAPI.Video,
+          'id' | 'mediaContentType' | 'alt'
+        > & {
+            sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>;
+            previewImage?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Image, 'url'>
+            >;
+          })
+    >;
+  };
+  variants: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.ProductVariant,
+        'title' | 'id' | 'availableForSale'
+      > & {
+        price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+        compareAtPrice?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+        >;
+        selectedOptions: Array<
+          Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+        >;
+        product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+      }
+    >;
+  };
+};
 
-export type ProductCardFragment = (
-  Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-  & { media: { nodes: Array<(
-      { __typename: 'ExternalVideo' }
-      & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-      & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-    ) | (
-      { __typename: 'MediaImage' }
-      & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-      & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-    ) | (
-      { __typename: 'Model3d' }
-      & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-      & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-    ) | (
-      { __typename: 'Video' }
-      & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-      & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-    )> }, variants: { nodes: Array<(
-      Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-      & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-    )> } }
-);
+export type FeaturedCollectionDetailsFragment = Pick<
+  StorefrontAPI.Collection,
+  'id' | 'title' | 'handle'
+> & {
+  image?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.Image, 'altText' | 'width' | 'height' | 'url'>
+  >;
+};
 
-export type FeaturedCollectionDetailsFragment = (
-  Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle'>
-  & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'altText' | 'width' | 'height' | 'url'>> }
-);
-
-export type ProductVariantFragmentFragment = (
-  Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale' | 'quantityAvailable' | 'sku' | 'title'>
-  & { selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>, price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, unitPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, product: Pick<StorefrontAPI.Product, 'title' | 'handle'> }
-);
+export type ProductVariantFragmentFragment = Pick<
+  StorefrontAPI.ProductVariant,
+  'id' | 'availableForSale' | 'quantityAvailable' | 'sku' | 'title'
+> & {
+  selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>;
+  image?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>
+  >;
+  price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+  compareAtPrice?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+  >;
+  unitPrice?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+  >;
+  product: Pick<StorefrontAPI.Product, 'title' | 'handle'>;
+};
 
 export type FeaturedProductsByIdsQueryVariables = StorefrontAPI.Exact<{
-  ids: Array<StorefrontAPI.Scalars['ID']['input']> | StorefrontAPI.Scalars['ID']['input'];
+  ids:
+    | Array<StorefrontAPI.Scalars['ID']['input']>
+    | StorefrontAPI.Scalars['ID']['input'];
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
-
-export type FeaturedProductsByIdsQuery = { nodes: Array<StorefrontAPI.Maybe<(
-    Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-    & { options: Array<Pick<StorefrontAPI.ProductOption, 'name' | 'values' | 'id'>>, media: { nodes: Array<(
-        { __typename: 'ExternalVideo' }
-        & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-        & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'MediaImage' }
-        & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-        & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'Model3d' }
-        & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-        & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'Video' }
-        & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-        & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      )> }, variants: { nodes: Array<(
-        Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-        & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-      )> } }
-  )>> };
+export type FeaturedProductsByIdsQuery = {
+  nodes: Array<
+    StorefrontAPI.Maybe<
+      Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'publishedAt' | 'handle' | 'vendor' | 'descriptionHtml'
+      > & {
+        media: {
+          nodes: Array<
+            | ({__typename: 'ExternalVideo'} & Pick<
+                StorefrontAPI.ExternalVideo,
+                'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+              > & {
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'MediaImage'} & Pick<
+                StorefrontAPI.MediaImage,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  image?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Model3d'} & Pick<
+                StorefrontAPI.Model3d,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Video'} & Pick<
+                StorefrontAPI.Video,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+          >;
+        };
+        variants: {
+          nodes: Array<
+            Pick<
+              StorefrontAPI.ProductVariant,
+              'title' | 'id' | 'availableForSale'
+            > & {
+              price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+              compareAtPrice?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+              >;
+              selectedOptions: Array<
+                Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+              >;
+              product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+            }
+          >;
+        };
+        options: Array<
+          Pick<StorefrontAPI.ProductOption, 'name' | 'values' | 'id'>
+        >;
+      }
+    >
+  >;
+};
 
 export type CollectionFeedQueryVariables = StorefrontAPI.Exact<{
   id: StorefrontAPI.Scalars['ID']['input'];
@@ -156,58 +384,159 @@ export type CollectionFeedQueryVariables = StorefrontAPI.Exact<{
   first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
 }>;
 
+export type CollectionFeedQuery = {
+  collection?: StorefrontAPI.Maybe<
+    Pick<
+      StorefrontAPI.Collection,
+      'id' | 'handle' | 'title' | 'descriptionHtml'
+    > & {
+      image?: StorefrontAPI.Maybe<
+        Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height' | 'altText'>
+      >;
+      products: {
+        nodes: Array<
+          Pick<
+            StorefrontAPI.Product,
+            'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
+          > & {
+            media: {
+              nodes: Array<
+                | ({__typename: 'ExternalVideo'} & Pick<
+                    StorefrontAPI.ExternalVideo,
+                    'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+                  > & {
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+                | ({__typename: 'MediaImage'} & Pick<
+                    StorefrontAPI.MediaImage,
+                    'id' | 'mediaContentType' | 'alt'
+                  > & {
+                      image?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.Image,
+                          'id' | 'url' | 'width' | 'height'
+                        >
+                      >;
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+                | ({__typename: 'Model3d'} & Pick<
+                    StorefrontAPI.Model3d,
+                    'id' | 'mediaContentType' | 'alt'
+                  > & {
+                      sources: Array<
+                        Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+                      >;
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+                | ({__typename: 'Video'} & Pick<
+                    StorefrontAPI.Video,
+                    'id' | 'mediaContentType' | 'alt'
+                  > & {
+                      sources: Array<
+                        Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
+                      >;
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+              >;
+            };
+            variants: {
+              nodes: Array<
+                Pick<
+                  StorefrontAPI.ProductVariant,
+                  'title' | 'id' | 'availableForSale'
+                > & {
+                  price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+                  compareAtPrice?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+                  >;
+                  selectedOptions: Array<
+                    Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+                  >;
+                  product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+                }
+              >;
+            };
+          }
+        >;
+      };
+    }
+  >;
+};
 
-export type CollectionFeedQuery = { collection?: StorefrontAPI.Maybe<(
-    Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title' | 'descriptionHtml'>
-    & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height' | 'altText'>>, products: { nodes: Array<(
-        Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-        & { media: { nodes: Array<(
-            { __typename: 'ExternalVideo' }
-            & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-            & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          ) | (
-            { __typename: 'MediaImage' }
-            & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-            & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          ) | (
-            { __typename: 'Model3d' }
-            & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-            & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          ) | (
-            { __typename: 'Video' }
-            & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-            & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          )> }, variants: { nodes: Array<(
-            Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-            & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-          )> } }
-      )> } }
-  )> };
+export type LayoutQueryVariables = StorefrontAPI.Exact<{
+  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
+}>;
 
-export type GetShopPrimaryDomainQueryVariables = StorefrontAPI.Exact<{ [key: string]: never; }>;
+export type LayoutQuery = {
+  shop: Pick<StorefrontAPI.Shop, 'id' | 'name' | 'description'> & {
+    primaryDomain: Pick<StorefrontAPI.Domain, 'url'>;
+    brand?: StorefrontAPI.Maybe<{
+      logo?: StorefrontAPI.Maybe<{
+        image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
+      }>;
+    }>;
+  };
+};
 
+export type ShopFragment = Pick<
+  StorefrontAPI.Shop,
+  'id' | 'name' | 'description'
+> & {
+  primaryDomain: Pick<StorefrontAPI.Domain, 'url'>;
+  brand?: StorefrontAPI.Maybe<{
+    logo?: StorefrontAPI.Maybe<{
+      image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
+    }>;
+  }>;
+};
 
-export type GetShopPrimaryDomainQuery = { shop: { primaryDomain: Pick<StorefrontAPI.Domain, 'url'> } };
+export type GetShopPrimaryDomainQueryVariables = StorefrontAPI.Exact<{
+  [key: string]: never;
+}>;
 
-export type PredictiveCollectionFragment = (
-  { __typename: 'Collection' }
-  & Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle' | 'trackingParameters'>
-  & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>> }
-);
+export type GetShopPrimaryDomainQuery = {
+  shop: {primaryDomain: Pick<StorefrontAPI.Domain, 'url'>};
+};
 
-export type PredictiveProductFragment = (
-  { __typename: 'Product' }
-  & Pick<StorefrontAPI.Product, 'id' | 'title' | 'handle' | 'trackingParameters'>
-  & { variants: { nodes: Array<(
-      Pick<StorefrontAPI.ProductVariant, 'id'>
-      & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>>, price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'> }
-    )> } }
-);
+export type PredictiveCollectionFragment = {__typename: 'Collection'} & Pick<
+  StorefrontAPI.Collection,
+  'id' | 'title' | 'handle' | 'trackingParameters'
+> & {
+    image?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+    >;
+  };
 
-export type PredictiveQueryFragment = (
-  { __typename: 'SearchQuerySuggestion' }
-  & Pick<StorefrontAPI.SearchQuerySuggestion, 'text' | 'styledText' | 'trackingParameters'>
-);
+export type PredictiveProductFragment = {__typename: 'Product'} & Pick<
+  StorefrontAPI.Product,
+  'id' | 'title' | 'handle' | 'trackingParameters'
+> & {
+    variants: {
+      nodes: Array<
+        Pick<StorefrontAPI.ProductVariant, 'id'> & {
+          image?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+          >;
+          price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+        }
+      >;
+    };
+  };
+
+export type PredictiveQueryFragment = {
+  __typename: 'SearchQuerySuggestion';
+} & Pick<
+  StorefrontAPI.SearchQuerySuggestion,
+  'text' | 'styledText' | 'trackingParameters'
+>;
 
 export type PredictiveSearchQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
@@ -215,71 +544,181 @@ export type PredictiveSearchQueryVariables = StorefrontAPI.Exact<{
   limit: StorefrontAPI.Scalars['Int']['input'];
   limitScope: StorefrontAPI.PredictiveSearchLimitScope;
   searchTerm: StorefrontAPI.Scalars['String']['input'];
-  types?: StorefrontAPI.InputMaybe<Array<StorefrontAPI.PredictiveSearchType> | StorefrontAPI.PredictiveSearchType>;
+  types?: StorefrontAPI.InputMaybe<
+    | Array<StorefrontAPI.PredictiveSearchType>
+    | StorefrontAPI.PredictiveSearchType
+  >;
 }>;
 
-
-export type PredictiveSearchQuery = { predictiveSearch?: StorefrontAPI.Maybe<{ collections: Array<(
-      { __typename: 'Collection' }
-      & Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle' | 'trackingParameters'>
-      & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>> }
-    )>, products: Array<(
-      { __typename: 'Product' }
-      & Pick<StorefrontAPI.Product, 'id' | 'title' | 'handle' | 'trackingParameters'>
-      & { variants: { nodes: Array<(
-          Pick<StorefrontAPI.ProductVariant, 'id'>
-          & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>>, price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'> }
-        )> } }
-    )>, queries: Array<(
-      { __typename: 'SearchQuerySuggestion' }
-      & Pick<StorefrontAPI.SearchQuerySuggestion, 'text' | 'styledText' | 'trackingParameters'>
-    )> }> };
+export type PredictiveSearchQuery = {
+  predictiveSearch?: StorefrontAPI.Maybe<{
+    collections: Array<
+      {__typename: 'Collection'} & Pick<
+        StorefrontAPI.Collection,
+        'id' | 'title' | 'handle' | 'trackingParameters'
+      > & {
+          image?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+          >;
+        }
+    >;
+    products: Array<
+      {__typename: 'Product'} & Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'handle' | 'trackingParameters'
+      > & {
+          variants: {
+            nodes: Array<
+              Pick<StorefrontAPI.ProductVariant, 'id'> & {
+                image?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'url' | 'altText' | 'width' | 'height'
+                  >
+                >;
+                price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+              }
+            >;
+          };
+        }
+    >;
+    queries: Array<
+      {__typename: 'SearchQuerySuggestion'} & Pick<
+        StorefrontAPI.SearchQuerySuggestion,
+        'text' | 'styledText' | 'trackingParameters'
+      >
+    >;
+  }>;
+};
 
 export type CollectionDetailsQueryVariables = StorefrontAPI.Exact<{
   handle: StorefrontAPI.Scalars['String']['input'];
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  filters?: StorefrontAPI.InputMaybe<Array<StorefrontAPI.ProductFilter> | StorefrontAPI.ProductFilter>;
+  filters?: StorefrontAPI.InputMaybe<
+    Array<StorefrontAPI.ProductFilter> | StorefrontAPI.ProductFilter
+  >;
   sortKey: StorefrontAPI.ProductCollectionSortKeys;
   reverse?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Boolean']['input']>;
   first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  startCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
-  endCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
+export type CollectionDetailsQuery = {
+  collection?: StorefrontAPI.Maybe<
+    Pick<
+      StorefrontAPI.Collection,
+      'id' | 'handle' | 'title' | 'description'
+    > & {
+      seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
+      image?: StorefrontAPI.Maybe<
+        Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height' | 'altText'>
+      >;
+      products: {
+        filters: Array<
+          Pick<StorefrontAPI.Filter, 'id' | 'label' | 'type'> & {
+            values: Array<
+              Pick<
+                StorefrontAPI.FilterValue,
+                'id' | 'label' | 'count' | 'input'
+              >
+            >;
+          }
+        >;
+        nodes: Array<
+          Pick<
+            StorefrontAPI.Product,
+            'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
+          > & {
+            media: {
+              nodes: Array<
+                | ({__typename: 'ExternalVideo'} & Pick<
+                    StorefrontAPI.ExternalVideo,
+                    'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+                  > & {
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+                | ({__typename: 'MediaImage'} & Pick<
+                    StorefrontAPI.MediaImage,
+                    'id' | 'mediaContentType' | 'alt'
+                  > & {
+                      image?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.Image,
+                          'id' | 'url' | 'width' | 'height'
+                        >
+                      >;
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+                | ({__typename: 'Model3d'} & Pick<
+                    StorefrontAPI.Model3d,
+                    'id' | 'mediaContentType' | 'alt'
+                  > & {
+                      sources: Array<
+                        Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+                      >;
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+                | ({__typename: 'Video'} & Pick<
+                    StorefrontAPI.Video,
+                    'id' | 'mediaContentType' | 'alt'
+                  > & {
+                      sources: Array<
+                        Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
+                      >;
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    })
+              >;
+            };
+            variants: {
+              nodes: Array<
+                Pick<
+                  StorefrontAPI.ProductVariant,
+                  'title' | 'id' | 'availableForSale'
+                > & {
+                  price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+                  compareAtPrice?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+                  >;
+                  selectedOptions: Array<
+                    Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+                  >;
+                  product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+                }
+              >;
+            };
+          }
+        >;
+        pageInfo: Pick<
+          StorefrontAPI.PageInfo,
+          'hasPreviousPage' | 'hasNextPage' | 'endCursor' | 'startCursor'
+        >;
+      };
+    }
+  >;
+  collections: {
+    edges: Array<{node: Pick<StorefrontAPI.Collection, 'title' | 'handle'>}>;
+  };
+};
 
-export type CollectionDetailsQuery = { collection?: StorefrontAPI.Maybe<(
-    Pick<StorefrontAPI.Collection, 'id' | 'handle' | 'title' | 'description'>
-    & { seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height' | 'altText'>>, products: { filters: Array<(
-        Pick<StorefrontAPI.Filter, 'id' | 'label' | 'type'>
-        & { values: Array<Pick<StorefrontAPI.FilterValue, 'id' | 'label' | 'count' | 'input'>> }
-      )>, nodes: Array<(
-        Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-        & { media: { nodes: Array<(
-            { __typename: 'ExternalVideo' }
-            & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-            & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          ) | (
-            { __typename: 'MediaImage' }
-            & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-            & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          ) | (
-            { __typename: 'Model3d' }
-            & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-            & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          ) | (
-            { __typename: 'Video' }
-            & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-            & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-          )> }, variants: { nodes: Array<(
-            Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-            & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-          )> } }
-      )>, pageInfo: Pick<StorefrontAPI.PageInfo, 'hasPreviousPage' | 'hasNextPage' | 'endCursor' | 'startCursor'> } }
-  )>, collections: { edges: Array<{ node: Pick<StorefrontAPI.Collection, 'title' | 'handle'> }> } };
-
-export type PolicyHandleFragment = Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>;
+export type PolicyHandleFragment = Pick<
+  StorefrontAPI.ShopPolicy,
+  'body' | 'handle' | 'id' | 'title' | 'url'
+>;
 
 export type PoliciesHandleQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
@@ -289,181 +728,182 @@ export type PoliciesHandleQueryVariables = StorefrontAPI.Exact<{
   refundPolicy: StorefrontAPI.Scalars['Boolean']['input'];
 }>;
 
+export type PoliciesHandleQuery = {
+  shop: {
+    privacyPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>
+    >;
+    shippingPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>
+    >;
+    termsOfService?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>
+    >;
+    refundPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>
+    >;
+  };
+};
 
-export type PoliciesHandleQuery = { shop: { privacyPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>>, shippingPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>>, termsOfService?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>>, refundPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle' | 'id' | 'title' | 'url'>> } };
+export type PolicyIndexFragment = Pick<
+  StorefrontAPI.ShopPolicy,
+  'id' | 'title' | 'handle'
+>;
 
-export type PolicyIndexFragment = Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>;
-
-export type PoliciesIndexQueryVariables = StorefrontAPI.Exact<{ [key: string]: never; }>;
-
-
-export type PoliciesIndexQuery = { shop: { privacyPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>>, shippingPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>>, termsOfService?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>>, refundPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>>, subscriptionPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicyWithDefault, 'id' | 'title' | 'handle'>> } };
-
-export type ProductQueryVariables = StorefrontAPI.Exact<{
-  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  handle: StorefrontAPI.Scalars['String']['input'];
-  selectedOptions: Array<StorefrontAPI.SelectedOptionInput> | StorefrontAPI.SelectedOptionInput;
+export type PoliciesIndexQueryVariables = StorefrontAPI.Exact<{
+  [key: string]: never;
 }>;
 
-
-export type ProductQuery = { product?: StorefrontAPI.Maybe<(
-    Pick<StorefrontAPI.Product, 'id' | 'title' | 'vendor' | 'handle' | 'descriptionHtml' | 'description'>
-    & { options: Array<Pick<StorefrontAPI.ProductOption, 'name' | 'values'>>, selectedVariant?: StorefrontAPI.Maybe<(
-      Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale' | 'quantityAvailable' | 'sku' | 'title'>
-      & { selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>, price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, unitPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, product: Pick<StorefrontAPI.Product, 'title' | 'handle'> }
-    )>, media: { nodes: Array<(
-        { __typename: 'ExternalVideo' }
-        & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-        & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'MediaImage' }
-        & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-        & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'Model3d' }
-        & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-        & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'Video' }
-        & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-        & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      )> }, metafields: Array<StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value' | 'key'>>>, variants: { nodes: Array<(
-        Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale' | 'quantityAvailable' | 'sku' | 'title'>
-        & { selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>, price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, unitPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, product: Pick<StorefrontAPI.Product, 'title' | 'handle'> }
-      )> }, seo: Pick<StorefrontAPI.Seo, 'description' | 'title'> }
-  )>, shop: (
-    Pick<StorefrontAPI.Shop, 'name'>
-    & { primaryDomain: Pick<StorefrontAPI.Domain, 'url'>, shippingPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle'>>, refundPolicy?: StorefrontAPI.Maybe<Pick<StorefrontAPI.ShopPolicy, 'body' | 'handle'>> }
-  ) };
-
-export type VariantsQueryVariables = StorefrontAPI.Exact<{
-  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  handle: StorefrontAPI.Scalars['String']['input'];
-}>;
-
-
-export type VariantsQuery = { product?: StorefrontAPI.Maybe<{ variants: { nodes: Array<(
-        Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale' | 'quantityAvailable' | 'sku' | 'title'>
-        & { selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>, price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, unitPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, product: Pick<StorefrontAPI.Product, 'title' | 'handle'> }
-      )> } }> };
-
-export type ProductRecommendationsQueryVariables = StorefrontAPI.Exact<{
-  productId: StorefrontAPI.Scalars['ID']['input'];
-  count?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-}>;
-
-
-export type ProductRecommendationsQuery = { recommended?: StorefrontAPI.Maybe<Array<(
-    Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-    & { media: { nodes: Array<(
-        { __typename: 'ExternalVideo' }
-        & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-        & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'MediaImage' }
-        & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-        & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'Model3d' }
-        & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-        & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      ) | (
-        { __typename: 'Video' }
-        & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-        & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-      )> }, variants: { nodes: Array<(
-        Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-        & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-      )> } }
-  )>>, additional: { nodes: Array<(
-      Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-      & { media: { nodes: Array<(
-          { __typename: 'ExternalVideo' }
-          & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-          & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'MediaImage' }
-          & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-          & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Model3d' }
-          & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Video' }
-          & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        )> }, variants: { nodes: Array<(
-          Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-          & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-        )> } }
-    )> } };
-
-export type SizeGuideQueryVariables = StorefrontAPI.Exact<{
-  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  id: StorefrontAPI.Scalars['ID']['input'];
-}>;
-
-
-export type SizeGuideQuery = { page?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Page, 'body'>> };
+export type PoliciesIndexQuery = {
+  shop: {
+    privacyPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>
+    >;
+    shippingPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>
+    >;
+    termsOfService?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>
+    >;
+    refundPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'id' | 'title' | 'handle'>
+    >;
+    subscriptionPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicyWithDefault, 'id' | 'title' | 'handle'>
+    >;
+  };
+};
 
 export type PaginatedProductsSearchQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  endCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
+  endCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
   first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  searchTerm?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
-  startCursor?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
+  searchTerm?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
+  startCursor?: StorefrontAPI.InputMaybe<
+    StorefrontAPI.Scalars['String']['input']
+  >;
 }>;
 
-
-export type PaginatedProductsSearchQuery = { products: { nodes: Array<(
-      Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-      & { media: { nodes: Array<(
-          { __typename: 'ExternalVideo' }
-          & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-          & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'MediaImage' }
-          & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-          & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Model3d' }
-          & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Video' }
-          & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        )> }, variants: { nodes: Array<(
-          Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-          & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-        )> } }
-    )>, pageInfo: Pick<StorefrontAPI.PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'> } };
+export type PaginatedProductsSearchQuery = {
+  products: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
+      > & {
+        media: {
+          nodes: Array<
+            | ({__typename: 'ExternalVideo'} & Pick<
+                StorefrontAPI.ExternalVideo,
+                'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+              > & {
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'MediaImage'} & Pick<
+                StorefrontAPI.MediaImage,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  image?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Model3d'} & Pick<
+                StorefrontAPI.Model3d,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Video'} & Pick<
+                StorefrontAPI.Video,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+          >;
+        };
+        variants: {
+          nodes: Array<
+            Pick<
+              StorefrontAPI.ProductVariant,
+              'title' | 'id' | 'availableForSale'
+            > & {
+              price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+              compareAtPrice?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+              >;
+              selectedOptions: Array<
+                Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+              >;
+              product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+            }
+          >;
+        };
+      }
+    >;
+    pageInfo: Pick<
+      StorefrontAPI.PageInfo,
+      'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+    >;
+  };
+};
 
 export type StoreRobotsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
-
-export type StoreRobotsQuery = { shop: Pick<StorefrontAPI.Shop, 'id'> };
+export type StoreRobotsQuery = {shop: Pick<StorefrontAPI.Shop, 'id'>};
 
 export type SitemapsQueryVariables = StorefrontAPI.Exact<{
   urlLimits?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
 }>;
 
-
-export type SitemapsQuery = { products: { nodes: Array<(
-      Pick<StorefrontAPI.Product, 'updatedAt' | 'handle' | 'onlineStoreUrl' | 'title'>
-      & { featuredImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url' | 'altText'>> }
-    )> }, collections: { nodes: Array<Pick<StorefrontAPI.Collection, 'updatedAt' | 'handle' | 'onlineStoreUrl'>> }, pages: { nodes: Array<Pick<StorefrontAPI.Page, 'updatedAt' | 'handle' | 'onlineStoreUrl'>> } };
+export type SitemapsQuery = {
+  products: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.Product,
+        'updatedAt' | 'handle' | 'onlineStoreUrl' | 'title'
+      > & {
+        featuredImage?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'url' | 'altText'>
+        >;
+      }
+    >;
+  };
+  collections: {
+    nodes: Array<
+      Pick<StorefrontAPI.Collection, 'updatedAt' | 'handle' | 'onlineStoreUrl'>
+    >;
+  };
+  pages: {
+    nodes: Array<
+      Pick<StorefrontAPI.Page, 'updatedAt' | 'handle' | 'onlineStoreUrl'>
+    >;
+  };
+};
 
 export type ApiAllProductsQueryVariables = StorefrontAPI.Exact<{
   query?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
@@ -474,30 +914,79 @@ export type ApiAllProductsQueryVariables = StorefrontAPI.Exact<{
   sortKey?: StorefrontAPI.InputMaybe<StorefrontAPI.ProductSortKeys>;
 }>;
 
-
-export type ApiAllProductsQuery = { products: { nodes: Array<(
-      Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-      & { media: { nodes: Array<(
-          { __typename: 'ExternalVideo' }
-          & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-          & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'MediaImage' }
-          & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-          & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Model3d' }
-          & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Video' }
-          & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        )> }, variants: { nodes: Array<(
-          Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-          & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-        )> } }
-    )> } };
+export type ApiAllProductsQuery = {
+  products: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
+      > & {
+        media: {
+          nodes: Array<
+            | ({__typename: 'ExternalVideo'} & Pick<
+                StorefrontAPI.ExternalVideo,
+                'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+              > & {
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'MediaImage'} & Pick<
+                StorefrontAPI.MediaImage,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  image?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Model3d'} & Pick<
+                StorefrontAPI.Model3d,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Video'} & Pick<
+                StorefrontAPI.Video,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+          >;
+        };
+        variants: {
+          nodes: Array<
+            Pick<
+              StorefrontAPI.ProductVariant,
+              'title' | 'id' | 'availableForSale'
+            > & {
+              price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+              compareAtPrice?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+              >;
+              selectedOptions: Array<
+                Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+              >;
+              product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+            }
+          >;
+        };
+      }
+    >;
+  };
+};
 
 export type FeaturedItemsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
@@ -505,33 +994,88 @@ export type FeaturedItemsQueryVariables = StorefrontAPI.Exact<{
   pageBy?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
 }>;
 
-
-export type FeaturedItemsQuery = { featuredCollections: { nodes: Array<(
-      Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle'>
-      & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'altText' | 'width' | 'height' | 'url'>> }
-    )> }, featuredProducts: { nodes: Array<(
-      Pick<StorefrontAPI.Product, 'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'>
-      & { media: { nodes: Array<(
-          { __typename: 'ExternalVideo' }
-          & Pick<StorefrontAPI.ExternalVideo, 'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'>
-          & { previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'MediaImage' }
-          & Pick<StorefrontAPI.MediaImage, 'id' | 'mediaContentType' | 'alt'>
-          & { image?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Model3d' }
-          & Pick<StorefrontAPI.Model3d, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        ) | (
-          { __typename: 'Video' }
-          & Pick<StorefrontAPI.Video, 'id' | 'mediaContentType' | 'alt'>
-          & { sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>, previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>> }
-        )> }, variants: { nodes: Array<(
-          Pick<StorefrontAPI.ProductVariant, 'title' | 'id' | 'availableForSale'>
-          & { price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>, compareAtPrice?: StorefrontAPI.Maybe<Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>>, selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>, product: Pick<StorefrontAPI.Product, 'handle' | 'title'> }
-        )> } }
-    )> } };
+export type FeaturedItemsQuery = {
+  featuredCollections: {
+    nodes: Array<
+      Pick<StorefrontAPI.Collection, 'id' | 'title' | 'handle'> & {
+        image?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'altText' | 'width' | 'height' | 'url'>
+        >;
+      }
+    >;
+  };
+  featuredProducts: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
+      > & {
+        media: {
+          nodes: Array<
+            | ({__typename: 'ExternalVideo'} & Pick<
+                StorefrontAPI.ExternalVideo,
+                'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
+              > & {
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'MediaImage'} & Pick<
+                StorefrontAPI.MediaImage,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  image?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Model3d'} & Pick<
+                StorefrontAPI.Model3d,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+            | ({__typename: 'Video'} & Pick<
+                StorefrontAPI.Video,
+                'id' | 'mediaContentType' | 'alt'
+              > & {
+                  sources: Array<
+                    Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
+                  >;
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                })
+          >;
+        };
+        variants: {
+          nodes: Array<
+            Pick<
+              StorefrontAPI.ProductVariant,
+              'title' | 'id' | 'availableForSale'
+            > & {
+              price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+              compareAtPrice?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+              >;
+              selectedOptions: Array<
+                Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+              >;
+              product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
+            }
+          >;
+        };
+      }
+    >;
+  };
+};
 
 interface GeneratedQueryTypes {
   '#graphql\nquery homepageFeaturedCollections($country: CountryCode, $language: LanguageCode)\n@inContext(country: $country, language: $language) {\n    collections(\n        first: 4,\n        sortKey: UPDATED_AT\n    ) {\n        nodes {\n            id\n            title\n            handle\n            image {\n                altText\n                width\n                height\n                url\n            }\n        }\n    }\n}\n': {
@@ -596,8 +1140,7 @@ interface GeneratedQueryTypes {
   };
 }
 
-interface GeneratedMutationTypes {
-}
+interface GeneratedMutationTypes {}
 
 declare module '@shopify/hydrogen' {
   interface StorefrontQueries extends GeneratedQueryTypes {}

@@ -35,6 +35,7 @@ type TimerProps = {
   time: Time;
   variant?: TimerVariants;
   size?: CounterSize;
+  className?: string;
 };
 export const Countdown = ({
   launchDate,
@@ -92,15 +93,16 @@ export function Timer({
   time,
   variant = TimerVariants.Ticker,
   size = CounterSize.Large,
+  className,
 }: TimerProps) {
   switch (variant) {
     case TimerVariants.Ticker:
     default:
-      return <VerboseTimer time={time} size={size} />;
+      return <VerboseTimer className={className} time={time} size={size} />;
   }
 }
 
-function VerboseTimer({time, size}: Omit<TimerProps, 'variant'>) {
+function VerboseTimer({time, size, className}: Omit<TimerProps, 'variant'>) {
   const {days, hours, minutes, seconds} = time;
   const labelStyles = cn('hidden', CounterSize.Large === size && 'lg:inline');
   const separatorStyles = cn('separator lg:pl-2');
@@ -110,7 +112,8 @@ function VerboseTimer({time, size}: Omit<TimerProps, 'variant'>) {
         size === CounterSize.Large && 'timer-large',
         size === CounterSize.Small && 'timer-small',
         !days && 'with-seconds',
-        'flex justify-center py-2 md:pb-8 flex-nowrap text-white font-bold timer',
+        'flex justify-center py-2 md:pb-8 flex-nowrap text-background font-bold timer',
+        className,
       )}
     >
       {days ? (

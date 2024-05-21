@@ -1,9 +1,8 @@
 import type {ReactElement, ReactNode} from 'react';
 import React, {Fragment, isValidElement} from 'react';
-import type {RichTextProps} from './types';
+import type {NodeRendererType, RichTextProps} from './types';
 
 import {Audio, Class, IFrame, Image, Link, Video} from './elements';
-import type {NodeRendererType} from '~/lib/react-renderer';
 import {Heading} from '~/components/Text';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
 import {cn, isAfterDate} from '~/lib/utils';
@@ -163,7 +162,7 @@ export const DEFAULT_RENDERERS: NodeRendererType = {
           {() => (
             <Countdown
               launchDate={data.scheduledUnlockTime}
-              isLiveAtInit={isAfterDate(data)}
+              isLiveAtInit={isAfterDate(data.scheduledUnlockTime)}
             >
               {({timeLeft, isLive}) => {
                 return (

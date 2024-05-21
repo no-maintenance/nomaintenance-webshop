@@ -100,12 +100,7 @@ export function CollectionBlock({gid}: BlockProps<'Collection'>) {
         {({collection}) => <Component collection={collection} />}
       </CollectionFeed>
     );
-  return (
-    <></>
-    // <HygraphCollection gid={gid} type={HygraphCollectionType.Feed}>
-    //   {({collection}) => <Component collection={collection} />}
-    // </HygraphCollection>
-  );
+  return <></>;
 }
 function Feed({products}: {products: ProductConnection}) {
   return (

@@ -6,9 +6,10 @@ import type {
   ProductVariantConnection,
   SelectedOptionInput,
 } from '@shopify/hydrogen/storefront-api-types';
-import {type ReactNode, useMemo, createElement, Fragment} from 'react';
+import {createElement, Fragment, type ReactNode, useMemo} from 'react';
 import type {PartialDeep} from 'type-fest';
 import type {Maybe} from 'graphql/jsutils/Maybe';
+import {PartialObjectDeep} from 'type-fest/source/partial-deep';
 
 export type VariantOption = {
   name: string;
@@ -23,6 +24,7 @@ export type VariantOptionValue = {
   search: string;
   isActive: boolean;
   quantityAvailable?: Maybe<number>;
+  variant?: PartialObjectDeep<ProductVariant, {recurseIntoArrays: true}>;
 };
 
 type VariantSelectorProps = {
@@ -117,6 +119,7 @@ export function VariantSelector({
                 search: searchString,
                 isActive: calculatedActiveValue,
                 quantityAvailable: variant?.quantityAvailable,
+                variant,
               });
             }
 

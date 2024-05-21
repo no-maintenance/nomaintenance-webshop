@@ -106,20 +106,6 @@ export function ProductGallery({media}: {media: MediaFragment[]}) {
           <CarouselPrevious isInline={true} />
           <CarouselNext isInline={true} />
         </CarouselWithCounter>
-        {/*<Carousel size={images.length}>*/}
-        {/*{media.map((data, i) => {*/}
-        {/*  return (*/}
-        {/*    <Image*/}
-        {/*      key={data.id}*/}
-        {/*      loading={i === 0 ? 'eager' : 'lazy'}*/}
-        {/*      data={data.image}*/}
-        {/*      aspectRatio="4/5"*/}
-        {/*      sizes={'(min-width: 48em) 60vw, 100vw'}*/}
-        {/*      className="object-cover flex-1"*/}
-        {/*    />*/}
-        {/*  );*/}
-        {/*})}*/}
-        {/*</Carousel>*/}
       </div>
       <div className="hidden w-full md:grid gap-y-12 xl:col-start-2 col-span-6  xl:col-span-5">
         {media.map((data, i) => {

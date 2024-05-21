@@ -66,7 +66,6 @@ export default defineConfig({
         '@sentry/react',
         'react-use',
         'escape-html',
-        '@notionhq/client',
         '@emailjs/client',
       ],
     },

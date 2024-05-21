@@ -1,43 +1,34 @@
-import {useState, useRef, Suspense, Fragment, useEffect} from 'react';
-import {Listbox} from '@headlessui/react';
+import {Suspense, useEffect, useRef, useState} from 'react';
+import type {type LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
+import {defer, redirect} from '@shopify/remix-oxygen';
+import {Await, useLoaderData, useNavigate} from '@remix-run/react';
+
+import type {ShopifyAnalyticsProduct, Storefront} from '@shopify/hydrogen';
 import {
-  MetaArgs,
-  defer,
-  redirect,
-  type LoaderFunctionArgs,
-} from '@shopify/remix-oxygen';
-import {useLoaderData, Await, useNavigate} from '@remix-run/react';
-import {
-  getSeoMeta,
-  ShopifyAnalyticsProduct,
-  Storefront,
-} from '@shopify/hydrogen';
-import {
-  flattenConnection,
   AnalyticsPageType,
+  flattenConnection,
+  getSelectedProductOptions,
+  getSeoMeta,
   Money,
   ShopPayButton,
-  getSelectedProductOptions,
+  UNSTABLE_Analytics as Analytics,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
 import type {
   Maybe,
   Metafield,
-  Page,
+  Product,
+  ProductVariant,
 } from '@shopify/hydrogen/storefront-api-types';
-import {AnimatePresence, m} from 'framer-motion';
 
-import type {
-  VariantOption,
-  VariantOptionValue,
-} from '~/components/VariantSelector';
+import type {VariantOption} from '~/components/VariantSelector';
 import {VariantSelector} from '~/components/VariantSelector';
 import type {
   ProductQuery,
   ProductVariantFragmentFragment,
 } from '~/__generated__/storefrontapi.generated';
-import {Text, Heading, Section} from '~/components/Text';
+import {Heading, Section, Text} from '~/components/Text';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/lib/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
@@ -64,35 +55,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '~/components/ui/accordion';
+// @ts-ignore
 import {convertSchemaToHtml} from '@thebeyondgroup/shopify-rich-text-renderer';
 import {useMediaQuery} from '~/hooks/useMediaQuery';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '~/components/ui/dialog';
-import {IconGlobe} from '~/components/Icon';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '~/components/ui/drawer';
-import {Localizations} from '~/components/LocaleSelector';
 import {useCopyToClipboard} from '~/hooks/useCopyToClipboard';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '~/components/ui/tooltip';
 
 export const headers = routeHeaders;
 
@@ -100,7 +80,20 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   const {productHandle} = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
-  const selectedOptions = getSelectedProductOptions(request);
+  const selectedOptions = getSelectedProductOptions(request).filter(
+    (option) =>
+      // Filter out Shopify predictive search query params
+      !option.name.startsWith('_sid') &&
+      !option.name.startsWith('_pos') &&
+      !option.name.startsWith('_psq') &&
+      !option.name.startsWith('_ss') &&
+      !option.name.startsWith('_v') &&
+      // Filter out third party tracking params
+      !option.name.startsWith('fbclid') &&
+      !option.name.startsWith('gclid') &&
+      !option.name.startsWith('utm') &&
+      !option.name.startsWith('_kx'),
+  );
 
   const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
@@ -199,9 +192,10 @@ function redirectToFirstVariant({
   request: Request;
 }) {
   const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.search);
 
-  const firstVariant = product!.variants.nodes[0];
+  const searchParams = new URLSearchParams(url.search);
+  const flattenedVariants = flattenConnection(product!.variants);
+  const firstVariant = getFirstAvailableVariant(flattenedVariants);
   for (const option of firstVariant.selectedOptions) {
     searchParams.set(option.name, option.value);
   }
@@ -220,10 +214,9 @@ const settings: ProductDisplaySettings = {
   preselectFirstAvailableVariant: true,
 };
 export default function Product() {
-  console.log('Product');
   const lastData = useRef({});
   const data = useLoaderData<typeof loader>() || lastData.current;
-  const {product, shop, recommended, variants, sizeGuide, hasSizeGuide} =
+  const {product, analytics, storeDomain, recommended, variants} =
     data || lastData.current;
   const {media, title, vendor, descriptionHtml, metafields} = product;
   const selectedVariant = product.selectedVariant!;
@@ -314,6 +307,21 @@ export default function Product() {
           )}
         </Await>
       </Suspense>
+      <Analytics.ProductView
+        data={{
+          products: [
+            {
+              id: product.id,
+              title: product.title,
+              price: selectedVariant?.price.amount || '0',
+              vendor: product.vendor,
+              variantId: selectedVariant?.id || '',
+              variantTitle: selectedVariant?.title || '',
+              quantity: 1,
+            },
+          ],
+        }}
+      />
     </>
   );
 }
@@ -330,12 +338,12 @@ function ProductInfoPopups() {
 function ProductVariantSelector({
   variants,
   showVariantTitle,
+  product,
 }: {
   showVariantTitle: boolean;
   variants: ProductVariantFragmentFragment[];
+  product: Product;
 }) {
-  const {product} = useLoaderData<typeof loader>();
-
   return (
     <VariantSelector
       handle={product.handle}
@@ -390,9 +398,6 @@ export function ProductForm({
   variants: ProductVariantFragmentFragment[];
 }) {
   const {product, analytics, storeDomain} = useLoaderData<typeof loader>();
-
-  const closeRef = useRef<HTMLButtonElement>(null);
-
   /**
    * Likewise, we're defaulting to the first variant for purposes
    * of add to cart if there is none returned from the loader.
@@ -410,13 +415,14 @@ export function ProductForm({
     <div className="grid gap-10">
       <div className="grid gap-10">
         <ProductVariantSelector
+          product={product}
           variants={variants}
           showVariantTitle={showVariantTitle}
         />
         {selectedVariant && (
           <div className="grid items-stretch gap-4">
             {isOutOfStock ? (
-              <SoldOutButton variants={variants} />
+              <SoldOutButton product={product} variants={variants} />
             ) : (
               <AddToCartButton
                 size={'sm'}
@@ -460,18 +466,15 @@ export function ProductForm({
   );
 }
 
-function SoldOutButton({
+export function SoldOutButton({
   variants,
+  product,
 }: {
   variants: ProductVariantFragmentFragment[];
+  product: Product;
 }) {
   const {t} = useTranslation();
   // const {isOpen, openPopup, closePopup} = usePopup();
-  const {product} = useLoaderData<typeof loader>();
-  const [selectedVariant, setSelectedVariant] = useState(
-    product.selectedVariant?.id ?? '',
-  );
-
   return (
     <div>
       <Button
@@ -751,7 +754,6 @@ function SupportPopup() {
   const [_, copy] = useCopyToClipboard();
   const [tooltipText, setTooltipText] = useState('Copy to Clipboard');
   const handleCopy = (text: string) => () => {
-    console.log('handleCopy');
     copy(text)
       .then(() => {
         console.log('Copied!', {text});
@@ -889,150 +891,6 @@ function SupportPopup() {
   );
 }
 
-function ProductDetailsOld({
-  metafields,
-  descriptionHtml,
-}: {
-  metafields: Metafield[];
-  descriptionHtml: string;
-}) {
-  const [openTab, setOpenTab] = useState<number>(0);
-  const tabs = getMetafieldDefsV2(metafields, descriptionHtml);
-  return (
-    <div>
-      <div
-        className={
-          'flex justify-between w-full gap-4 uppercase md:max-w-sm md:px-0'
-        }
-      >
-        {tabs.map((tab, idx: number) => (
-          <button key={tab.id} onClick={() => setOpenTab(idx)}>
-            <Heading
-              className={`uppercase ${
-                openTab === idx ? 'font-semibold text-copy ' : ''
-              }`}
-              as={'h4'}
-              size={'copy'}
-            >
-              {tab.name}
-            </Heading>
-          </button>
-        ))}
-      </div>
-      <div className={'min-h-[200px] max-w-xl  md:max-w-md md:px-0 pt-6'}>
-        {tabs.map(
-          (tab, idx: number) =>
-            openTab === idx && <m.div key={tab.id}>{tab.component}</m.div>,
-        )}
-      </div>
-    </div>
-  );
-}
-
-function getMfDescriptionV2(mf: Metafield[]) {
-  const res = mf.find((f) => f.key === 'description');
-  return res?.value;
-}
-
-function getMetafieldDefsV2(mf: Metafield[], descriptionHTML: string) {
-  const res = [
-    {
-      name: 'Description',
-      id: 'description',
-      component: (
-        <div className={'rte text-copy text-foreground/50 size-chart'}></div>
-        // <div
-        //   className={"rte text-copy text-foreground/50 size-chart"}
-        //   dangerouslySetInnerHTML={{
-        //     __html: convertSchemaToHtml(getMfDescriptionV2(mf))
-        //   }}
-        // ></div>
-      ),
-    },
-  ];
-
-  for (let i = 0; i < mf.length; i++) {
-    const pf = {name: '', component: <></>, id: ''};
-    const f = mf[i];
-
-    if (!f) continue;
-    if (f.key === 'details') {
-      pf.name = 'Details';
-      pf.id = 'details';
-      pf.component = (
-        <div className={'h-full flex items-center'}>
-          <div className={'rte text-copy text-foreground/50'}></div>
-        </div>
-      );
-      res.push(pf);
-    }
-    if (f.key === 'show_policies_product_tab' && f.value == 'true') {
-      pf.name = 'Policies';
-      pf.id = 'policies';
-      pf.component = <Policies />;
-      res.push(pf);
-    }
-  }
-  res.push({
-    name: 'Measurements',
-    id: 'measurements',
-    component: (
-      <div
-        className={'rte text-copy text-foreground/50 size-chart'}
-        dangerouslySetInnerHTML={{__html: descriptionHTML}}
-      ></div>
-    ),
-  });
-  return res;
-}
-
-function Policies() {
-  const {shop} = useLoaderData<typeof loader>();
-
-  if (!shop) return <></>;
-  const {shippingPolicy, refundPolicy} = shop;
-  const p = [
-    {id: 0, name: 'Refund Policy', policy: refundPolicy?.body},
-    {id: 1, name: 'Shipping Policy', policy: shippingPolicy?.body},
-  ];
-  const Title = ({name, isOpen}: {name: string; isOpen: boolean}) => {
-    return (
-      <Heading as={'h3'} size={'copy'}>
-        {name}
-      </Heading>
-    );
-  };
-  const Description = ({policy}: {policy: string}) => {
-    return (
-      <div className={'rte'} dangerouslySetInnerHTML={{__html: policy}}></div>
-    );
-  };
-  return (
-    <div className={'mx-auto h-full w-full flex items-center'}>
-      <div className={'w-full overflow-auto max-h-full'}>
-        {shippingPolicy?.body && (
-          <div className={'py-6 border-b border-black'}>
-            {/*<Accordion*/}
-            {/*  isHTML={true}*/}
-            {/*  question={'Shipping Policy'}*/}
-            {/*  answer={shippingPolicy.body}*/}
-            {/*/>*/}
-          </div>
-        )}
-        {refundPolicy?.body && (
-          <div className={'py-6'}>
-            {/*<Accordion*/}
-            {/*  isHTML={true}*/}
-            {/*  question={'Refund Policy'}*/}
-            {/*  answer={refundPolicy.body}*/}
-            {/*/>*/}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 const PRODUCT_VARIANT_FRAGMENT = `#graphql
 fragment ProductVariantFragment on ProductVariant {
     id
@@ -1107,7 +965,7 @@ query Product(
             value
             key
         }
-        variants(first: 1) {
+        variants(first: 10) {
             nodes {
                 ...ProductVariantFragment
             }

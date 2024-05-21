@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react';
 import {createContext, useContext} from 'react';
 
-import {Event, Lock, Product} from '~/components/blocks';
+import {Event} from '~/components/blocks';
 
 import type {
   BlockFragment,
@@ -15,6 +15,8 @@ import {CollectionBlock} from './CollectionBlock';
 import {Archive} from '~/components/blocks/Archive';
 import {FormBlock} from '~/components/blocks/FormBlock';
 import {MixedMedia} from '~/components/blocks/MixedMedia';
+import {Lock} from '~/components/blocks/LockBlock';
+import {ProductBlock} from '~/components/blocks/ProductBlock';
 
 export type BlockProps<T extends BlockFragment['__typename']> = Extract<
   BlockFragment,
@@ -61,7 +63,7 @@ export function Block(props: BlockFragment) {
     case 'MixedMedia':
       return <MixedMedia {...props} />;
     case 'Product':
-      return <Product {...props} />;
+      return <ProductBlock {...props} />;
     case 'CustomizedSection':
       return <CustomizedSection {...props} />;
     default:
