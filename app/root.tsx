@@ -139,6 +139,8 @@ export async function loader({context, request}: LoaderFunctionArgs) {
       analyticsTokens: {
         gtm: context.env.GOOGLE_TAG_MANAGER_ID,
         klaviyo: context.env.KLAVIYO_COMPANY_ID,
+        ga4: context.env.GA4_ID,
+        meta: context.env.META_PIXEL_ID,
       },
     },
     {
@@ -276,29 +278,29 @@ export function Document({
             />
           </>
         )}
-        {/*{process.env.NODE_ENV === 'development' || !tokens?.ga4 ? null : (*/}
-        {/*  <>*/}
-        {/*    <script*/}
-        {/*      async*/}
-        {/*      src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}*/}
-        {/*    ></script>*/}
+        {process.env.NODE_ENV === 'development' || !tokens?.ga4 ? null : (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}
+            ></script>
 
-        {/*    <script*/}
-        {/*      type={'text/partytown'}*/}
-        {/*      dangerouslySetInnerHTML={{*/}
-        {/*        __html: `*/}
-        {/*        window.dataLayer = window.dataLayer || [];*/}
+            <script
+              type={'text/partytown'}
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
 
-        {/*          function gtag(){dataLayer.push(arguments);}*/}
+                  function gtag(){dataLayer.push(arguments);}
 
-        {/*          gtag('js', new Date());*/}
+                  gtag('js', new Date());
 
-        {/*          gtag('config', '${tokens.ga4}');*/}
-        {/*        `,*/}
-        {/*      }}*/}
-        {/*    ></script>*/}
-        {/*  </>*/}
-        {/*)}*/}
+                  gtag('config', '${tokens.ga4}');
+                `,
+              }}
+            ></script>
+          </>
+        )}
         {process.env.NODE_ENV === 'development' || !tokens?.klaviyo ? null : (
           <script
             type="text/partytown"
@@ -307,30 +309,31 @@ export function Document({
         )}
         {process.env.NODE_ENV === 'development' || !tokens?.meta ? null : (
           <>
-            <noscript>
-              <img
-                height="1"
-                width="1"
-                style="display:none"
-                src={`https://www.facebook.com/tr?id=${tokens.meta}&ev=PageView&noscript=1`}
-              />
-            </noscript>
+            {/* for some reason this breaks the productilon build @TODO — INVESTIGATE */}
+            {/*<noscript>*/}
+            {/*  <img*/}
+            {/*    height="1"*/}
+            {/*    width="1"*/}
+            {/*    style="display:none"*/}
+            {/*    src={`https://www.facebook.com/tr?id=${tokens.meta}&ev=PageView&noscript=1`}*/}
+            {/*  />*/}
+            {/*</noscript>*/}
 
             <script
               type={'text/partytown'}
               dangerouslySetInnerHTML={{
                 __html: `
-          !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '${tokens.meta}');
-        fbq('track', 'PageView');
-          `,
+              !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '${tokens.meta}');
+            fbq('track', 'PageView');
+              `,
               }}
             ></script>
           </>

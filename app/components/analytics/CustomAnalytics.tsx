@@ -7,7 +7,11 @@ import {
   trackViewedProduct as klaviyoTrackViewedProduct,
   trackAddedToCart as klaviyoTrackAddedToCart,
 } from '~/components/analytics/Klaviyo';
-import {metaAddToCart, trackMetaEvent} from '~/components/analytics/Meta';
+import {
+  metaAddToCart,
+  metaNewsletterSignup,
+  trackMetaEvent,
+} from '~/components/analytics/Meta';
 
 export function CustomAnalytics() {
   const {subscribe, canTrack} = useAnalytics();
@@ -31,21 +35,23 @@ export function CustomAnalytics() {
       klaviyoTrackAddedToCart(data);
       trackMetaEvent(metaAddToCart, data);
     });
-    subscribe('cart_updated', (data) => {
-      // const newQuantity = data.cart?.totalQuantity || 0;
-      // const oldQuantity = data.prevCart?.totalQuantity || 0;
-      // if (newQuantity > oldQuantity) {
-      // }
-    });
 
     // Custom events
-    // subscribe('newsletter_signup', (data) => {
-    //   console.log('CustomAnalytics - Custom sidecart opened:', data);
-    // });
+    subscribe('custom_newsletter_signup', (data) => {
+      console.log('CustomAnalytics - Custom sidecart opened:', data);
+      // trackMetaEvent(metaNewsletterSignup)
+    });
     subscribe('custom_sidecart_viewed', (data) => {
       console.log('CustomAnalytics - Custom sidecart opened:', data);
     });
   }, []);
 
   return null;
+}
+
+const CONV_ADDED_TO_CART = 0.29;
+const AOV = 235;
+
+export function getAddToCartValue(v: number) {
+  return CONV_ADDED_TO_CART * v;
 }

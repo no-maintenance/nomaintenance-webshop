@@ -25,10 +25,7 @@ import type {
   Product,
   ProductVariant,
 } from '@shopify/hydrogen/storefront-api-types';
-import {
-  getFirstAvailableVariant,
-  SoldOutButton,
-} from '~/routes/($locale)+/products.$productHandle';
+import {getFirstAvailableVariant} from '~/routes/($locale)+/products.$productHandle';
 import type {ProductVariantFragmentFragment} from '~/__generated__/storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {VariantSelector} from '~/components/VariantSelector';
@@ -304,9 +301,6 @@ export function SoldOutButton({
   const flattenedVariants = flattenConnection(product.variants);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariant>(initSelectedVariant);
-  useEffect(() => {
-    console.log(selectedVariant);
-  }, [selectedVariant]);
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -338,7 +332,7 @@ export function SoldOutButton({
                 </Heading>
                 <div className={'w-full'}>
                   <ProductVariantSelector
-                    type={'listbox'}
+                    type={'buttons'}
                     product={product}
                     setSelectedVariant={setSelectedVariant}
                     selectedVariant={selectedVariant}
@@ -350,6 +344,7 @@ export function SoldOutButton({
               <KlaviyoBackInStock
                 source={'popup'}
                 variantId={selectedVariant.id}
+                cb={() => setOpen(false)}
               />
             </Section>
             <section>
@@ -408,6 +403,7 @@ export function SoldOutButton({
             <KlaviyoBackInStock
               source={'popup'}
               variantId={selectedVariant.id}
+              cb={() => setOpen(false)}
             />
             <DrawerClose asChild>
               <Button className={'w-full mt-4'} variant={'outline'}>
@@ -436,6 +432,7 @@ function ProductVariantSelector({
   selectedVariant: ProductVariant;
   type?: 'buttons' | 'listbox';
 }) {
+  console.log(selectedVariant);
   return (
     <VariantSelector
       handle={product.handle}
@@ -443,7 +440,6 @@ function ProductVariantSelector({
       variants={variants}
     >
       {({option}) => {
-        console.log('option', option);
         if (type === 'buttons')
           return (
             <div
@@ -479,14 +475,14 @@ function ProductVariantSelector({
         if (type === 'listbox')
           return (
             <Select
-              value={option.value}
+              value={selectedVariant.selectedOptions[0].value}
               onValueChange={(selectedOption) => {
-                const value = option.values.find(
+                const opt = option.values.find(
                   (v) => v.value === selectedOption,
                 );
-                if (value) {
-                  console.log(value.variant);
-                  setSelectedVariant(value.variant as ProductVariant);
+                if (opt) {
+                  console.log(opt.variant);
+                  setSelectedVariant(opt.variant as ProductVariant);
                 }
               }}
             >

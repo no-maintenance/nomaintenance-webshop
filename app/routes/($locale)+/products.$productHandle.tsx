@@ -31,7 +31,6 @@ import {Heading, Section, Text} from '~/components/Text';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/lib/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments'; // import {KlaviyoBackInStock} from '~/components/KlavivyoForm';
-// import {Popup, usePopup} from '~/components/Popup';
 import {ProductGallery} from '~/components/ProductGallery';
 import {ProductSwimlane} from '~/components/ProductSwimlane';
 import {Link} from '~/components/Link';
@@ -347,7 +346,7 @@ function ProductVariantSelector({
                     replace
                     className={clsx(
                       'text-fine subpixel-antialiased leading-none py-1 cursor-pointer transition-all duration-200',
-                      isActive ? 'font-semibold' : 'font-normal',
+                      isActive ? 'font-semibold underline' : 'font-normal',
                       isAvailable ? 'opacity-100' : 'opacity-50',
                     )}
                   >
@@ -476,52 +475,6 @@ function ProductListbox({option}: {option: VariantOption}) {
           )}
         </SelectContent>
       </Select>
-      {/*<Listbox value={selectedOption} onChange={handleSelection}>*/}
-      {/*  {({open}) => (*/}
-      {/*    <>*/}
-      {/*      <Listbox.Button as={Fragment}>*/}
-      {/*        <Button*/}
-      {/*          className={'text-fine flex items-center justify-between w-full'}*/}
-      {/*          variant={'outline'}*/}
-
-      {/*        >*/}
-      {/*          {selectedOption.value &&*/}
-      {/*            GetVariantLabel(*/}
-      {/*              selectedOption.value,*/}
-      {/*              selectedVariant.quantityAvailable,*/}
-      {/*            )}*/}
-      {/*        </Button>*/}
-      {/*      </Listbox.Button>*/}
-      {/*      <Listbox.Options*/}
-      {/*        className={clsx(*/}
-      {/*          'border-foreground/10 bg-background absolute bottom-12 z-30 grid w-full overflow-y-scroll  border py-2 transition-[max-height] duration-150 sm:bottom-auto border-t-0 md:border-b',*/}
-      {/*          open ? 'max-h-60' : 'max-h-0',*/}
-      {/*        )}*/}
-      {/*      >*/}
-      {/*        {option.values.map(*/}
-      {/*          ({value, to, isActive, isAvailable, quantityAvailable}) => (*/}
-      {/*            <Listbox.Option*/}
-      {/*              key={`option-${option.name}-${value}`}*/}
-      {/*              value={{value, to, quantityAvailable}}*/}
-      {/*              as={Fragment}*/}
-      {/*            >*/}
-      {/*              {({active}) => (*/}
-      {/*                <li*/}
-      {/*                  className={clsx(*/}
-      {/*                    'text-foreground w-full py-2 text-copy transition flex justify-between items-center text-left cursor-pointer px-4',*/}
-      {/*                    active && 'bg-primary/10',*/}
-      {/*                  )}*/}
-      {/*                >*/}
-      {/*                  {GetVariantLabel(value, quantityAvailable)}*/}
-      {/*                </li>*/}
-      {/*              )}*/}
-      {/*            </Listbox.Option>*/}
-      {/*          ),*/}
-      {/*        )}*/}
-      {/*      </Listbox.Options>*/}
-      {/*    </>*/}
-      {/*  )}*/}
-      {/*</Listbox>*/}
     </div>
   );
 }

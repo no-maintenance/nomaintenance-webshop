@@ -45,7 +45,9 @@ declare global {
     SENTRY_DSN: string;
     GOOGLE_TAG_MANAGER_ID: string;
     KLAVIYO_COMPANY_ID: string;
+    KLAVIYO_PRIVATE_KEY: string;
     META_PIXEL_ID: string;
+    GA4_ID: string;
   }
 }
 
