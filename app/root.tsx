@@ -119,6 +119,7 @@ export async function loader({context, request}: LoaderFunctionArgs) {
   const [tData, sData] = await Promise.all([themesPromise, shopPromise]);
   invariant(sData?.shop, 'No data returned from Shopify API');
   const seo = seoPayload.root({shop: sData.shop, url: request.url});
+  console.log('seo ', JSON.stringify(seo, 4, null));
   return defer(
     {
       seo,
