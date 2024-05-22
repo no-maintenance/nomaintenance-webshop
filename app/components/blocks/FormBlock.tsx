@@ -137,7 +137,7 @@ export function ContactForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>First, Last Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Cena" {...field} />
+                <Input placeholder="First, Last Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
