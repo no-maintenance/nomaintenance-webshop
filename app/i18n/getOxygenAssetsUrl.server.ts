@@ -25,5 +25,5 @@ export function getOxygenAssetsUrl(
     return `${url.origin}` as DevOxygenAssetsUrl;
   }
 
-  return `https://cdn.shopify.com/oxygen/${shopId}/${storefrontId}/${deploymentId}` as ProdOxygenAssetsUrl;
+  return `https://nomaintenance.us` as ProdOxygenAssetsUrl;
 }
