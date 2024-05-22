@@ -1,4 +1,5 @@
 import {CartLineUpdatePayload} from '@shopify/hydrogen';
+import {getAddToCartValue} from '~/components/analytics/CustomAnalytics';
 
 /**
  * A wrapper for meta pixel events
@@ -25,7 +26,7 @@ export function metaAddToCart(data: CartLineUpdatePayload) {
   const p = m?.product;
   window.fbq('track', 'AddToCart', {
     currency: m?.price?.currencyCode,
-    value: m?.price?.amount,
+    value: getAddToCartValue(parseInt(m?.price?.amount ?? '0')),
     content_ids: [m?.id],
     content_name: p?.title,
     content_type: 'product',
@@ -39,7 +40,9 @@ export function metaAddToCart(data: CartLineUpdatePayload) {
  * A person submits a completed subscription or signup form.
  *
  */
-export function metaNewsletterSignup() {}
+export function metaNewsletterSignup() {
+  window.fbq('track', 'CompleteRegistration');
+}
 
 /**
  * A visit to a web page you care about (for example, a product page or landing page).
@@ -47,7 +50,17 @@ export function metaNewsletterSignup() {}
  * `ViewContent` tells you if someone visits a web page's URL, but not what they see or do on that page.
  * A person lands on a product details page.
  */
-export function metaViewedItem() {}
+// export function metaViewedItem(data: ProductViewPayload) {
+//   window.fbq('track', 'ViewContent',
+//     {
+//       currency: m?.price?.currencyCode,
+//       value: m?.price?.amount,
+//       content_ids: [m?.id],
+//       content_name: p?.title,
+//       content_type: 'product',
+//       content: [{id: m?.id, quantity: data?.currentLine}],
+//     })
+// }
 
 /**
  * When a search is made.
@@ -64,5 +77,3 @@ export function metaSearch() {}
 export function metaBookAppointment() {}
 
 export function metaLead() {}
-
-export function metaCustomizeProduct() {}

@@ -137,8 +137,9 @@ export async function loader({context, request}: LoaderFunctionArgs) {
         storefrontAccessToken: context.env.PUBLIC_STOREFRONT_API_TOKEN,
       },
       analyticsTokens: {
-        gtm: context.env.GOOGLE_TAG_MANAGER_ID,
         klaviyo: context.env.KLAVIYO_COMPANY_ID,
+        meta: context.env.META_PIXEL_ID,
+        ga4: context.env.GA4_ID,
       },
     },
     {
@@ -276,29 +277,29 @@ export function Document({
             />
           </>
         )}
-        {/*{process.env.NODE_ENV === 'development' || !tokens?.ga4 ? null : (*/}
-        {/*  <>*/}
-        {/*    <script*/}
-        {/*      async*/}
-        {/*      src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}*/}
-        {/*    ></script>*/}
+        {process.env.NODE_ENV === 'development' || !tokens?.ga4 ? null : (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}
+            ></script>
 
-        {/*    <script*/}
-        {/*      type={'text/partytown'}*/}
-        {/*      dangerouslySetInnerHTML={{*/}
-        {/*        __html: `*/}
-        {/*        window.dataLayer = window.dataLayer || [];*/}
+            <script
+              type={'text/partytown'}
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
 
-        {/*          function gtag(){dataLayer.push(arguments);}*/}
+                  function gtag(){dataLayer.push(arguments);}
 
-        {/*          gtag('js', new Date());*/}
+                  gtag('js', new Date());
 
-        {/*          gtag('config', '${tokens.ga4}');*/}
-        {/*        `,*/}
-        {/*      }}*/}
-        {/*    ></script>*/}
-        {/*  </>*/}
-        {/*)}*/}
+                  gtag('config', '${tokens.ga4}');
+                `,
+              }}
+            ></script>
+          </>
+        )}
         {process.env.NODE_ENV === 'development' || !tokens?.klaviyo ? null : (
           <script
             type="text/partytown"
