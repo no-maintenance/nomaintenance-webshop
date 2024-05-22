@@ -124,6 +124,10 @@ export function FiltersDrawer({
             <AppliedFilters filters={appliedFilters} />
           </div>
         ) : null}
+
+        <Heading as="h4" size="lead" className="pb-4">
+          Filter By
+        </Heading>
         <div className="divide-y">
           {filters.map((filter: Filter) => (
             <Disclosure as="div" key={filter.id} className="w-full">

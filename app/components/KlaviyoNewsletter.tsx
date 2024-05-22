@@ -14,35 +14,27 @@ import {Button} from '~/components/ui/button';
 
 import type {action as backInStockAction} from '~/routes/api+/subscribe.restock';
 import {useFocus} from '~/hooks/useFocus';
-import {toast} from '~/components/ui/use-toast';
 
-export function useForm<T extends typeof backInStockAction>() {}
-
-export function KlaviyoBackInStock({
-  source,
-  variantId,
-  cb,
-}: {
-  source: string;
-  variantId: string;
-  cb?: () => void;
-}) {
+export function useForm<T extends typeof backInStockAction>() {
   const formRef = useRef<HTMLFormElement>(null);
   const fetcher = useFetcher<T>();
   const isLoading = fetcher.state !== 'idle';
   const data = fetcher.data;
   useEffect(() => {
-    console.log(fetcher, data);
-    if (formRef.current && data?.status === 'success') {
-      formRef.current.reset();
-      toast({
-        title: 'You are now subscribed to receive back in stock notifications',
-        description:
-          'We will notify you when we restock this product in your requested size.',
-      });
-      if (cb) cb();
-    }
+    if (formRef.current && data?.status === 'success') formRef.current.reset();
   }, [fetcher?.data]);
+  return {formRef, fetcher, isLoading, data};
+}
+
+export function KlaviyoBackInStock({
+  source,
+  variantId,
+}: {
+  source: string;
+  variantId: string;
+}) {
+  const {formRef, fetcher, isLoading, data} =
+    useForm<typeof backInStockAction>();
 
   return (
     <fetcher.Form ref={formRef} method="post" action={`/api/subscribe/restock`}>

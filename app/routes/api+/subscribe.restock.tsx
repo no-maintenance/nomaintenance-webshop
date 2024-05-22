@@ -31,21 +31,28 @@ export async function action({request, context}: ActionFunctionArgs) {
 
   const hasValidationErrors = Object.keys(errors).length > 0;
   if (hasValidationErrors) return json({status: 'error', errors});
-  const url = 'https://a.klaviyo.com/api/back-in-stock-subscriptions/';
+
+  let customer;
+  if (await context.customerAccount.isLoggedIn()) {
+    const {data: c, errors: customerQueryErrors} =
+      await context.customerAccount.query(CUSTOMER_DETAILS_QUERY);
+    customer = c?.customer;
+  }
+  const url = `https://a.klaviyo.com/client/subscriptions/?company_id=${context.env.KLAVIYO_COMPANY_ID}`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       revision: '2024-02-15',
-      Authorization: `Klaviyo-API-Key ${context.env.KLAVIYO_PRIVATE_KEY}`,
     },
     body: getBody({
       email,
       source,
       variantId,
+      eid: parseNumberFromShopGid(customer?.id),
     }),
   });
-  console.log(response.ok);
+
   if (!response.ok) {
     errors.generic = `Sorry, an error has occurred. Please try again later`;
     const d = (await response.json()) as any;
@@ -64,6 +71,7 @@ export async function action({request, context}: ActionFunctionArgs) {
       body: getNewsletterBody({
         email,
         source,
+        eid: parseNumberFromShopGid(customer?.id),
       }),
     });
     if (!response.ok) {
@@ -98,6 +106,7 @@ const getBody = ({
     data: {
       type: 'back-in-stock-subscription',
       attributes: {
+        customSource: source,
         profile: {
           data: {
             type: 'profile',
@@ -105,6 +114,9 @@ const getBody = ({
               email,
               ...(eid && {external_id: eid}),
               ...(anonId && {anonymous_id: anonId}),
+              properties: {
+                version: 1,
+              },
             },
           },
         },

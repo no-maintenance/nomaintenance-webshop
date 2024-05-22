@@ -304,7 +304,9 @@ export function SoldOutButton({
   const flattenedVariants = flattenConnection(product.variants);
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariant>(initSelectedVariant);
-  useEffect(() => {}, [selectedVariant]);
+  useEffect(() => {
+    console.log(selectedVariant);
+  }, [selectedVariant]);
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -336,7 +338,7 @@ export function SoldOutButton({
                 </Heading>
                 <div className={'w-full'}>
                   <ProductVariantSelector
-                    type={'buttons'}
+                    type={'listbox'}
                     product={product}
                     setSelectedVariant={setSelectedVariant}
                     selectedVariant={selectedVariant}
@@ -348,7 +350,6 @@ export function SoldOutButton({
               <KlaviyoBackInStock
                 source={'popup'}
                 variantId={selectedVariant.id}
-                cb={() => setOpen(false)}
               />
             </Section>
             <section>
@@ -407,7 +408,6 @@ export function SoldOutButton({
             <KlaviyoBackInStock
               source={'popup'}
               variantId={selectedVariant.id}
-              cb={() => setOpen(false)}
             />
             <DrawerClose asChild>
               <Button className={'w-full mt-4'} variant={'outline'}>
@@ -436,7 +436,6 @@ function ProductVariantSelector({
   selectedVariant: ProductVariant;
   type?: 'buttons' | 'listbox';
 }) {
-  console.log(selectedVariant);
   return (
     <VariantSelector
       handle={product.handle}
@@ -444,6 +443,7 @@ function ProductVariantSelector({
       variants={variants}
     >
       {({option}) => {
+        console.log('option', option);
         if (type === 'buttons')
           return (
             <div
@@ -479,14 +479,14 @@ function ProductVariantSelector({
         if (type === 'listbox')
           return (
             <Select
-              value={selectedVariant.selectedOptions[0].value}
+              value={option.value}
               onValueChange={(selectedOption) => {
-                const opt = option.values.find(
+                const value = option.values.find(
                   (v) => v.value === selectedOption,
                 );
-                if (opt) {
-                  console.log(opt.variant);
-                  setSelectedVariant(opt.variant as ProductVariant);
+                if (value) {
+                  console.log(value.variant);
+                  setSelectedVariant(value.variant as ProductVariant);
                 }
               }}
             >
