@@ -38,7 +38,7 @@ fragment BlockPrimitive on LayoutSections {
     }
     ... on Form {
         id
-        type
+        ...Form
     }
     ... on Lock {
         id

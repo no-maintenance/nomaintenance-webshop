@@ -39,6 +39,9 @@ export function CustomAnalytics() {
     });
 
     // Custom events
+    // subscribe('newsletter_signup', (data) => {
+    //   console.log('CustomAnalytics - Custom sidecart opened:', data);
+    // });
     subscribe('custom_sidecart_viewed', (data) => {
       console.log('CustomAnalytics - Custom sidecart opened:', data);
     });

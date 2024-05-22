@@ -18,7 +18,6 @@ import clsx from 'clsx';
 import type {
   Maybe,
   Metafield,
-  Product,
   ProductVariant,
 } from '@shopify/hydrogen/storefront-api-types';
 
@@ -31,15 +30,12 @@ import type {
 import {Heading, Section, Text} from '~/components/Text';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/lib/cache';
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
-// import {KlaviyoBackInStock} from '~/components/KlavivyoForm';
+import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments'; // import {KlaviyoBackInStock} from '~/components/KlavivyoForm';
 // import {Popup, usePopup} from '~/components/Popup';
-import {useTranslation} from '~/i18n';
 import {ProductGallery} from '~/components/ProductGallery';
 import {ProductSwimlane} from '~/components/ProductSwimlane';
 import {Link} from '~/components/Link';
 import {AddToCartButton} from '~/components/AddToCartButton';
-import {Button} from '~/components/ui/button';
 import {Skeleton} from '~/components/ui/skeleton';
 import {cn, parseNumberFromShopGid} from '~/lib/utils';
 import {
@@ -54,8 +50,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '~/components/ui/accordion';
-// @ts-ignore
+} from '~/components/ui/accordion'; // @ts-ignore
 import {convertSchemaToHtml} from '@thebeyondgroup/shopify-rich-text-renderer';
 import {useMediaQuery} from '~/hooks/useMediaQuery';
 import {
@@ -73,6 +68,7 @@ import {
   DrawerTrigger,
 } from '~/components/ui/drawer';
 import {useCopyToClipboard} from '~/hooks/useCopyToClipboard';
+import {SoldOutButton} from '~/components/blocks/ProductBlock';
 
 export const headers = routeHeaders;
 
@@ -127,19 +123,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     throw redirectToFirstVariant({product, request});
   }
 
-  // In order to show which variants are available in the UI, we need to query
-  // all of them. But there might be a *lot*, so instead separate the variants
-  // into it's own separate query that is deferred. So there's a brief moment
-  // where variant options might show as available when they're not, but after
-  // this deferred query resolves, the UI will update.
-  const variants = context.storefront.query(VARIANTS_QUERY, {
-    variables: {
-      handle: productHandle,
-      country: context.storefront.i18n.country,
-      language: context.storefront.i18n.language,
-    },
-  });
-
   const recommended = getRecommendedProducts(context.storefront, product.id);
 
   // TODO: firstVariant is never used because we will always have a selectedVariant due to redirect
@@ -163,7 +146,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
   });
 
   return defer({
-    variants,
     product,
     shop,
     storeDomain: shop.primaryDomain.url,
@@ -216,8 +198,7 @@ const settings: ProductDisplaySettings = {
 export default function Product() {
   const lastData = useRef({});
   const data = useLoaderData<typeof loader>() || lastData.current;
-  const {product, analytics, storeDomain, recommended, variants} =
-    data || lastData.current;
+  const {product, storeDomain, recommended} = data || lastData.current;
   const {media, title, vendor, descriptionHtml, metafields} = product;
   const selectedVariant = product.selectedVariant!;
   const isOnSale =
@@ -271,18 +252,8 @@ export default function Product() {
                     {title}
                   </Heading>
                 </div>
-                <Suspense fallback={<ProductForm variants={[]} />}>
-                  <Await
-                    errorElement="There was a problem loading related products"
-                    resolve={variants}
-                  >
-                    {(resp) => (
-                      <ProductForm
-                        variants={resp.product?.variants.nodes || []}
-                      />
-                    )}
-                  </Await>
-                </Suspense>
+
+                <ProductForm variants={product?.variants.nodes || []} />
               </div>
               <ProductInfoPopups />
               <Suspense>
@@ -341,12 +312,11 @@ function ProductInfoPopups() {
 function ProductVariantSelector({
   variants,
   showVariantTitle,
-  product,
 }: {
   showVariantTitle: boolean;
   variants: ProductVariantFragmentFragment[];
-  product: Product;
 }) {
+  const {product} = useLoaderData<typeof loader>();
   return (
     <VariantSelector
       handle={product.handle}
@@ -425,7 +395,11 @@ export function ProductForm({
         {selectedVariant && (
           <div className="grid items-stretch gap-4">
             {isOutOfStock ? (
-              <SoldOutButton product={product} variants={variants} />
+              <SoldOutButton
+                initSelectedVariant={selectedVariant}
+                product={product}
+                variants={variants}
+              />
             ) : (
               <AddToCartButton
                 size={'sm'}
@@ -465,66 +439,6 @@ export function ProductForm({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-export function SoldOutButton({
-  variants,
-  product,
-}: {
-  variants: ProductVariantFragmentFragment[];
-  product: Product;
-}) {
-  const {t} = useTranslation();
-  // const {isOpen, openPopup, closePopup} = usePopup();
-  return (
-    <div>
-      <Button
-        variant={'outline'}
-        size={'sm'}
-        className={'text-fine font-semibold cursor-pointer w-full'}
-      >
-        {t('product.soldOut')} — {t('product.notifyMe')}
-      </Button>
-      {/*<Popup open={isOpen} onClose={closePopup} fullScreenOnMobile={false}>*/}
-      {/*  <div className={'p-6'}>*/}
-      {/*    <section>*/}
-      {/*      <Heading as={'h2'} className={'uppercase font-medium text-lead'}>*/}
-      {/*        NOTIFY ME WHEN BACK IN STOCK*/}
-      {/*      </Heading>*/}
-      {/*      <div>*/}
-      {/*        <Text>*/}
-      {/*          We will send you a notification when this product is back in*/}
-      {/*          stock.*/}
-      {/*        </Text>*/}
-      {/*      </div>*/}
-      {/*    </section>*/}
-      {/*    <Section padding={'y'}>*/}
-      {/*      <div className={'pb-6'}>*/}
-      {/*        <Heading as={'h4'} size={'copy'} className={'mb-2'}>*/}
-      {/*          {product.title}*/}
-      {/*        </Heading>*/}
-      {/*        <div className={'w-full'}>*/}
-      {/*          <ProductVariantSelector*/}
-      {/*            showVariantTitle={false}*/}
-      {/*            variants={variants}*/}
-      {/*          />*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*      <KlaviyoBackInStock source={'popup'} variantId={selectedVariant} />*/}
-      {/*    </Section>*/}
-      {/*    <section>*/}
-      {/*      <Heading size={'copy'} className={'font-medium'}>*/}
-      {/*        Log In*/}
-      {/*      </Heading>*/}
-      {/*      <Link to={`/account`} className={'underline'}>*/}
-      {/*        Sign in*/}
-      {/*      </Link>{' '}*/}
-      {/*      to your account to request a return or ask a question*/}
-      {/*    </section>*/}
-      {/*  </div>*/}
-      {/*</Popup>*/}
     </div>
   );
 }

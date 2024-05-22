@@ -205,6 +205,7 @@ export function Document({
     gtm?: string;
     klaviyo?: string;
     meta?: string;
+    ga4?: string;
   };
 }) {
   const t = createRootThemeCss(themes);
@@ -275,6 +276,29 @@ export function Document({
             />
           </>
         )}
+        {/*{process.env.NODE_ENV === 'development' || !tokens?.ga4 ? null : (*/}
+        {/*  <>*/}
+        {/*    <script*/}
+        {/*      async*/}
+        {/*      src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}*/}
+        {/*    ></script>*/}
+
+        {/*    <script*/}
+        {/*      type={'text/partytown'}*/}
+        {/*      dangerouslySetInnerHTML={{*/}
+        {/*        __html: `*/}
+        {/*        window.dataLayer = window.dataLayer || [];*/}
+
+        {/*          function gtag(){dataLayer.push(arguments);}*/}
+
+        {/*          gtag('js', new Date());*/}
+
+        {/*          gtag('config', '${tokens.ga4}');*/}
+        {/*        `,*/}
+        {/*      }}*/}
+        {/*    ></script>*/}
+        {/*  </>*/}
+        {/*)}*/}
         {process.env.NODE_ENV === 'development' || !tokens?.klaviyo ? null : (
           <script
             type="text/partytown"

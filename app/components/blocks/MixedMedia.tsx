@@ -57,11 +57,12 @@ export function DuplexHygraph({
     <SpacingWrapper spacing={{verticalPadding, horizontalPadding}}>
       <div
         className={cn(
-          'grid grid-cols-2 gap-12 pb-12 md:pb-0 md:gap-0 mx-auto',
+          'grid-cols-2 pb-12 md:pb-0 md:gap-0 mx-auto',
+          media && media?.length ? 'grid' : 'flex justify-center',
           maxHeight,
         )}
       >
-        {media && (
+        {media && media?.length > 0 && (
           <div
             className={cn(
               !children && !title ? 'col-span-2' : 'md:col-span-1 col-span-2',
@@ -91,13 +92,13 @@ export function DuplexHygraph({
         <div
           className={cn(
             'flex items-center',
-            media?.length
+            media && media?.length > 0
               ? 'col-span-2 md:col-span-1'
               : 'col-span-2 justify-center max-w-2xl',
           )}
         >
           <div
-            className={'grid grid-cols-1 gap-8 p-gutter md:max-w-2xl mx-auto'}
+            className={'grid grid-cols-1 gap-2 p-gutter md:max-w-2xl mx-auto'}
           >
             {title && <Heading as={'h2'}>{title}</Heading>}
             {children}

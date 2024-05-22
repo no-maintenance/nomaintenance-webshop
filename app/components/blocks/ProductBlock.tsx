@@ -18,8 +18,9 @@ import {
   CarouselPrevious,
   CarouselWithCounter,
 } from '~/components/ui/carousel';
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Heading, Text} from '~/components/Text';
+import type {Dispatch, SetStateAction} from 'react';
+import React, {useEffect, useState} from 'react';
+import {Heading, Section, Text} from '~/components/Text';
 import type {
   Product,
   ProductVariant,
@@ -31,6 +32,25 @@ import {
 import type {ProductVariantFragmentFragment} from '~/__generated__/storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {VariantSelector} from '~/components/VariantSelector';
+import {useTranslation} from '~/i18n';
+import {useMediaQuery} from '~/hooks/useMediaQuery';
+import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
+import {Button} from '~/components/ui/button';
+import {KlaviyoBackInStock} from '~/components/KlaviyoNewsletter';
+import {Link} from '~/components/Link';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from '~/components/ui/drawer';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select';
 
 export function ProductBlock({gid}: BlockProps<'Product'>) {
   return (
@@ -221,7 +241,11 @@ function ProductForm({
         {selectedVariant && (
           <div className="grid items-stretch gap-4">
             {isOutOfStock ? (
-              <SoldOutButton product={product} variants={variants} />
+              <SoldOutButton
+                initSelectedVariant={selectedVariant}
+                product={product}
+                variants={variants}
+              />
             ) : (
               <AddToCartButton
                 size={'sm'}
@@ -265,18 +289,152 @@ function ProductForm({
   );
 }
 
+export function SoldOutButton({
+  variants,
+  product,
+  initSelectedVariant,
+}: {
+  variants: ProductVariantFragmentFragment[];
+  product: Product;
+  initSelectedVariant: ProductVariant;
+}) {
+  const {t} = useTranslation();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const [open, setOpen] = useState(false);
+  const flattenedVariants = flattenConnection(product.variants);
+  const [selectedVariant, setSelectedVariant] =
+    useState<ProductVariant>(initSelectedVariant);
+  useEffect(() => {
+    console.log(selectedVariant);
+  }, [selectedVariant]);
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger
+          asChild
+          className={'text-fine font-semibold cursor-pointer w-full'}
+        >
+          <Button variant={'outline'}>
+            {t('product.soldOut')} — {t('product.notifyMe')}
+          </Button>
+        </DialogTrigger>
+        <DialogContent variant={'tall'}>
+          <div className={'p-6 flex flex-col gap-6'}>
+            <section>
+              <Heading as={'h2'} className={'uppercase font-medium text-lead'}>
+                NOTIFY ME WHEN BACK IN STOCK
+              </Heading>
+              <div>
+                <Text>
+                  We will send you a notification when this product is back in
+                  stock.
+                </Text>
+              </div>
+            </section>
+            <Section padding={'y'} className={'flex-1'}>
+              <div className={''}>
+                <Heading as={'h4'} size={'copy'} className={'mb-2'}>
+                  {product.title}
+                </Heading>
+                <div className={'w-full'}>
+                  <ProductVariantSelector
+                    type={'listbox'}
+                    product={product}
+                    setSelectedVariant={setSelectedVariant}
+                    selectedVariant={selectedVariant}
+                    showVariantTitle={false}
+                    variants={variants}
+                  />
+                </div>
+              </div>
+              <KlaviyoBackInStock
+                source={'popup'}
+                variantId={selectedVariant.id}
+              />
+            </Section>
+            <section>
+              <Heading size={'copy'} className={'font-medium'}>
+                Log In
+              </Heading>
+              <Link to={`/account`} className={'underline'}>
+                Sign in
+              </Link>{' '}
+              to your account to request a return or ask a question
+            </section>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger
+        asChild
+        className={'text-fine font-semibold cursor-pointer w-full'}
+      >
+        <Button variant={'outline'}>
+          {t('product.soldOut')} — {t('product.notifyMe')}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className={'p-6'}>
+          <section>
+            <Heading as={'h2'} className={'uppercase font-medium text-lead'}>
+              NOTIFY ME WHEN BACK IN STOCK
+            </Heading>
+            <div>
+              <Text>
+                We will send you a notification when this product is back in
+                stock.
+              </Text>
+            </div>
+          </section>
+          <Section padding={'y'}>
+            <div className={'pb-6'}>
+              <Heading as={'h4'} size={'copy'} className={'mb-2'}>
+                {product.title}
+              </Heading>
+              <div className={'w-full'}>
+                <ProductVariantSelector
+                  type={'listbox'}
+                  product={product}
+                  setSelectedVariant={setSelectedVariant}
+                  selectedVariant={selectedVariant}
+                  showVariantTitle={false}
+                  variants={variants}
+                />
+              </div>
+            </div>
+            <KlaviyoBackInStock
+              source={'popup'}
+              variantId={selectedVariant.id}
+            />
+            <DrawerClose asChild>
+              <Button className={'w-full mt-4'} variant={'outline'}>
+                Cancel
+              </Button>
+            </DrawerClose>
+          </Section>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
 function ProductVariantSelector({
   variants,
   showVariantTitle,
   product,
   setSelectedVariant,
   selectedVariant,
+  type = 'buttons',
 }: {
   showVariantTitle: boolean;
   variants: ProductVariantFragmentFragment[];
   product: Product;
   setSelectedVariant: Dispatch<SetStateAction<ProductVariant>>;
   selectedVariant: ProductVariant;
+  type?: 'buttons' | 'listbox';
 }) {
   return (
     <VariantSelector
@@ -285,35 +443,71 @@ function ProductVariantSelector({
       variants={variants}
     >
       {({option}) => {
-        return (
-          <div
-            key={option.name}
-            className="flex flex-col flex-wrap gap-y-2 last:mb-0"
-          >
-            {showVariantTitle && (
-              <Heading as="legend" size="lead" className="min-w-[4rem]">
-                {option.name}
-              </Heading>
-            )}
-            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
-              {option.values.map(({value, isAvailable, variant}) => (
-                <button
-                  key={option.name + value}
-                  onClick={() => setSelectedVariant(variant as ProductVariant)}
-                  className={cn(
-                    'text-fine subpixel-antialiased leading-none py-1 cursor-pointer transition-all duration-200',
-                    variant?.id === selectedVariant.id
-                      ? 'font-semibold'
-                      : 'font-normal',
-                    isAvailable ? 'opacity-100' : 'opacity-50',
-                  )}
-                >
-                  {value}
-                </button>
-              ))}
+        console.log('option', option);
+        if (type === 'buttons')
+          return (
+            <div
+              key={option.name}
+              className="flex flex-col flex-wrap gap-y-2 last:mb-0"
+            >
+              {showVariantTitle && (
+                <Heading as="legend" size="lead" className="min-w-[4rem]">
+                  {option.name}
+                </Heading>
+              )}
+              <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+                {option.values.map(({value, isAvailable, variant}) => (
+                  <button
+                    key={option.name + value}
+                    onClick={() =>
+                      setSelectedVariant(variant as ProductVariant)
+                    }
+                    className={cn(
+                      'text-fine subpixel-antialiased leading-none py-1 cursor-pointer transition-all duration-200',
+                      variant?.id === selectedVariant.id
+                        ? 'font-semibold'
+                        : 'font-normal',
+                      isAvailable ? 'opacity-100' : 'opacity-50',
+                    )}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        );
+          );
+        if (type === 'listbox')
+          return (
+            <Select
+              value={option.value}
+              onValueChange={(selectedOption) => {
+                const value = option.values.find(
+                  (v) => v.value === selectedOption,
+                );
+                if (value) {
+                  console.log(value.variant);
+                  setSelectedVariant(value.variant as ProductVariant);
+                }
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a Size" />
+              </SelectTrigger>
+              <SelectContent className={'bg-background'}>
+                {option.values.map(
+                  ({value, to, isActive, isAvailable, quantityAvailable}) => (
+                    <SelectItem
+                      key={value}
+                      value={value}
+                      className={'cursor-pointer'}
+                    >
+                      {value}
+                    </SelectItem>
+                  ),
+                )}
+              </SelectContent>
+            </Select>
+          );
       }}
     </VariantSelector>
   );

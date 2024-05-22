@@ -17,11 +17,12 @@ import {Drawer as OldDrawer, useDrawer} from '~/components/Drawer';
 import {Heading, Text} from '~/components/Text';
 import {IconAccount, IconCart, IconClose, IconSearch} from '~/components/Icon';
 import {useRootLoaderData} from '~/root';
-import type {
+import {
+  FooterStyle,
+  HeaderStyle,
   Maybe,
   NavigationFragment,
 } from '~/__generated__/hygraph.generated';
-import {FooterStyle, HeaderStyle} from '~/__generated__/hygraph.generated';
 import {HygraphLink} from '~/components/blocks/fragment/HygraphLink';
 import {useOnKeyPress} from '~/hooks/useOnKeyPress';
 import {
@@ -65,6 +66,7 @@ export function Header({
     if (isCartOpen || !addToCartFetchers.length) return;
     openCart();
   }, [addToCartFetchers, isCartOpen, openCart]);
+  if (headerStyle === HeaderStyle.None) return;
   if (
     headerStyle === HeaderStyle.MinimalNewsletterCta ||
     headerStyle === HeaderStyle.Minimal

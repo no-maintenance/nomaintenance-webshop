@@ -37,6 +37,7 @@ import emailjs from '@emailjs/browser';
 export function FormBlock({
   type,
   variant = 'standalone',
+  submitButtonLabel = 'Submit',
 }: BlockProps<'Form'> & {
   variant?: 'default' | 'standalone' | 'embedded';
 }) {
@@ -45,11 +46,11 @@ export function FormBlock({
   const FormSwitcher = () => {
     switch (type) {
       case 'contact':
-        return <ContactForm />;
+        return <ContactForm submitBtn={submitButtonLabel} />;
       case 'appointments':
-        return <AppointmentForm />;
+        return <AppointmentForm submitBtn={submitButtonLabel} />;
       case 'newsletter':
-        return <NewsletterForm id={id} />;
+        return <NewsletterForm submitBtn={submitButtonLabel} id={id} />;
       default:
         return null;
     }
@@ -82,7 +83,7 @@ const contactFormSchema = z.object({
   message: z.string(),
 });
 
-export function ContactForm() {
+export function ContactForm({submitBtn}: {submitBtn: string}) {
   const form = useForm<z.infer<typeof contactFormSchema>>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -195,7 +196,7 @@ export function ContactForm() {
           )}
         />
         <Button type="submit" size={'lg'}>
-          Submit
+          {submitBtn}
         </Button>
       </form>
     </Form>
@@ -222,7 +223,7 @@ const appointmentFormSchema = z.object({
   message: z.string(),
 });
 
-export function AppointmentForm() {
+export function AppointmentForm({submitBtn}: {submitBtn: string}) {
   const form = useForm<z.infer<typeof appointmentFormSchema>>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
@@ -277,7 +278,7 @@ export function AppointmentForm() {
             <FormItem>
               <FormLabel>First, Last Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Cena" {...field} />
+                <Input placeholder="First, Last Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -351,7 +352,7 @@ export function AppointmentForm() {
           )}
         />
         <Button type="submit" size={'lg'}>
-          Submit
+          {submitBtn}
         </Button>
       </form>
     </Form>
@@ -424,7 +425,9 @@ const newsletterSchema = z.object({
 export function NewsletterForm({
   hasSubmitBtn = true,
   id,
+  submitBtn,
 }: {
+  submitBtn: string;
   hasSubmitBtn?: boolean;
   id?: string;
 }) {
@@ -531,7 +534,7 @@ export function NewsletterForm({
                         'absolute right-0 bottom-0 py-2 lg:pb-[6px] transform px-2 outline-offset-0'
                       }
                     >
-                      {isLoading ? <p>Loading...</p> : 'Submit'}
+                      {isLoading ? <p>Loading...</p> : submitBtn}
                     </button>
                   )}
                 </div>

@@ -3,7 +3,7 @@ import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import {Link} from '~/components/Link';
-import {PageHeader, Section, Heading} from '~/components/Text';
+import {Section} from '~/components/Text';
 import {routeHeaders} from '~/lib/cache';
 import {seoPayload} from '~/lib/seo.server';
 import type {NonNullableFields} from '~/lib/types';
@@ -38,17 +38,31 @@ export default function Policies() {
 
   return (
     <>
-      <PageHeader heading="" />
       <Section padding="x" className="mb-24">
-        {policies.map((policy) => {
-          return (
-            policy && (
-              <Heading className="font-normal text-heading" key={policy.id}>
-                <Link to={`/policies/${policy.handle}`}>{policy.title}</Link>
-              </Heading>
-            )
-          );
-        })}
+        <div
+          className={
+            ' flex items-center justify-center relative max-w-screen-2xl mx-8 md:mx-24 sm:mx-16 mt-16 '
+          }
+        >
+          <ul className={'space-y-8 md:space-y-4 flex-1 '}>
+            {policies.map((policy) => {
+              return (
+                policy && (
+                  <li key={policy.id}>
+                    <Link
+                      to={`/policies/${policy.handle}`}
+                      className={
+                        'font-medium text-display  animated-underline uppercase'
+                      }
+                    >
+                      {policy.title}
+                    </Link>
+                  </li>
+                )
+              );
+            })}
+          </ul>
+        </div>
       </Section>
     </>
   );
@@ -56,30 +70,30 @@ export default function Policies() {
 
 const POLICIES_QUERY = `#graphql
 fragment PolicyIndex on ShopPolicy {
-  id
-  title
-  handle
+    id
+    title
+    handle
 }
 
 query PoliciesIndex {
-  shop {
-    privacyPolicy {
-      ...PolicyIndex
+    shop {
+        privacyPolicy {
+            ...PolicyIndex
+        }
+        shippingPolicy {
+            ...PolicyIndex
+        }
+        termsOfService {
+            ...PolicyIndex
+        }
+        refundPolicy {
+            ...PolicyIndex
+        }
+        subscriptionPolicy {
+            id
+            title
+            handle
+        }
     }
-    shippingPolicy {
-      ...PolicyIndex
-    }
-    termsOfService {
-      ...PolicyIndex
-    }
-    refundPolicy {
-      ...PolicyIndex
-    }
-    subscriptionPolicy {
-      id
-      title
-      handle
-    }
-  }
 }
 `;
