@@ -224,7 +224,7 @@ export function Document({
           <meta name="robots" content="noindex, nofollow" />
         )}
         <Partytown
-          debug={true}
+          debug={process.env.NODE_ENV === 'development'}
           forward={[
             'dataLayer.push',
             'gtag',

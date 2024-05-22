@@ -47,8 +47,7 @@ export default async function handleRequest(
       'https://unpkg.com',
       'https://cdn.shopify.com',
       MODE === 'development' ? 'testing.nomaintenance.us' : null,
-      'preview.nomaintenance.us',
-      'googletagmanager.com',
+      'https://googletagmanager.com',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com'],
   });
