@@ -129,7 +129,9 @@ function fetchJson<DefaultI18n extends BaseI18n>(
     const {resource, asset, request} = props as FetchJsonProps;
     try {
       const oxygenAssetsUrl = getOxygenAssetsUrl(request);
+      console.log('oxygenAssetsUrl ', getOxygenAssetsUrl(request));
       const jsonUrl = `${oxygenAssetsUrl}/locales/${resource}/${asset}.json`;
+      console.log('fetch jsonUrl ', jsonUrl);
       const response = await fetch(jsonUrl);
 
       if (!response.ok) {
