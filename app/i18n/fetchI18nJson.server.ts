@@ -1,6 +1,5 @@
 import type {BaseI18n} from './types';
-import {createWithCache, CacheLong, CacheNone} from '@shopify/hydrogen';
-import {getOxygenAssetsUrl} from './getOxygenAssetsUrl.server';
+import {CacheNone, createWithCache} from '@shopify/hydrogen';
 
 /**
  * A server-side utility to fetch a json locale file from the CDN.
@@ -128,33 +127,14 @@ function fetchJson<DefaultI18n extends BaseI18n>(
   return async function () {
     const {resource, asset, request} = props as FetchJsonProps;
     try {
-      const oxygenAssetsUrl = getOxygenAssetsUrl(request);
-      console.log('oxygenAssetsUrl ', getOxygenAssetsUrl(request));
-      const jsonUrl = `${oxygenAssetsUrl}/locales/${resource}/${asset}.json`;
-      console.log('fetch jsonUrl ', jsonUrl);
-      const response = await fetch(jsonUrl);
-
-      if (!response.ok) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `Failed to fetch ${resource}/${asset}, response not ok, status: ${response.status}`,
-        );
-        return undefined;
-      }
-
-      let json;
-      if (resource === 'country') {
-        json = (await response.json()) as DefaultI18n['country'];
-      } else if (resource === 'language') {
-        json = (await response.json()) as DefaultI18n['language'];
-      }
-
-      if (!json || typeof json !== 'object') {
-        // eslint-disable-next-line no-console
-        console.log(`Failed to parse json for ${resource}/${asset}`);
-        return Promise.resolve(undefined);
-      }
-
+      const json =
+        resource === 'country'
+          ? ((await import(
+              `./locales/${resource}/${asset}.json`
+            )) as DefaultI18n['country'])
+          : ((await import(
+              `./locales/${resource}/${asset}.json`
+            )) as DefaultI18n['language']);
       return json;
     } catch (error) {
       let message;
