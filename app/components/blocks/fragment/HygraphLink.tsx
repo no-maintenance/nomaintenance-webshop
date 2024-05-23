@@ -2,8 +2,8 @@ import type {ReactNode} from 'react';
 
 import type {LinkFragment, Maybe} from '~/__generated__/hygraph.generated';
 import {StaticPage} from '~/__generated__/hygraph.generated';
-import {Link} from '~/components/Link';
 import type {LinkProps} from '~/components/Link';
+import {Link} from '~/components/Link';
 
 const getStaticPathname = (slug: string, k?: Maybe<StaticPage>) => {
   switch (k) {
@@ -15,6 +15,7 @@ const getStaticPathname = (slug: string, k?: Maybe<StaticPage>) => {
       return `/pages/${slug}`;
   }
 };
+
 export function getDestination(internalTarget: LinkFragment['internalTarget']) {
   let to = '';
   if (!internalTarget) return to;
@@ -37,6 +38,7 @@ export function getDestination(internalTarget: LinkFragment['internalTarget']) {
   }
   return to;
 }
+
 export function HygraphLink({
   hygraphLink,
   children,
@@ -47,7 +49,7 @@ export function HygraphLink({
   >) {
   const {hasTargetBlank, rel, title} = hygraphLink;
   const {externalTarget, internalTarget} = hygraphLink;
-  const to = externalTarget ?? getDestination(hygraphLink.internalTarget);
+  const to = internalTarget ? getDestination(internalTarget) : externalTarget;
   props.prefetch = 'intent';
 
   return (
