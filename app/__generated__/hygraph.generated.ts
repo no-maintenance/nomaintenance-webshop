@@ -20954,19 +20954,19 @@ export const AssetDetailsFragmentDoc = gql`
     transformation: {document: {output: {format: autoImage}}, image: {compress: {metadata: true}, quality: {value: 80}}}
   )
   thumbnail: url(
-    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 32}, quality: {value: 80}, compress: {metadata: true}}}
+    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 32}, compress: {metadata: true}}}
   )
   small: url(
-    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 400}, quality: {value: 80}, compress: {metadata: true}}}
+    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 400}, compress: {metadata: true}}}
   )
   medium: url(
-    transformation: {document: {output: {format: autoImage}}, image: {quality: {value: 80}, resize: {fit: max, width: 680}, compress: {metadata: true}}}
+    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 680}, compress: {metadata: true}}}
   )
   large: url(
-    transformation: {document: {output: {format: autoImage}}, image: {quality: {value: 80}, resize: {fit: max, width: 960}, compress: {metadata: true}}}
+    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 960}, compress: {metadata: true}}}
   )
   xlarge: url(
-    transformation: {document: {output: {format: autoImage}}, image: {quality: {value: 80}, resize: {fit: max, width: 1980}, compress: {metadata: true}}}
+    transformation: {document: {output: {format: autoImage}}, image: {resize: {fit: max, width: 1980}, compress: {metadata: true}}}
   )
 }
     `;
