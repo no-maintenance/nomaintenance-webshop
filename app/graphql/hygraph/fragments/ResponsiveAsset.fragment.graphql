@@ -22,7 +22,6 @@ fragment AssetDetails on Asset {
       document: {output: {format: autoImage}}
       image: {
         resize: {fit: max, width: 32}
-        quality: {value: 80}
         compress: {metadata: true}
       }
     }
@@ -32,7 +31,6 @@ fragment AssetDetails on Asset {
       document: {output: {format: autoImage}}
       image: {
         resize: {fit: max, width: 400}
-        quality: {value: 80}
         compress: {metadata: true}
       }
     }
@@ -41,7 +39,6 @@ fragment AssetDetails on Asset {
     transformation: {
       document: {output: {format: autoImage}}
       image: {
-        quality: {value: 80}
         resize: {fit: max, width: 680}
         compress: {metadata: true}
       }
@@ -51,7 +48,6 @@ fragment AssetDetails on Asset {
     transformation: {
       document: {output: {format: autoImage}}
       image: {
-        quality: {value: 80}
         resize: {fit: max, width: 960}
         compress: {metadata: true}
       }
@@ -61,7 +57,6 @@ fragment AssetDetails on Asset {
     transformation: {
       document: {output: {format: autoImage}}
       image: {
-        quality: {value: 80}
         resize: {fit: max, width: 1980}
         compress: {metadata: true}
       }
