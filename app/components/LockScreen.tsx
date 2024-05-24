@@ -1,16 +1,22 @@
 import type {
   GetEntitiesQuery,
-  LockFragment,
   type HeroesFragment,
+  LockFragment,
 } from '~/__generated__/hygraph.generated';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
-import {Countdown, CounterSize, Timer} from '~/components/Countdown';
+import {
+  calculateTimeLeft,
+  Countdown,
+  CounterSize,
+  Timer,
+} from '~/components/Countdown';
 import {cn, isAfterDate} from '~/lib/utils';
 import React, {Suspense} from 'react';
 import {HeroFactory} from '~/components/Hero';
 import {PageHeader} from '~/components/Text';
 import {Await} from '@remix-run/react';
 import {BlockFactory} from '~/components/blocks/BlockFactory';
+import {ClientOnly} from '~/lib/client-only';
 
 export function LockScreen({
   lock,
@@ -85,17 +91,25 @@ export function LockScreen({
             'absolute bottom-1/2 md:bottom-20 left-1/2 -translate-x-1/2 md:-translate-y-0 translate-y-1/2'
           }
         >
-          <Countdown
-            launchDate={scheduledUnlockTime}
-            isLiveAtInit={isAfterDate(scheduledUnlockTime)}
+          <ClientOnly
+            fallback={
+              <Timer time={calculateTimeLeft(scheduledUnlockTime).timeLeft} />
+            }
           >
-            {({timeLeft, isLive}) => {
-              if (isLive) {
-                window.location.reload();
-              }
-              return <Timer time={timeLeft} size={CounterSize.Large} />;
-            }}
-          </Countdown>
+            {() => (
+              <Countdown
+                launchDate={scheduledUnlockTime}
+                isLiveAtInit={isAfterDate(scheduledUnlockTime)}
+              >
+                {({timeLeft, isLive}) => {
+                  if (isLive) {
+                    window.location.reload();
+                  }
+                  return <Timer time={timeLeft} size={CounterSize.Large} />;
+                }}
+              </Countdown>
+            )}
+          </ClientOnly>
         </div>
       </div>
     </div>

@@ -37,49 +37,54 @@ type TimerProps = {
   size?: CounterSize;
   className?: string;
 };
+
+export function calculateTimeLeft(end: string) {
+  const difference = +new Date(end) - +new Date();
+  let isLive = false;
+  let timeLeft: {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  } else {
+    isLive = true;
+    timeLeft = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    };
+  }
+  return {timeLeft, isLive};
+}
+
 export const Countdown = ({
   launchDate,
   isLiveAtInit,
   children,
 }: CountdownProps) => {
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft().timeLeft);
+  const [timeLeft, setTimeLeft] = useState(
+    calculateTimeLeft(launchDate).timeLeft,
+  );
   const [isLive, setIsLive] = useState<boolean>(isLiveAtInit);
   useEffect(() => {
     const timer = setTimeout(() => {
-      const {timeLeft, isLive} = calculateTimeLeft();
+      const {timeLeft, isLive} = calculateTimeLeft(launchDate);
       setTimeLeft(timeLeft);
       setIsLive(isLive);
     }, 1000);
 
     return () => clearTimeout(timer);
   });
-  function calculateTimeLeft() {
-    const difference = +new Date(launchDate) - +new Date();
-    let isLive = false;
-    let timeLeft: {
-      days: number;
-      hours: number;
-      minutes: number;
-      seconds: number;
-    };
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    } else {
-      isLive = true;
-      timeLeft = {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
-    }
-    return {timeLeft, isLive};
-  }
+
   return createElement(
     Fragment,
     null,
