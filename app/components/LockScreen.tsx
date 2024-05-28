@@ -91,11 +91,7 @@ export function LockScreen({
             'absolute bottom-1/2 md:bottom-20 left-1/2 -translate-x-1/2 md:-translate-y-0 translate-y-1/2'
           }
         >
-          <ClientOnly
-            fallback={
-              <Timer time={calculateTimeLeft(scheduledUnlockTime).timeLeft} />
-            }
-          >
+          <ClientOnly fallback={null}>
             {() => (
               <Countdown
                 launchDate={scheduledUnlockTime}

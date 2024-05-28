@@ -11,10 +11,11 @@ fragment AssetDetails on Asset {
   mimeType
   height
   width
-  url(
+  url
+  image: url(
     transformation: {
       document: {output: {format: autoImage}}
-      image: {compress: {metadata: true}, quality: {value: 80}}
+      image: {compress: {metadata: true}}
     }
   )
   thumbnail: url(

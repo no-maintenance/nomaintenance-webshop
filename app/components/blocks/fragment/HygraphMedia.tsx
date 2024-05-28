@@ -18,6 +18,7 @@ import {
 } from '~/components/ui/carousel';
 import {Image, Video} from '@shopify/hydrogen';
 import type {MediaFragment} from '~/__generated__/storefrontapi.generated';
+import {useMediaQuery} from '~/hooks/useMediaQuery';
 // @todo create function overload
 // function PolymorphicMedia({
 //   media,
@@ -83,9 +84,9 @@ export function HygraphMultiMedia({
               ? 'aspect-square'
               : aspect === '16/9' && 'aspect-[16/9]',
             className,
-            'portrait:hidden',
+            'md:hidden block',
           )}
-          {...asset}
+          {...asset.portrait}
         />
         <HygraphMedia
           className={cn(
@@ -95,7 +96,7 @@ export function HygraphMultiMedia({
               ? 'aspect-square'
               : aspect === '16/9' && 'aspect-[16/9]',
             className,
-            'landscape:hidden',
+            'hidden md:block',
           )}
           {...asset}
         />
@@ -128,6 +129,7 @@ function HygraphMedia({
   large,
   xlarge,
   url,
+  image,
   mimeType,
   alt,
   className,
@@ -143,8 +145,14 @@ function HygraphMedia({
   const src = `${small} 320w, ${medium} 680w, ${large} 960w, ${xlarge} 1980w`;
   const classes = clsx(className && className);
   return mimeType.startsWith('image/') ? (
-    <img className={classes} srcSet={src} src={url} alt={alt ?? ''} />
+    <img className={classes} srcSet={src} src={image} alt={alt ?? ''} />
   ) : mimeType.startsWith('video/') ? (
-    <video className={classes} controls src={url} />
+    <video
+      className={classes}
+      controls={false}
+      autoPlay={true}
+      muted={true}
+      src={url}
+    />
   ) : null;
 }
