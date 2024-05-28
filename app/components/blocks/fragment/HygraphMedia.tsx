@@ -153,6 +153,8 @@ function HygraphMedia({
       autoPlay={true}
       muted={true}
       src={url}
+      loop
+      playsInline
     />
   ) : null;
 }
