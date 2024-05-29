@@ -117,7 +117,7 @@ function VerboseTimer({time, size, className}: Omit<TimerProps, 'variant'>) {
         size === CounterSize.Large && 'timer-large',
         size === CounterSize.Small && 'timer-small',
         !days && 'with-seconds',
-        'flex justify-center py-2 md:pb-8 flex-nowrap text-background font-bold timer',
+        'flex justify-center py-2 flex-nowrap text-background font-bold timer',
         className,
       )}
     >

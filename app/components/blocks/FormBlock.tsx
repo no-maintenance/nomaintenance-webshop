@@ -478,7 +478,7 @@ export function NewsletterForm({
           // setSubmissionState('success');
           form.reset();
           toast({
-            title: 'You have been subscribed to our newsletter.',
+            title: 'You are now subscribed to our newsletter.',
             description:
               'We will keep you posted on upcoming promotions and releases.',
           });
