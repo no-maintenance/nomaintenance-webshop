@@ -39,11 +39,11 @@ import {
   ThemeConsumer,
 } from '~/components/ui/theme';
 import {seoPayload} from '~/lib/seo.server';
-import invariant from 'tiny-invariant';
 import {Toaster} from '~/components/ui/toaster';
 import {CustomAnalytics} from '~/components/analytics/CustomAnalytics';
 import {Partytown} from '@builder.io/partytown/react';
-import {maybeProxyRequest} from '~/lib/utils'; // import {parseAcceptLanguage} from 'intl-parse-accept-language';
+import {maybeProxyRequest} from '~/lib/utils';
+import {SEO_PLACEHOLDER} from '~/lib/const'; // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
@@ -155,7 +155,8 @@ export async function loader({context, request}: LoaderFunctionArgs) {
 }
 
 export const meta = ({data}: MetaArgs<typeof loader>) => {
-  return getSeoMeta(data!.seo as SeoConfig);
+  const seo = data?.seo || SEO_PLACEHOLDER;
+  return getSeoMeta(seo as SeoConfig);
 };
 
 export default function App() {
