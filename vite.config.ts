@@ -61,7 +61,7 @@ export default defineConfig({
     tsconfigPaths(),
     sentryVitePlugin({
       org: 'no-maintenance',
-      project: 'javascript-remix',
+      project: 'nm-webshop',
     }),
   ],
   ssr: {
