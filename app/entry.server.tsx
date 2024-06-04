@@ -10,7 +10,7 @@ export function handleError(error: unknown, {request}: any) {
 }
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: 'https://bed6f36c868092d61e61b57db4abf346@o4507371821727744.ingest.us.sentry.io/4507371823366144',
   tracesSampleRate: 1,
 });
 
