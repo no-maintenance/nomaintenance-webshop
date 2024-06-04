@@ -20,7 +20,11 @@ declare global {
    * A global `process` object is only available during build to access NODE_ENV.
    */
   const process: {
-    env: {SENTRY_DSN: string; NODE_ENV: 'production' | 'development'};
+    env: {
+      SENTRY_AUTH_TOKEN: string | undefined;
+      SENTRY_DSN: string;
+      NODE_ENV: 'production' | 'development';
+    };
   };
 
   interface Window {

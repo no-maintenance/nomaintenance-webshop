@@ -1,4 +1,4 @@
-import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix";
+import {captureRemixErrorBoundaryError, withSentry} from '@sentry/remix';
 import type {SeoConfig} from '@shopify/hydrogen';
 import {
   CacheLong,
@@ -160,7 +160,7 @@ export const meta = ({data}: MetaArgs<typeof loader>) => {
   return getSeoMeta(seo as SeoConfig);
 };
 
-function App() {
+export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
   return (
@@ -187,7 +187,7 @@ function App() {
   );
 }
 
-export default withSentry(App);
+// export default withSentry(App); @TODO investigate why this breaks miniflare build in production
 
 export function Document({
   children,

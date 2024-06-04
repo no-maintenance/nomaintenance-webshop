@@ -9,10 +9,10 @@ export function handleError(error: unknown, {request}: any) {
   Sentry.captureRemixServerException(error, 'remix.server', request);
 }
 
-Sentry.init({
-  dsn: 'https://bed6f36c868092d61e61b57db4abf346@o4507371821727744.ingest.us.sentry.io/4507371823366144',
-  tracesSampleRate: 1,
-});
+// Sentry.init({ @TODO investigate why this breaks miniflare build in production
+//   dsn: 'https://bed6f36c868092d61e61b57db4abf346@o4507371821727744.ingest.us.sentry.io/4507371823366144',
+//   tracesSampleRate: 1,
+// });
 
 const MODE = process.env.NODE_ENV ?? 'development';
 

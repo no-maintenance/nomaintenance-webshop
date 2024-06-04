@@ -4,7 +4,7 @@ import {hydrogen} from '@shopify/hydrogen/vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';
 import {vitePlugin as remix} from '@remix-run/dev';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import {flatRoutes} from 'remix-flat-routes'; // import {visualizer} from 'rollup-plugin-visualizer';
+import {flatRoutes} from 'remix-flat-routes';
 // import {visualizer} from 'rollup-plugin-visualizer';
 
 const MODE = process.env.NODE_ENV;
@@ -47,7 +47,8 @@ export default defineConfig({
         });
       },
       buildDirectory: 'dist',
-    }), // visualizer({
+    }),
+    // visualizer({
     //   emitFile: true,
     //   // template: 'network',
     //   // template: 'raw-data',
