@@ -6,10 +6,10 @@
 import '@total-typescript/ts-reset';
 
 import type {
-  Storefront,
   CustomerAccount,
   HydrogenCart,
   HydrogenSessionData,
+  Storefront,
 } from '@shopify/hydrogen';
 import type {AppSession} from '~/lib/session';
 import {createHygraphClient} from '~/lib/createHygraphClient.server';
@@ -19,11 +19,15 @@ declare global {
   /**
    * A global `process` object is only available during build to access NODE_ENV.
    */
-  const process: {env: {NODE_ENV: 'production' | 'development'}};
+  const process: {
+    env: {SENTRY_DSN: string; NODE_ENV: 'production' | 'development'};
+  };
+
   interface Window {
     klaviyo: any;
     fbq: any;
   }
+
   /**
    * Declare expected Env parameter in fetch handler.
    */

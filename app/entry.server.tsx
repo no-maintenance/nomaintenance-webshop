@@ -1,8 +1,19 @@
+import * as Sentry from '@sentry/remix';
 import type {AppLoadContext, EntryContext} from '@shopify/remix-oxygen';
 import {RemixServer} from '@remix-run/react';
 import isbot from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
 import {createContentSecurityPolicy} from '@shopify/hydrogen';
+
+export function handleError(error: unknown, {request}: any) {
+  Sentry.captureRemixServerException(error, 'remix.server', request);
+}
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 1,
+});
+
 const MODE = process.env.NODE_ENV ?? 'development';
 
 export default async function handleRequest(

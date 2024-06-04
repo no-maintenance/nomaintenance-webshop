@@ -1,9 +1,10 @@
+import {sentryVitePlugin} from '@sentry/vite-plugin';
 import {defineConfig} from 'vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';
 import {vitePlugin as remix} from '@remix-run/dev';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import {flatRoutes} from 'remix-flat-routes';
+import {flatRoutes} from 'remix-flat-routes'; // import {visualizer} from 'rollup-plugin-visualizer';
 // import {visualizer} from 'rollup-plugin-visualizer';
 
 const MODE = process.env.NODE_ENV;
@@ -46,10 +47,7 @@ export default defineConfig({
         });
       },
       buildDirectory: 'dist',
-    }),
-    tsconfigPaths(),
-
-    // visualizer({
+    }), // visualizer({
     //   emitFile: true,
     //   // template: 'network',
     //   // template: 'raw-data',
@@ -59,6 +57,11 @@ export default defineConfig({
     //   brotliSize: true,
     //   gzipSize: true,
     // }),
+    tsconfigPaths(),
+    sentryVitePlugin({
+      org: 'no-maintenance',
+      project: 'javascript-remix',
+    }),
   ],
   ssr: {
     optimizeDeps: {

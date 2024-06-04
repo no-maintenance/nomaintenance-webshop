@@ -1,3 +1,4 @@
+import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix";
 import type {SeoConfig} from '@shopify/hydrogen';
 import {
   CacheLong,
@@ -159,7 +160,7 @@ export const meta = ({data}: MetaArgs<typeof loader>) => {
   return getSeoMeta(seo as SeoConfig);
 };
 
-export default function App() {
+function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
   return (
@@ -185,6 +186,8 @@ export default function App() {
     </Document>
   );
 }
+
+export default withSentry(App);
 
 export function Document({
   children,
@@ -380,6 +383,8 @@ export function ErrorBoundary() {
   } else if (error instanceof Error) {
     errorMessage = error.message;
   }
+
+  captureRemixErrorBoundaryError(error);
 
   return (
     <Document

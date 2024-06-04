@@ -7,3 +7,8 @@ node_modules
 .env
 .shopify
 .idea
+# Sentry Config File
+.sentryclirc
+
+# Sentry Config File
+.env.sentry-build-plugin
