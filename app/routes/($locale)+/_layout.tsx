@@ -189,7 +189,7 @@ function getAppearance(
           return {typename: __typename as EntityTypeName, id, stage};
         })
         .filter((e) => !!e.typename);
-      const blocksPromise = sections
+      const blocksPromise = sections.length
         ? context.hygraph.query(CacheLong()).GetEntities({
             where: [...sections],
           })

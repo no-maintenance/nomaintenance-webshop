@@ -1,5 +1,4 @@
-import {LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
-import {defer} from '@shopify/remix-oxygen';
+import {LoaderFunctionArgs, MetaArgs, defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData} from '@remix-run/react';
 import React, {Suspense} from 'react';
 
@@ -31,7 +30,7 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
     throw new Response(null, {status: 404});
   }
   const {page, sections} = data;
-  const blocksPromise = sections
+  const blocksPromise = sections.length
     ? context.hygraph.query(CacheLong()).GetEntities({
         where: [...sections],
       })

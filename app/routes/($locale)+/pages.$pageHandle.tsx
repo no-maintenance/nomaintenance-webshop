@@ -32,7 +32,7 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
     throw new Response(null, {status: 404});
   }
   const {page, sections} = data;
-  const blocksPromise = sections
+  const blocksPromise = sections.length
     ? context.hygraph.query(CacheLong()).GetEntities({
         where: [...sections],
       })
