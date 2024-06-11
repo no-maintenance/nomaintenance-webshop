@@ -17,7 +17,7 @@ export function trackViewedProduct(data: ProductViewPayload) {
       CompareAtPrice: product.compareAtPrice,
     },
   };
-  klaviyo.push(['track', 'Hydrogen Viewed Product', item]);
+  klaviyo.push(['track', 'Viewed Product', item]);
   klaviyo.push(['trackViewedItem', item]);
 }
 
@@ -33,5 +33,5 @@ export function trackAddedToCart(data: CartLineUpdatePayload) {
     Brand: p?.vendor,
     Price: m?.price?.amount,
   };
-  klaviyo.push(['track', 'Hydrogen Added To Cart', item]);
+  klaviyo.push(['track', 'Added To Cart', item]);
 }
