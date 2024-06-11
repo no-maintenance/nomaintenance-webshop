@@ -150,7 +150,7 @@ export function ContactForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="support@nomaintenance.us" {...field} />
+                <Input placeholder="your email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -291,7 +291,7 @@ export function AppointmentForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="support@nomaintenance.us" {...field} />
+                <Input placeholder="your email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -304,7 +304,7 @@ export function AppointmentForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input placeholder="+1-647-415-2313" {...field} />
+                <Input placeholder="your number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

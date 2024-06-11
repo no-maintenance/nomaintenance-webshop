@@ -52,6 +52,7 @@ export default async function handleRequest(
     ],
     fontSrc: ["'self'", 'cdn.shopify.com'],
     frameSrc: ["'self'"],
+    workerSrc: ["'self'"],
     scriptSrc: [
       "'self'",
       '*.klaviyo.com',
