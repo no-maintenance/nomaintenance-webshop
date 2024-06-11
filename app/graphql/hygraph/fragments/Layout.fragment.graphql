@@ -12,14 +12,10 @@ fragment LayoutContent on Layout {
     ...Heroes
   }
   sections {
+    __typename
     ... on Entity {
-      ...Entity
+      id
+      stage
     }
   }
 }
-fragment Entity on Entity {
-  __typename
-  id
-  stage
-}
-

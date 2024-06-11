@@ -1,5 +1,18 @@
 query GetEntities($where: [EntityWhereInput!]!) {
   entities(where: $where) {
-    ...Block
+    id
+    __typename
+    ...BlockPrimitive
+    ... on CustomizedSection {
+      __typename
+      id
+      theme {
+        slug
+      }
+      ...BlockSettings
+      content {
+        ...BlockPrimitive
+      }
+    }
   }
 }
