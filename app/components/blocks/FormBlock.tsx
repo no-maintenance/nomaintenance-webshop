@@ -150,7 +150,7 @@ export function ContactForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="your email" {...field} />
+                <Input placeholder="Your Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -291,7 +291,7 @@ export function AppointmentForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="your email" {...field} />
+                <Input placeholder="Your Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -304,7 +304,7 @@ export function AppointmentForm({submitBtn}: {submitBtn: string}) {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input placeholder="your number" {...field} />
+                <Input placeholder="Your Number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
