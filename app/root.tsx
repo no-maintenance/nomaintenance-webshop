@@ -213,6 +213,8 @@ export function Document({
     ga4?: string;
   };
 }) {
+  const enableTracking = (id?: string) =>
+    process.env.NODE_ENV !== 'development' && id;
   const t = createRootThemeCss(themes);
   return (
     <html dir={direction} lang={lang} className={`h-full`}>
@@ -239,7 +241,7 @@ export function Document({
           nonce={nonce}
           resolveUrl={maybeProxyRequest}
         />
-        {process.env.NODE_ENV === 'development' || !tokens?.gtm ? null : (
+        {enableTracking(tokens?.gtm) && (
           <>
             <noscript>
               <iframe
@@ -250,7 +252,6 @@ export function Document({
                 style={{display: 'none', visibility: 'hidden'}}
               />
             </noscript>
-
             <script
               dangerouslySetInnerHTML={{
                 __html: `
@@ -281,11 +282,12 @@ export function Document({
             />
           </>
         )}
-        {process.env.NODE_ENV === 'development' || !tokens?.ga4 ? null : (
+        {enableTracking(tokens?.ga4) && (
           <>
             <script
               async
-              src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}
+              type="text/partytown"
+              src={`https://www.googletagmanager.com/gtag/js?id=${tokens?.ga4}`}
             ></script>
 
             <script
@@ -298,19 +300,19 @@ export function Document({
 
                   gtag('js', new Date());
 
-                  gtag('config', '${tokens.ga4}');
+                  gtag('config', '${tokens?.ga4}');
                 `,
               }}
             ></script>
           </>
         )}
-        {process.env.NODE_ENV === 'development' || !tokens?.klaviyo ? null : (
+        {enableTracking(tokens?.klaviyo) && (
           <script
             type="text/partytown"
             src={`https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=${tokens?.klaviyo}`}
           ></script>
         )}
-        {process.env.NODE_ENV === 'development' || !tokens?.meta ? null : (
+        {enableTracking(tokens?.meta) && (
           <>
             {/* for some reason this breaks the productilon build @TODO — INVESTIGATE */}
             {/*<noscript>*/}
@@ -334,7 +336,7 @@ export function Document({
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${tokens.meta}');
+            fbq('init', '${tokens?.meta}');
             fbq('track', 'PageView');
               `,
               }}

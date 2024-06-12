@@ -1,8 +1,5 @@
 fragment Heroes on LayoutHero {
   __typename
-  ... on Entity {
-    id
-  }
   ... on MixedMedia {
     id
     link {
@@ -20,7 +17,8 @@ fragment Heroes on LayoutHero {
   #    ...LockSection
   #  }
   ... on Product {
-    ...ProductGid
+    gid
+    id
   }
   ... on Page {
     id
@@ -33,6 +31,7 @@ fragment Heroes on LayoutHero {
   }
   ... on Collection {
     gid
+    id
   }
   ... on Event {
     id
@@ -59,6 +58,4 @@ fragment Heroes on LayoutHero {
     slug
   }
 }
-fragment ProductGid on Product {
-  gid
-}
+
