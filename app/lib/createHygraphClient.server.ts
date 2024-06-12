@@ -20,12 +20,10 @@ export function createHygraphClient({
   env,
   cache,
   waitUntil,
-  lastModified,
 }: {
   env: Env;
   cache: Cache;
   waitUntil: ExecutionContext['waitUntil'];
-  lastModified: string;
 }) {
   const token =
     env.HYGRAPH_ENV === 'DRAFT'
@@ -74,13 +72,7 @@ export function createHygraphClient({
       client,
       async (action, operationName, operationType, variables) => {
         return withCache(
-          [
-            'hygraph',
-            operationName,
-            operationType,
-            JSON.stringify(variables),
-            lastModified,
-          ],
+          ['hygraph', operationName, operationType, JSON.stringify(variables)],
           env.HYGRAPH_ENV === 'DRAFT' ? CacheNone() : cache,
           async () => {
             return await action();

@@ -1,4 +1,5 @@
 import {
+  CacheCustom,
   CacheLong,
   CacheNone,
   CacheShort,
@@ -16,3 +17,9 @@ export function routeHeaders({loaderHeaders}: {loaderHeaders: Headers}) {
 export const CACHE_SHORT = generateCacheControlHeader(CacheShort());
 export const CACHE_LONG = generateCacheControlHeader(CacheLong());
 export const CACHE_NONE = generateCacheControlHeader(CacheNone());
+
+export const CacheBalanced = CacheCustom({
+  mode: 'public',
+  maxAge: 300,
+  staleWhileRevalidate: 3600,
+});

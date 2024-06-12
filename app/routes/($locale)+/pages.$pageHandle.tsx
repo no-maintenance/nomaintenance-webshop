@@ -19,6 +19,7 @@ import {PageHeader} from '~/components/Text';
 import {cn} from '~/lib/utils';
 import {seoPayload} from '~/lib/seo.server';
 import {FormBlock} from '~/components/blocks/FormBlock';
+import {CacheBalanced} from '~/lib/cache';
 
 export async function loader({params, context, request}: LoaderFunctionArgs) {
   if (!isValidLocaleServer(context, params)) {
@@ -33,7 +34,7 @@ export async function loader({params, context, request}: LoaderFunctionArgs) {
   }
   const {page, sections} = data;
   const blocksPromise = sections.length
-    ? context.hygraph.query(CacheLong()).GetEntities({
+    ? context.hygraph.query(CacheBalanced).GetEntities({
         where: [...sections],
       })
     : null;

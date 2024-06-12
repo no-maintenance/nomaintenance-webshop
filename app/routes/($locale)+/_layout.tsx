@@ -34,6 +34,7 @@ import {delocalizePath} from '~/i18n';
 import {LockScreen} from '~/components/LockScreen';
 import React from 'react';
 import {LazyMotion} from 'framer-motion';
+import {CacheBalanced} from '~/lib/cache';
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   currentUrl,
@@ -190,7 +191,7 @@ function getAppearance(
         })
         .filter((e) => !!e.typename);
       const blocksPromise = sections.length
-        ? context.hygraph.query(CacheLong()).GetEntities({
+        ? context.hygraph.query(CacheBalanced).GetEntities({
             where: [...sections],
           })
         : null;

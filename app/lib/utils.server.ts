@@ -4,6 +4,7 @@ import type {
   PageWhereUniqueInput,
 } from '~/__generated__/hygraph.generated';
 import {CacheLong} from '@shopify/hydrogen';
+import {CacheBalanced} from '~/lib/cache';
 
 export async function getHygraphLoaderContent(
   context: AppLoadContext,
@@ -20,7 +21,7 @@ export async function getHygraphLoaderContent(
     })
     .filter((e) => !!e.typename);
   const {entities} = sections
-    ? await context.hygraph.query(CacheLong()).GetEntities({
+    ? await context.hygraph.query(CacheBalanced).GetEntities({
         where: [...sections],
       })
     : {entities: []};

@@ -85,13 +85,10 @@ export default {
         storefrontId: env.PUBLIC_STOREFRONT_ID,
         storefrontHeaders: getStorefrontHeaders(request),
       });
-      const m = await fetch(env.KV_URL + '/get');
-      const lastModified = await m.text();
       const hygraph = createHygraphClient({
         env,
         cache: await caches.open(HYGRAPH_CACHE_NAME),
         waitUntil,
-        lastModified,
       });
       /**
        * Create a client for Customer Account API.
