@@ -12,7 +12,7 @@ import type {
 } from '@shopify/remix-oxygen';
 import {defer} from '@shopify/remix-oxygen';
 import {useRouteLoaderData} from 'react-router';
-import {CacheLong, useNonce} from '@shopify/hydrogen'; // import LockLayout from '~/components/LockLayout';
+import {CacheLong, CacheShort, useNonce} from '@shopify/hydrogen'; // import LockLayout from '~/components/LockLayout';
 import {getLock} from '~/lib/locks.server';
 import {GenericError, NotFound} from '~/components/Error';
 import type {
@@ -215,7 +215,7 @@ async function getOnPageShopifyGids(
   layoutId?: string,
 ) {
   return layoutId
-    ? await context.hygraph.query(CacheLong()).GetOnPageShopData({
+    ? await context.hygraph.query(CacheShort()).GetOnPageShopData({
         collectionsInfo: {
           heroes_some: {
             id: layoutId,
