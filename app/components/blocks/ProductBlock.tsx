@@ -30,7 +30,7 @@ import type {ProductVariantFragmentFragment} from '~/__generated__/storefrontapi
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {VariantSelector} from '~/components/VariantSelector';
 import {useTranslation} from '~/i18n';
-import {useMediaQuery} from '~/hooks/useMediaQuery';
+import {useMediaQuery} from 'usehooks-ts';
 import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
 import {Button} from '~/components/ui/button';
 import {KlaviyoBackInStock} from '~/components/KlaviyoNewsletter';

@@ -18,7 +18,7 @@ import {
 } from '~/components/ui/carousel';
 import {Image, Video} from '@shopify/hydrogen';
 import type {MediaFragment} from '~/__generated__/storefrontapi.generated';
-import {useMediaQuery} from '~/hooks/useMediaQuery';
+import {useMediaQuery} from 'usehooks-ts';
 // @todo create function overload
 // function PolymorphicMedia({
 //   media,
@@ -66,10 +66,10 @@ export function HygraphMultiMedia({
           aspect === '4/5'
             ? 'aspect-[4/5]'
             : aspect === 'square'
-            ? 'aspect-square'
-            : aspect === '16/9'
-            ? 'aspect-[16/9]'
-            : aspect === 'fluid' && 'h-full',
+              ? 'aspect-square'
+              : aspect === '16/9'
+                ? 'aspect-[16/9]'
+                : aspect === 'fluid' && 'h-full',
           className,
         )}
         {...asset}
@@ -81,8 +81,8 @@ export function HygraphMultiMedia({
             aspect === '4/5'
               ? 'aspect-[4/5]'
               : aspect === 'square'
-              ? 'aspect-square'
-              : aspect === '16/9' && 'aspect-[16/9]',
+                ? 'aspect-square'
+                : aspect === '16/9' && 'aspect-[16/9]',
             className,
             'md:hidden block',
           )}
@@ -93,8 +93,8 @@ export function HygraphMultiMedia({
             aspect === '4/5'
               ? 'aspect-[4/5]'
               : aspect === 'square'
-              ? 'aspect-square'
-              : aspect === '16/9' && 'aspect-[16/9]',
+                ? 'aspect-square'
+                : aspect === '16/9' && 'aspect-[16/9]',
             className,
             'hidden md:block',
           )}

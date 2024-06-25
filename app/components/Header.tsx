@@ -17,12 +17,11 @@ import {Drawer as OldDrawer, useDrawer} from '~/components/Drawer';
 import {Heading, Text} from '~/components/Text';
 import {IconAccount, IconCart, IconClose, IconSearch} from '~/components/Icon';
 import {useRootLoaderData} from '~/root';
-import {
-  FooterStyle,
-  HeaderStyle,
+import type {
   Maybe,
   NavigationFragment,
 } from '~/__generated__/hygraph.generated';
+import {FooterStyle, HeaderStyle} from '~/__generated__/hygraph.generated';
 import {HygraphLink} from '~/components/blocks/fragment/HygraphLink';
 import {useOnKeyPress} from '~/hooks/useOnKeyPress';
 import {
@@ -255,7 +254,7 @@ function DesktopHeader({
                             onKeyDown={(event) => {
                               if (event.key === 'Enter')
                                 window.location.href = inputRef?.current?.value
-                                  ? `/search?q=${inputRef.current.value}`
+                                  ? `/search?q=${inputRef.current?.value}`
                                   : `/search`;
                             }}
                             name="q"

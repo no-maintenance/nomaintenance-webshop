@@ -4,7 +4,7 @@ import {
   CacheLong,
   getSeoMeta,
   getShopAnalytics,
-  UNSTABLE_Analytics as Analytics,
+  Analytics,
   useNonce,
 } from '@shopify/hydrogen';
 import type {

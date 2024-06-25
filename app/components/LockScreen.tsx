@@ -17,7 +17,7 @@ import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
 import {useForm} from 'react-hook-form';
 import {KLAVIYO_BASE_URL, KLAVIYO_COMPANY_ID} from '~/lib/const';
 import {Link} from '~/components/Link';
-import {useMediaQuery} from '~/hooks/useMediaQuery';
+import {useMediaQuery} from 'usehooks-ts';
 import {
   Drawer,
   DrawerClose,

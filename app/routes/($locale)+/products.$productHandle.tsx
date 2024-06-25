@@ -11,7 +11,7 @@ import {
   getSeoMeta,
   Money,
   ShopPayButton,
-  UNSTABLE_Analytics as Analytics,
+  Analytics,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
@@ -51,7 +51,7 @@ import {
   AccordionTrigger,
 } from '~/components/ui/accordion'; // @ts-ignore
 import {convertSchemaToHtml} from '@thebeyondgroup/shopify-rich-text-renderer';
-import {useMediaQuery} from '~/hooks/useMediaQuery';
+import {useMediaQuery} from 'usehooks-ts';
 import {
   Dialog,
   DialogContent,

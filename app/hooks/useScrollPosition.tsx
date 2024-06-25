@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import {useIsomorphicLayoutEffect} from '~/hooks/useIsomorphicLayoutEffect';
 
 export const useScrollPosition = () => {
   const [scrollPosition, setScrollPosition] = useState(0);

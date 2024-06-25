@@ -1,6 +1,6 @@
 // We `toString()` to prevent bundlers from trying to `import { useId } from 'react';`
 import * as React from 'react';
-import {useIsomorphicLayoutEffect} from '~/hooks/useIsomorphicLayoutEffect';
+import {useIsomorphicLayoutEffect} from 'usehooks-ts';
 
 const useReactId = (React as any)['useId'.toString()] || (() => undefined);
 let count = 0;

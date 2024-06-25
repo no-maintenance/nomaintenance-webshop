@@ -3,11 +3,7 @@
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, Form, useLoaderData} from '@remix-run/react';
 import {Suspense} from 'react';
-import {
-  getPaginationVariables,
-  Pagination,
-  UNSTABLE_Analytics as Analytics,
-} from '@shopify/hydrogen';
+import {getPaginationVariables, Pagination, Analytics} from '@shopify/hydrogen';
 import {useInView} from 'react-intersection-observer';
 
 import {Heading, PageHeader, Section, Text} from '~/components/Text';

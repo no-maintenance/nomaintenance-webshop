@@ -66,7 +66,13 @@ export default defineConfig({
   ],
   ssr: {
     optimizeDeps: {
-      include: ['cross-fetch', '@sentry/react', 'react-use', 'escape-html'],
+      include: [
+        'lodash.debounce',
+        'cross-fetch',
+        '@sentry/react',
+        'react-use',
+        'escape-html',
+      ],
     },
   },
 });

@@ -8,7 +8,7 @@ import {
   Image,
   Money,
   OptimisticInput,
-  UNSTABLE_Analytics as Analytics,
+  Analytics,
   useOptimisticData,
 } from '@shopify/hydrogen';
 import type {
@@ -25,7 +25,6 @@ import {Heading, Text} from '~/components/Text';
 import {Button} from '~/components/ui/button';
 import {Input} from '~/components/ui/input';
 import {FeaturedProducts} from '~/components/FeaturedShopifyContent';
-import {CountrySelector} from '~/components/CountrySelector';
 
 type Layouts = 'page' | 'drawer';
 

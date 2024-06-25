@@ -1,5 +1,5 @@
-import {type ComponentProps, lazy, useEffect, useRef, useState} from 'react';
-import {useMediaQuery} from '~/hooks/useMediaQuery';
+import {type ComponentProps, useEffect, useRef, lazy} from 'react';
+import {useMediaQuery} from 'usehooks-ts';
 import {
   Dialog,
   DialogClose,
@@ -52,8 +52,8 @@ export function LocaleSelector({
   onChange: () => void;
   open: boolean;
 }) {
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-
+  // const isDesktop = useMediaQuery('(min-width: 768px)'); @todo fix hydration error for useIsomorphicLayoutEffect
+  const isDesktop = true;
   const title = 'Choose Country';
   const description =
     'Select your country where your order will be shipped. This will provide you the correct language, pricing and shipping costs.';
@@ -77,7 +77,6 @@ export function LocaleSelector({
           <Localizations>
             {({localizations}) => <LocaleForm localizations={localizations} />}
           </Localizations>
-
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
@@ -143,7 +142,7 @@ function LocaleForm({
       return;
     }
     navigateToLocale(selectedLocale.current);
-  }, [fetcher]);
+  }, [buyerIdentityUpdate, fetcher]);
   if (!localizations) return <p>Loading...</p>;
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {

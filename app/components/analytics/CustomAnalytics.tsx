@@ -1,7 +1,4 @@
-import {
-  getCustomerPrivacy,
-  unstable_useAnalytics as useAnalytics,
-} from '@shopify/hydrogen';
+import {getCustomerPrivacy, useAnalytics} from '@shopify/hydrogen';
 import {useEffect} from 'react';
 import {
   trackViewedProduct as klaviyoTrackViewedProduct,
