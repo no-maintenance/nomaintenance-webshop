@@ -48,7 +48,7 @@ export function CustomAnalytics() {
       console.log('CustomAnalytics - Product Added to Cart:', data);
       ga.trackProductAddedToCart(data);
       fb.trackProductAddedToCart(data);
-      klaviyo.track(klaviyo.trackProductAddedToCart, data);
+      klaviyo.trackProductAddedToCart(data);
     });
 
     // Custom events
