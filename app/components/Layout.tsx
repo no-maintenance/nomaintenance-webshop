@@ -58,8 +58,6 @@ export function Layout({
     <LayoutContext.Provider value={layoutConfig}>
       <ConditionalThemeWrapper theme={layoutConfig?.theme}>
         <div className="flex flex-col min-h-screen bg-background text-foreground">
-          {/*<CartAside cart={cart} />*/}
-          {/*<SearchAside />*/}
           <div className="">
             <a href="#mainContent" className="sr-only">
               Skip to content

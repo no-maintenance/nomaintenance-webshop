@@ -29,7 +29,9 @@ declare global {
 
   interface Window {
     klaviyo: any;
-    fbq: any;
+    fbq: (...args: any[]) => void;
+    dataLayer: any;
+    gtag: Gtag.Gtag;
   }
 
   /**

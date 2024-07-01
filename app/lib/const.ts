@@ -24,7 +24,7 @@ export const SEO_PLACEHOLDER = {
   titleTemplate: '%s',
   description: 'No Maintenance is a brand based in Los Angeles, California. ',
   handle: '@shopify',
-  url: 'http://localhost:3000/',
+  url: 'https://nomaintenance.us',
   robots: {
     noIndex: false,
     noFollow: false,
@@ -41,10 +41,10 @@ export const SEO_PLACEHOLDER = {
       'https://youtube.com/shopify',
       'https://tiktok.com/@shopify',
     ],
-    url: 'http://localhost:3000/',
+    url: 'https://nomaintenance.us/',
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'http://localhost:3000/search?q={search_term}',
+      target: 'https://nomaintenance.us/search?q={search_term}',
       query: "required name='search_term'",
     },
   },

@@ -50,7 +50,12 @@ export default async function handleRequest(
       'https://cdn.shopify.com',
       "'self'",
     ],
-    fontSrc: ["'self'", 'cdn.shopify.com'],
+    fontSrc: [
+      "'self'",
+      'cdn.shopify.com',
+      'fonts.gstatic.com',
+      'res.cloudinary.com',
+    ],
     frameSrc: ["'self'"],
     workerSrc: ["'self'", 'blob:'],
     scriptSrc: [
@@ -61,7 +66,7 @@ export default async function handleRequest(
       MODE === 'development' ? 'testing.nomaintenance.us' : null,
       '*.googletagmanager.com',
     ].filter(Boolean),
-    styleSrc: ["'self'", '*.klaviyo.com'],
+    styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],
   });
   const body = await renderToReadableStream(
     <NonceProvider>
