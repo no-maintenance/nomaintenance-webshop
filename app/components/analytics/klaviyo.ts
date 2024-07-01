@@ -25,7 +25,7 @@ export class KlaviyoAnalytics extends AnalyticsPixel {
     const item = {
       Name: product.title,
       ProductID: product.id.substring(product.id.lastIndexOf('/') + 1),
-      ImageURL: product.selectedVariant.image.url,
+      ImageURL: product.image,
       Handle: product.handle,
       Brand: product.vendor,
       Price: product.selectedVariant.price.amount,
