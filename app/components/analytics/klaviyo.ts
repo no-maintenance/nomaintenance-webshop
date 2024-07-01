@@ -45,16 +45,38 @@ export class KlaviyoAnalytics extends AnalyticsPixel {
 
   trackProductAddedToCart(data: CartLineUpdatePayload): void {
     const product = data.currentLine?.merchandise?.product;
-    const item = {
-      Name: product?.title,
-      ProductID: product?.id.substring(product?.id.lastIndexOf('/') + 1),
-      ImageURL: product?.variantBySelectedOptions?.image?.url,
+    const newline = {
+      $value: parseInt(product?.variantBySelectedOptions?.price?.amount ?? '0'),
+      AddedItemProductName: product?.title,
+      AddedItemProductID: product?.id.substring(
+        product?.id.lastIndexOf('/') + 1,
+      ),
+      AddedItemImageURL: product?.variantBySelectedOptions?.image?.url,
+      AddedItemURL: `https://nomaintenance.us/products/${
+        product?.handle ?? ''
+      }`,
       Handle: product?.handle,
       Brand: product?.vendor,
-      Price: product?.variantBySelectedOptions?.price?.amount,
+      AddedItemQuantity: 1,
+      AddedItemPrice: parseInt(
+        product?.variantBySelectedOptions?.price?.amount ?? '0',
+      ),
+      CheckoutURL: data?.cart?.checkoutUrl,
       ...data.customData,
     };
-    window.klaviyo.push(['track', 'Added to Cart', item]);
+    const payload = {
+      ...newline,
+      Items: data.cart?.lines.nodes.map((i) => ({
+        ProductID: i.id,
+        ProductName: i?.merchandise?.product?.title,
+        Quantity: i.quantity,
+        ItemPrice: parseInt(i.cost.amountPerQuantity.amount),
+        RowTotal: parseInt(i.cost.totalAmount.amount),
+        ProductURL: `https://nomaintenance.us/products/${i.merchandise.product.handle}`,
+        ImageURL: i.merchandise.image?.url,
+      })),
+    };
+    window.klaviyo.push(['track', 'Added to Cart', payload]);
   }
 
   trackNewsletterSignup(data: any): void {}
