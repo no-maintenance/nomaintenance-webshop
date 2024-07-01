@@ -27,21 +27,21 @@ export function CustomAnalytics() {
       ga.trackProductViewed(data);
       fb.trackProductViewed(data);
       klaviyo.track(klaviyo.trackProductViewed, data);
-      // klaviyo.trackProductViewed(data);
+      klaviyo.trackProductViewed(data);
     });
 
     subscribe('collection_viewed', (data) => {
       console.log('CustomAnalytics - Collection viewed:', data);
       ga.trackCollectionViewed(data);
       fb.trackCollectionViewed(data);
-      // klaviyo.trackCollectionViewed(data);
+      klaviyo.trackCollectionViewed(data);
     });
 
     subscribe('cart_viewed', (data) => {
       console.log('CustomAnalytics - Cart viewed:', data);
       ga.trackCartViewed(data);
       fb.trackCartViewed(data);
-      // klaviyo.trackCartViewed(data);
+      klaviyo.trackCartViewed(data);
     });
 
     subscribe('product_added_to_cart', (data) => {
