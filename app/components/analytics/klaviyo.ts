@@ -28,11 +28,11 @@ export class KlaviyoAnalytics extends AnalyticsPixel {
       ImageURL: product.image,
       Handle: product.handle,
       Brand: product.vendor,
-      Price: product.selectedVariant.price.amount,
+      Price: product.price,
       Metadata: {
         Brand: product.vendor,
-        Price: product.selectedVariant.unitPrice,
-        CompareAtPrice: product.selectedVariant.compareAtPrice,
+        Price: product.price,
+        CompareAtPrice: product.compareAtPrice,
       },
     };
     window.klaviyo.push(['track', 'Viewed Product', item]);
