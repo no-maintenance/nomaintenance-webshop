@@ -143,7 +143,7 @@ export function LockScreen({
                             'font-light tracking-widest uppercase text-background text-mid'
                           }
                         >
-                          Until our Summer Sale Begins
+                          Until Our Private Sale Begins
                         </h2>
                       </div>
                     </div>
@@ -299,7 +299,7 @@ const NewsletterPopup = () => {
               'uppercase text-heading decoration-1 underline font-light mx-auto flex items-center cursor-pointer'
             }
           >
-            Sign up for our Mailing List
+            Sign up for our Mailing List to Receive Access
           </button>
         </DialogTrigger>
         <DialogContent variant="tall" className={'rounded-lg'}>
@@ -410,7 +410,7 @@ const NewsletterPopup = () => {
           'uppercase text-heading decoration-1 mx-auto underline font-light  flex items-center cursor-pointer'
         }
       >
-        Sign up for our Mailing List
+        Sign up for our Mailing List to Receive Access
       </DrawerTrigger>
       <DrawerContent className={'py-gutter'}>
         <DrawerHeader className={'mt-2 mb-4'}>
