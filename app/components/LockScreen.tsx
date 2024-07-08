@@ -95,7 +95,7 @@ export function LockScreen({
     <div className=" flex items-center flex-col justify-center min-h-screen relative">
       <div
         className={
-          'relative h-full flex-1 w-full block md:pt-0 pt-32 md:flex md:flex-col items-center justify-center md:min-h-[620px] overflow-hidden'
+          'relative h-full max-h-screen flex-1 w-full block md:pt-0 pt-32 md:flex md:flex-col items-center justify-center md:min-h-[620px] overflow-hidden'
         }
       >
         <div className={'block'}>
@@ -108,17 +108,12 @@ export function LockScreen({
         </div>
         <div
           className={
-            'absolute pt-16 lg:pt-20 xl:pt-24  md:pr-10 md:right-0 md:top-0 right-1/2 translate-x-1/2 md:-translate-x-0 bottom-24 text-white text-mid max-w-full px-gutter w-full md:w-auto md:text-left text-center'
+            'absolute pt-16 lg:pt-20 xl:pt-24  md:pr-10 md:right-0 md:top-0 right-1/2 translate-x-1/2 md:-translate-x-0 bottom-28 text-white text-mid max-w-full px-gutter w-full md:w-auto md:text-left text-center'
           }
         >
-          <a
-            rel={'noreferrer'}
-            target={'_blank'}
-            className={'text-heading uppercase mt-2 block font-semibold'}
-            href={'https://partiful.com/e/N8J5F6nyElwaowx1X0jb'}
-          >
+          <h1 className={'text-heading uppercase mt-2 block font-semibold'}>
             Web Shop is Closed
-          </a>
+          </h1>
           <NewsletterPopup />
           <div className={'md:hidden block pt-16'}>
             <AppointmentDrawer />
@@ -216,7 +211,7 @@ const AppointmentDrawer = () => {
             and time.
           </DrawerDescription>
         </DrawerHeader>
-        <div className={'max-h-[70vh] overflow-y-auto px-gutter'}>
+        <div className={'max-h-[80vh] overflow-y-auto px-gutter'}>
           <AppointmentForm submitBtn={'Book Now'} />
         </div>
 
