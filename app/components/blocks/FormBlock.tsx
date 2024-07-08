@@ -351,7 +351,7 @@ export function AppointmentForm({submitBtn}: {submitBtn: string}) {
             </FormItem>
           )}
         />
-        <Button type="submit" size={'lg'}>
+        <Button type="submit" size="lg" className={'w-full'}>
           {submitBtn}
         </Button>
       </form>

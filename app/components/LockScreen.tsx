@@ -13,7 +13,14 @@ import {Await} from '@remix-run/react';
 import {BlockFactory} from '~/components/blocks/BlockFactory';
 import {ClientOnly} from '~/lib/client-only';
 import {Button} from '~/components/ui/button';
-import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/ui/dialog';
 import {useForm} from 'react-hook-form';
 import {KLAVIYO_BASE_URL, KLAVIYO_COMPANY_ID} from '~/lib/const';
 import {Link} from '~/components/Link';
@@ -23,11 +30,14 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '~/components/ui/drawer';
 import {toast} from '~/components/ui/use-toast';
+import {AppointmentForm} from '~/components/blocks/FormBlock';
+import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
 
 export function LockScreen({
   lock,
@@ -98,22 +108,25 @@ export function LockScreen({
         </div>
         <div
           className={
-            'absolute pt-16 lg:pt-20 xl:pt-24  md:pr-10 md:right-0 md:top-0 right-1/2 translate-x-1/2 md:-translate-x-0 bottom-10 text-white text-mid max-w-full px-gutter w-full md:w-auto'
+            'absolute pt-16 lg:pt-20 xl:pt-24  md:pr-10 md:right-0 md:top-0 right-1/2 translate-x-1/2 md:-translate-x-0 bottom-24 text-white text-mid max-w-full px-gutter w-full md:w-auto md:text-left text-center'
           }
         >
-          <NewsletterPopup />
           <a
             rel={'noreferrer'}
             target={'_blank'}
-            className={'text-heading uppercase mt-2 block font-semibold ml-6'}
+            className={'text-heading uppercase mt-2 block font-semibold'}
             href={'https://partiful.com/e/N8J5F6nyElwaowx1X0jb'}
           >
-            RSVP: Los Angeles Launch Event
+            Web Shop is Closed
           </a>
+          <NewsletterPopup />
+          <div className={'md:hidden block pt-16'}>
+            <AppointmentDrawer />
+          </div>
         </div>
         <div
           className={
-            'absolute bottom-1/2 md:bottom-20 left-1/2 -translate-x-1/2 md:-translate-y-0 translate-y-1/2'
+            'absolute bottom-1/2 left-1/2 -translate-x-1/2  translate-y-1/2'
           }
         >
           <ClientOnly fallback={null}>
@@ -132,10 +145,10 @@ export function LockScreen({
                       <div className={'text-center'}>
                         <h2
                           className={
-                            'font-bold uppercase text-background text-mid'
+                            'font-light tracking-widest uppercase text-background text-mid'
                           }
                         >
-                          Web shop is closed
+                          Until our Summer Sale Begins
                         </h2>
                       </div>
                     </div>
@@ -145,11 +158,77 @@ export function LockScreen({
             )}
           </ClientOnly>
         </div>
+        <div className={'absolute bottom-28 md:block hidden'}>
+          <AppointmentPopup />
+        </div>
       </div>
     </div>
   );
 }
 
+const AppointmentPopup = () => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <button
+          className={
+            'text-heading font-semibold underline decoration-1 underline-offset-8 uppercase text-background'
+          }
+        >
+          Book an Appointment to Shop in Person
+        </button>
+      </DialogTrigger>
+      <DialogContent variant="wide">
+        <DialogHeader>
+          <DialogTitle>Book an Appointment</DialogTitle>
+          <DialogDescription>
+            Our showroom is open by appointment only, Monday through Thursday.
+            To schedule your visit, please contact us with your preferred date
+            and time.
+          </DialogDescription>
+        </DialogHeader>
+        <AppointmentForm submitBtn={'Book Now'} />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const AppointmentDrawer = () => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <button
+          className={
+            'text-mid font-light tracking-widest mx-auto underline decoration-1 underline-offset-8 uppercase text-background'
+          }
+        >
+          Book an Appointment to Shop in Person
+        </button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Book An Appointment</DrawerTitle>
+          <DrawerDescription>
+            Our showroom is open by appointment only, Monday through Thursday.
+            To schedule your visit, please contact us with your preferred date
+            and time.
+          </DrawerDescription>
+        </DrawerHeader>
+        <div className={'max-h-[70vh] overflow-y-auto px-gutter'}>
+          <AppointmentForm submitBtn={'Book Now'} />
+        </div>
+
+        <DrawerFooter className="pt-2">
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+};
 const NewsletterPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [submissionState, setSubmissionState] = useState<
@@ -219,14 +298,19 @@ const NewsletterPopup = () => {
   if (isDesktop)
     return (
       <Dialog onOpenChange={setIsOpen} open={isOpen}>
-        <DialogTrigger
-          className={
-            'uppercase text-heading decoration-1 underline font-semibold  flex items-center cursor-pointer'
-          }
-        >
-          Sign up for Newsletter
+        <DialogTrigger asChild>
+          <button
+            className={
+              'uppercase text-heading decoration-1 underline font-light mx-auto flex items-center cursor-pointer'
+            }
+          >
+            Sign up for our Mailing List
+          </button>
         </DialogTrigger>
-        <DialogContent variant={'tall'} className={'rounded-lg'}>
+        <DialogContent variant="tall" className={'rounded-lg'}>
+          <VisuallyHidden>
+            <DialogTitle>Newsletter Form</DialogTitle>
+          </VisuallyHidden>
           <div className={'text-center flex flex-col'}>
             <Heading as={'h2'} className={'pt-16'} size={'mid'}>
               NOMAINTENANCE
@@ -328,12 +412,12 @@ const NewsletterPopup = () => {
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger
         className={
-          'uppercase text-heading decoration-1 underline font-semibold  flex items-center cursor-pointer'
+          'uppercase text-heading decoration-1 mx-auto underline font-light  flex items-center cursor-pointer'
         }
       >
-        Sign up for Newsletter
+        Sign up for our Mailing List
       </DrawerTrigger>
-      <DrawerContent className={'p-gutter'}>
+      <DrawerContent className={'py-gutter'}>
         <DrawerHeader className={'mt-2 mb-4'}>
           <DrawerTitle>NOMAINTENANCE</DrawerTitle>
           <DrawerDescription>
@@ -341,7 +425,10 @@ const NewsletterPopup = () => {
             restocks, and more.
           </DrawerDescription>
         </DrawerHeader>
-        <form className={'newsletter__form'} onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className={'newsletter__form px-gutter'}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className={'mb-2 flex relative'}>
             <input
               className={`ga-email input text-copy w-full  focus:shadow-none autofill:!bg-transparent  ${

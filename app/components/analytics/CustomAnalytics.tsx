@@ -81,7 +81,7 @@ export function Pixels({
     ga4?: string;
   };
 }) {
-  const DEBUG_TRACKING = true;
+  const DEBUG_TRACKING = false;
   if (process.env.NODE_ENV === 'development' && !DEBUG_TRACKING) return null;
   return (
     <>
