@@ -211,7 +211,7 @@ const AppointmentDrawer = () => {
             and time.
           </DrawerDescription>
         </DrawerHeader>
-        <div className={'max-h-[80vh] overflow-y-auto px-gutter'}>
+        <div className={'max-h-[75vh] overflow-y-auto px-gutter'}>
           <AppointmentForm submitBtn={'Book Now'} />
         </div>
 
