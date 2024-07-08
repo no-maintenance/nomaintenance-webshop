@@ -108,7 +108,7 @@ export function LockScreen({
         </div>
         <div
           className={
-            'absolute pt-16 lg:pt-20 xl:pt-24  md:pr-10 md:right-0 md:top-0 right-1/2 translate-x-1/2 md:-translate-x-0 bottom-40 text-white text-mid max-w-full px-gutter w-full md:w-auto md:text-left text-center'
+            'absolute max-w-[500px] pt-16 lg:pt-20 xl:pt-24  md:pr-10 md:right-0 md:top-0 right-1/2 translate-x-1/2 md:-translate-x-0 bottom-40 text-white text-mid max-w-full px-gutter w-full md:w-auto md:text-left text-center'
           }
         >
           <h1 className={'text-heading uppercase mt-2 block font-semibold'}>
@@ -294,13 +294,13 @@ const NewsletterPopup = () => {
     return (
       <Dialog onOpenChange={setIsOpen} open={isOpen}>
         <DialogTrigger asChild>
-          <button
+          <span
             className={
-              'uppercase text-heading decoration-1 underline font-light mx-auto flex items-center cursor-pointer'
+              'uppercase text-heading decoration-1 underline font-light mx-auto cursor-pointer'
             }
           >
             Sign up for our Mailing List to Receive Access
-          </button>
+          </span>
         </DialogTrigger>
         <DialogContent variant="tall" className={'rounded-lg'}>
           <VisuallyHidden>
@@ -405,12 +405,14 @@ const NewsletterPopup = () => {
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger
-        className={
-          'uppercase text-heading decoration-1 mx-auto underline font-light  flex items-center cursor-pointer'
-        }
-      >
-        Sign up for our Mailing List to Receive Access
+      <DrawerTrigger asChild>
+        <span
+          className={
+            'uppercase text-heading decoration-1 mx-auto underline font-light cursor-pointer'
+          }
+        >
+          Sign up for our Mailing List to Receive Access
+        </span>
       </DrawerTrigger>
       <DrawerContent className={'py-gutter'}>
         <DrawerHeader className={'mt-2 mb-4'}>
