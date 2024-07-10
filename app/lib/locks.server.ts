@@ -44,19 +44,10 @@ const isActiveLock = (
     password,
   } = lock;
   const {type, slug} = ctx;
-  console.log(scheduledUnlockTime);
 
   const pastDate = isAfterDate(scheduledUnlockTime);
   const authenticated = session.get('bypass-page-protection') === lock.id;
-  console.log(
-    authenticated,
-    !isEnabled,
-    alwaysUnlockOnTime && pastDate,
-    alwaysUnlockForAuthenticatedUser && authenticated,
-    pastDate && !password,
-    !scheduledUnlockTime && authenticated && password,
-    pastDate && authenticated,
-  );
+
   for (const e of exemptions) {
     if (slug === e.slug) return false;
   }
