@@ -192,6 +192,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
     password,
     alwaysUnlockForAuthenticatedUser,
   } = lock;
+  const pastDate = isAfterDate(scheduledUnlockTime);
   return (
     <div>
       <img
@@ -215,7 +216,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
           </Heading>
           <PasswordForm lock={lock} />
         </div>
-        {password && isAfterDate(scheduledUnlockTime) ? (
+        {password && pastDate ? (
           <hgroup>
             <Heading
               as={'h2'}
