@@ -94,9 +94,9 @@ function CustomLockScreen({
         isLiveAtInit={isAfterDate(scheduledUnlockTime)}
       >
         {({timeLeft, isLive}) => {
-          // if (isLive && alwaysUnlockOnTime) {
-          //   window.location.reload();
-          // } @TODO testing suppress warning
+          if (isLive && alwaysUnlockOnTime) {
+            window.location.reload();
+          }
           return null;
         }}
       </Countdown>

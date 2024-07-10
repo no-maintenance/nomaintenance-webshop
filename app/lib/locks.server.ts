@@ -33,7 +33,6 @@ const isActiveLock = (
   ctx: RouteSlugInfo,
   session: AppSession,
 ) => {
-  lock.scheduledUnlockTime = '2024-07-09T18:00:00+00:00'; // @TODO remove testing
   const {
     isEnabled,
     isGlobal,
