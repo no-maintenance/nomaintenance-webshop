@@ -33,7 +33,9 @@ const isActiveLock = (
   ctx: RouteSlugInfo,
   session: AppSession,
 ) => {
+  lock.scheduledUnlockTime = '2024-07-09T18:00:00+00:00'; // @TODO remove testing
   const {
+    isEnabled,
     isGlobal,
     alwaysUnlockForAuthenticatedUser,
     alwaysUnlockOnTime,
@@ -43,36 +45,43 @@ const isActiveLock = (
     password,
   } = lock;
   const {type, slug} = ctx;
-  const isExpired = isAfterDate(scheduledUnlockTime);
+  console.log(scheduledUnlockTime);
+
+  const pastDate = isAfterDate(scheduledUnlockTime);
+  const authenticated = session.get('bypass-page-protection') === lock.id;
+  console.log(
+    authenticated,
+    !isEnabled,
+    alwaysUnlockOnTime && pastDate,
+    alwaysUnlockForAuthenticatedUser && authenticated,
+    pastDate && !password,
+    !scheduledUnlockTime && authenticated && password,
+    pastDate && authenticated,
+  );
   for (const e of exemptions) {
     if (slug === e.slug) return false;
   }
 
-  if (isExpired && (alwaysUnlockOnTime || !password)) return false;
-
-  // @TODO implement password authentication
-  // if (alwaysUnlockForAuthenticatedUser) {
-  //   const token = session.get(`pw-${lock.id}`);
-  // }
-  if (password) {
-    const token = session.get(`pw-${lock.id}`);
-    if (!token) {
+  if (
+    !isEnabled ||
+    (alwaysUnlockOnTime && pastDate) ||
+    (alwaysUnlockForAuthenticatedUser && authenticated) ||
+    (pastDate && !password) ||
+    (!scheduledUnlockTime && authenticated && password) ||
+    (pastDate && authenticated)
+  ) {
+    return false;
+  } else {
+    if (isGlobal) {
       return true;
-    } else {
-      if (alwaysUnlockForAuthenticatedUser || isExpired) {
-        return false;
-      }
     }
-  }
-  if (!isGlobal) {
     if (type !== PageType.Page && type !== PageType.Editorial) return false;
     for (const page of pageLocks) {
       if (page.slug === slug) return true;
     }
-  } else {
-    return true;
   }
 
+  // invariant
   return false;
 };
 /**

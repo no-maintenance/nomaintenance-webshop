@@ -234,7 +234,7 @@ export function Document({
           value={t?.staticRoots?.normal ?? DEFAULT_CHILD_THEME}
         >
           <ThemeConsumer asChild>
-            <body>
+            <body suppressHydrationWarning={true}>
               {children}
               <script
                 nonce={nonce}

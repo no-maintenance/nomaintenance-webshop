@@ -3,7 +3,6 @@ import type {
   type HeroesFragment,
   LockFragment,
 } from '~/__generated__/hygraph.generated';
-import {HeaderStyle} from '~/__generated__/hygraph.generated';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
 import {Countdown, CounterSize, Timer} from '~/components/Countdown';
 import {cn, isAfterDate} from '~/lib/utils';
@@ -39,7 +38,6 @@ import {
 import {toast} from '~/components/ui/use-toast';
 import {AppointmentForm, newsletterSchema} from '~/components/blocks/FormBlock';
 import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
-import {MinimalHeader} from '~/components/Header';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {
@@ -56,6 +54,7 @@ import {useBaseLayoutData} from '~/routes/($locale)+/_layout';
 import {AnimatePresence, m, useAnimationControls} from 'framer-motion';
 import type {action} from '~/routes/api+/setPassword';
 import {useCopyToClipboard} from 'react-use';
+import logo from '~/assets/logo.png?url';
 
 function CustomLockScreen({
   lock,
@@ -95,9 +94,9 @@ function CustomLockScreen({
         isLiveAtInit={isAfterDate(scheduledUnlockTime)}
       >
         {({timeLeft, isLive}) => {
-          if (isLive) {
-            window.location.reload();
-          }
+          // if (isLive && alwaysUnlockOnTime) {
+          //   window.location.reload();
+          // } @TODO testing suppress warning
           return null;
         }}
       </Countdown>
@@ -186,16 +185,25 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
 }
 
 function PasswordLockScreen({lock}: {lock: LockFragment}) {
-  const {background, scheduledUnlockTime, alwaysUnlockOnTime} = lock;
+  const {
+    background,
+    scheduledUnlockTime,
+    alwaysUnlockOnTime,
+    password,
+    alwaysUnlockForAuthenticatedUser,
+  } = lock;
   return (
     <div>
-      <div
-        className={cn(['absolute h-full w-full', !background && 'bg-black'])}
-      ></div>
-      <MinimalHeader headerStyle={HeaderStyle.Minimal} />
+      <img
+        alt={'logo for No Maintenance'}
+        className={
+          'mx-auto md:absolute top-0 left-0 block w-[200px] sm:w-[250px] md:w-[300px] lg:w-[350px] z-10'
+        }
+        src={logo}
+      />
       <section
         className={
-          'px-gutter text-background text-center space-y-8 md:space-y-12 w-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2'
+          'px-gutter text-background text-center space-y-8 md:space-y-12 w-full  md:pt-80'
         }
       >
         <div className={'space-y-6'}>
@@ -205,10 +213,27 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
           >
             Summer &#39;24
           </Heading>
-
           <PasswordForm lock={lock} />
         </div>
-        <Counter lock={lock} />
+        {password && isAfterDate(scheduledUnlockTime) ? (
+          <hgroup>
+            <Heading
+              as={'h2'}
+              className={'uppercase text-oversize font-semibold'}
+            >
+              Now Live
+            </Heading>
+            <h3
+              className={
+                'font-light tracking-widest uppercase text-background text-mid'
+              }
+            >
+              Register for the mailing list to receive access
+            </h3>
+          </hgroup>
+        ) : (
+          <Counter lock={lock} />
+        )}
         <NewsletterForm password={lock.password} submitBtn={'Submit'} />
         <AppointmentResponsiveDialog />
       </section>
@@ -378,14 +403,21 @@ export function LockScreen({
   lock: LockFragment;
   sections: Promise<GetEntitiesQuery> | null;
 }) {
-  if (lock.customLockScreen) {
-    return <CustomLockScreen lock={lock} sections={sections} />;
-  }
-  if (lock.password) {
-    return <PasswordLockScreen lock={lock} />;
-  }
+  const Switcher = () => {
+    if (lock.customLockScreen) {
+      return <CustomLockScreen lock={lock} sections={sections} />;
+    }
+    if (lock.password) {
+      return <PasswordLockScreen lock={lock} />;
+    }
 
-  return <CountdownLockScreen lock={lock} />;
+    return <CountdownLockScreen lock={lock} />;
+  };
+  return (
+    <div className={'bg-foreground min-h-screen'}>
+      <Switcher />
+    </div>
+  );
 }
 
 const AppointmentResponsiveDialog = () => {
