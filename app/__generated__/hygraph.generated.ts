@@ -20839,6 +20839,13 @@ export type GetLayoutConfigQuery = { __typename?: 'Query', layouts: Array<{ __ty
 
 export type LayoutConfigFragment = { __typename?: 'Layout', id: string, headerStyle?: HeaderStyle | null, footerStyle?: FooterStyle | null, theme?: { __typename?: 'Theme', slug: string } | null };
 
+export type GetLockQueryVariables = Exact<{
+  where: LockWhereUniqueInput;
+}>;
+
+
+export type GetLockQuery = { __typename?: 'Query', lock?: { __typename?: 'Lock', password?: string | null } | null };
+
 export type GetNavigationQueryVariables = Exact<{
   where: NavigationWhereUniqueInput;
 }>;
@@ -21521,6 +21528,13 @@ export const GetLayoutConfigDocument = gql`
   }
 }
     ${LayoutConfigFragmentDoc}`;
+export const GetLockDocument = gql`
+    query GetLock($where: LockWhereUniqueInput!) {
+  lock(where: $where) {
+    password
+  }
+}
+    `;
 export const GetNavigationDocument = gql`
     query GetNavigation($where: NavigationWhereUniqueInput!) {
   navigation(where: $where) {
@@ -21618,6 +21632,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetLayoutConfig(variables: GetLayoutConfigQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetLayoutConfigQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetLayoutConfigQuery>(GetLayoutConfigDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetLayoutConfig', 'query', variables);
+    },
+    GetLock(variables: GetLockQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetLockQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetLockQuery>(GetLockDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetLock', 'query', variables);
     },
     GetNavigation(variables: GetNavigationQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetNavigationQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNavigationQuery>(GetNavigationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNavigation', 'query', variables);

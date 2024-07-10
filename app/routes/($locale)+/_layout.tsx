@@ -13,7 +13,7 @@ import type {
 import {defer} from '@shopify/remix-oxygen';
 import {useRouteLoaderData} from 'react-router';
 import {CacheLong, CacheShort, useNonce} from '@shopify/hydrogen'; // import LockLayout from '~/components/LockLayout';
-import {getLock} from '~/lib/locks.server';
+import {getLock, hasLockPasswordCookie} from '~/lib/locks.server';
 import {GenericError, NotFound} from '~/components/Error';
 import type {
   EntityTypeName,
@@ -98,6 +98,7 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
     await getOnPageShopifyGids(context, layoutConfig.id);
   return defer({
     lock,
+    hasLockPassword: hasLockPasswordCookie(context.session, lock),
     customLockContent: blocks,
     layoutConfig,
     products: getProducts(context, products),
@@ -197,7 +198,7 @@ function getAppearance(
         : null;
       layoutType.blocks = blocksPromise;
     } else {
-      layoutType.header = HeaderStyle.MinimalNewsletterCta;
+      layoutType.header = HeaderStyle.None;
       layoutType.footer = FooterStyle.Minimal;
     }
   } else if (pageLayout) {

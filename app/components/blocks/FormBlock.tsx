@@ -411,7 +411,7 @@ const DateInput = forwardRef<HTMLInputElement, UseControllerProps>(
     );
   },
 );
-const newsletterSchema = z.object({
+export const newsletterSchema = z.object({
   email: z
     .string({
       required_error: 'Please include an email for us to contact you.',
@@ -439,18 +439,6 @@ export function NewsletterForm({
     },
   });
   const isLoading = false;
-
-  // function onSubmit(data: z.infer<typeof newsletterSchema>) {
-  //
-  //   toast({
-  //     title: 'You submitted the following values:',
-  //     description: (
-  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-  //       </pre>
-  //     ),
-  //   });
-  // }
 
   const onSubmit = (data: z.infer<typeof newsletterSchema>) => {
     const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;

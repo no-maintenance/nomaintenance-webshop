@@ -1,0 +1,5 @@
+query GetLock($where: LockWhereUniqueInput!) {
+    lock(where: $where) {
+        password
+    }
+}

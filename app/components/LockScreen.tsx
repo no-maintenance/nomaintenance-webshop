@@ -3,13 +3,14 @@ import type {
   type HeroesFragment,
   LockFragment,
 } from '~/__generated__/hygraph.generated';
+import {HeaderStyle} from '~/__generated__/hygraph.generated';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
 import {Countdown, CounterSize, Timer} from '~/components/Countdown';
 import {cn, isAfterDate} from '~/lib/utils';
 import React, {Suspense, useEffect, useState} from 'react';
 import {HeroFactory} from '~/components/Hero';
 import {Heading, PageHeader} from '~/components/Text';
-import {Await} from '@remix-run/react';
+import {Await, useFetcher} from '@remix-run/react';
 import {BlockFactory} from '~/components/blocks/BlockFactory';
 import {ClientOnly} from '~/lib/client-only';
 import {Button} from '~/components/ui/button';
@@ -36,61 +37,76 @@ import {
   DrawerTrigger,
 } from '~/components/ui/drawer';
 import {toast} from '~/components/ui/use-toast';
-import {AppointmentForm} from '~/components/blocks/FormBlock';
+import {AppointmentForm, newsletterSchema} from '~/components/blocks/FormBlock';
 import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
+import {MinimalHeader} from '~/components/Header';
+import {z} from 'zod';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '~/components/ui/form';
+import {Input} from '~/components/ui/input';
+import {Checkbox} from '~/components/ui/checkbox';
+import {useBaseLayoutData} from '~/routes/($locale)+/_layout';
+import {AnimatePresence, m, useAnimationControls} from 'framer-motion';
+import type {action} from '~/routes/api+/setPassword';
+import {useCopyToClipboard} from 'react-use';
 
-export function LockScreen({
+function CustomLockScreen({
   lock,
   sections,
 }: {
   lock: LockFragment;
-  sections: Promise<GetEntitiesQuery> | null;
+  sections: Promise<GetEntitiesQuery>;
 }) {
   const {background, scheduledUnlockTime, alwaysUnlockOnTime} = lock;
-  if (lock.customLockScreen) {
-    return (
-      <>
-        {lock.customLockScreen?.heroes && (
-          <HeroFactory
-            reverseLayout={!!lock.customLockScreen?.mirrorLayout}
-            heroes={lock.customLockScreen.heroes as HeroesFragment[]}
-          />
+  return (
+    <>
+      {lock.customLockScreen?.heroes && (
+        <HeroFactory
+          reverseLayout={!!lock.customLockScreen?.mirrorLayout}
+          heroes={lock.customLockScreen.heroes as HeroesFragment[]}
+        />
+      )}
+      {lock.customLockScreen?.displayTitle && lock.customLockScreen?.title && (
+        <PageHeader variant={'page'} heading={lock.customLockScreen.title} />
+      )}
+      <div
+        className={cn(
+          !lock.customLockScreen?.heroes &&
+            !lock.customLockScreen?.displayTitle &&
+            !lock.customLockScreen?.title &&
+            'pt-gutter mt-gutter',
         )}
-        {lock.customLockScreen?.displayTitle &&
-          lock.customLockScreen?.title && (
-            <PageHeader
-              variant={'page'}
-              heading={lock.customLockScreen.title}
-            />
-          )}
-        <div
-          className={cn(
-            !lock.customLockScreen?.heroes &&
-              !lock.customLockScreen?.displayTitle &&
-              !lock.customLockScreen?.title &&
-              'pt-gutter mt-gutter',
-          )}
-        >
-          <Suspense fallback={null}>
-            <Await resolve={sections}>
-              {(b) => b && <BlockFactory blocks={b as GetEntitiesQuery} />}
-            </Await>
-          </Suspense>
-        </div>
-        <Countdown
-          launchDate={scheduledUnlockTime}
-          isLiveAtInit={isAfterDate(scheduledUnlockTime)}
-        >
-          {({timeLeft, isLive}) => {
-            if (isLive) {
-              window.location.reload();
-            }
-            return null;
-          }}
-        </Countdown>
-      </>
-    );
-  }
+      >
+        <Suspense fallback={null}>
+          <Await resolve={sections}>
+            {(b) => b && <BlockFactory blocks={b as GetEntitiesQuery} />}
+          </Await>
+        </Suspense>
+      </div>
+      <Countdown
+        launchDate={scheduledUnlockTime}
+        isLiveAtInit={isAfterDate(scheduledUnlockTime)}
+      >
+        {({timeLeft, isLive}) => {
+          if (isLive) {
+            window.location.reload();
+          }
+          return null;
+        }}
+      </Countdown>
+    </>
+  );
+}
+
+function CountdownLockScreen({lock}: {lock: LockFragment}) {
+  const {background, scheduledUnlockTime, alwaysUnlockOnTime} = lock;
   return (
     <div className=" flex items-center flex-col justify-center min-h-screen relative">
       <div
@@ -124,7 +140,15 @@ export function LockScreen({
             'absolute bottom-1/2 left-1/2 -translate-x-1/2  translate-y-1/2'
           }
         >
-          <ClientOnly fallback={null}>
+          <ClientOnly
+            fallback={
+              <div
+                className={
+                  'xl:h-[86px] lg:h-[70px] md:h-[108px] h-[93px] w-full'
+                }
+              ></div>
+            }
+          >
             {() => (
               <Countdown
                 launchDate={scheduledUnlockTime}
@@ -161,6 +185,270 @@ export function LockScreen({
   );
 }
 
+function PasswordLockScreen({lock}: {lock: LockFragment}) {
+  const {background, scheduledUnlockTime, alwaysUnlockOnTime} = lock;
+  return (
+    <div>
+      <div
+        className={cn(['absolute h-full w-full', !background && 'bg-black'])}
+      ></div>
+      <MinimalHeader headerStyle={HeaderStyle.Minimal} />
+      <section
+        className={
+          'px-gutter text-background text-center space-y-8 md:space-y-12 w-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2'
+        }
+      >
+        <div className={'space-y-6'}>
+          <Heading
+            as={'h1'}
+            className={'tracking-widest uppercase mx-auto text-center'}
+          >
+            Summer &#39;24
+          </Heading>
+
+          <PasswordForm lock={lock} />
+        </div>
+        <Counter lock={lock} />
+        <NewsletterForm password={lock.password} submitBtn={'Submit'} />
+        <AppointmentResponsiveDialog />
+      </section>
+    </div>
+  );
+}
+
+function Counter({lock}: {lock: LockFragment}) {
+  const {scheduledUnlockTime} = lock;
+  return (
+    <div>
+      <ClientOnly
+        fallback={
+          <div
+            className={'xl:h-[86px] lg:h-[72px] md:h-[108px] h-[93px] w-full'}
+          ></div>
+        }
+      >
+        {() => (
+          <Countdown
+            launchDate={scheduledUnlockTime}
+            isLiveAtInit={isAfterDate(scheduledUnlockTime)}
+          >
+            {({timeLeft, isLive}) => {
+              if (isLive) {
+                window.location.reload();
+              }
+              return <Timer time={timeLeft} size={CounterSize.Large} />;
+            }}
+          </Countdown>
+        )}
+      </ClientOnly>
+      <div className={'text-center'}>
+        <h2
+          className={
+            'font-light tracking-widest uppercase text-background text-mid'
+          }
+        >
+          Time Until Private Sale
+        </h2>
+      </div>
+    </div>
+  );
+}
+
+function PasswordForm({lock}: {lock: LockFragment}) {
+  const {hasLockPassword} = useBaseLayoutData();
+  const controls = useAnimationControls();
+  const fetcher = useFetcher<typeof action>();
+  const [hasPw, setHasPw] = useState<boolean>(hasLockPassword);
+  const pwFormSchema = z.object({
+    password: z.string({
+      required_error:
+        'A password is required. Join our mailing list and check your inbox for details.',
+    }),
+    id: z.string(),
+  });
+  const form = useForm<z.infer<typeof pwFormSchema>>({
+    resolver: zodResolver(pwFormSchema),
+    defaultValues: {
+      password: '',
+      id: lock.id,
+    },
+  });
+  useEffect(() => {
+    if (fetcher.data?.status === 401) {
+      toast({
+        variant: 'destructive',
+        title: 'Incorrect Password',
+        description: 'Please double check your password and try again.',
+      });
+      form.reset();
+      form.setFocus('password');
+      // form.setError('password', {type: 'manual', message: 'Incorrect entry'});
+      controls.start({
+        x: [0, -5, 5, -5, 5, 0],
+        transition: {duration: 0.3},
+      });
+    }
+    if (fetcher.data?.status === 200) {
+      setHasPw(true);
+    }
+  }, [fetcher.data]);
+  const onSubmit = (data: z.infer<typeof pwFormSchema>) => {
+    const formData = new FormData();
+    formData.append('id', data.id);
+    formData.append('password', data.password);
+    fetcher.submit(formData, {
+      method: 'POST',
+      action: '/api/setPassword',
+    });
+    // if (data.password === lock.password) {
+    //   setHasPw(true);
+    // } else {
+    //   form.setError('password', {type: 'manual', message: 'Incorrect entry'});
+    //   controls.start({
+    //     x: [0, -5, 5, -5, 5, 0],
+    //     transition: {duration: 0.3},
+    //   });
+    //   form.reset({password: ''});
+    //   toast({
+    //     variant: 'destructive',
+    //     title: 'Incorrect Password',
+    //     description: 'Please double check your password and try again.',
+    //   });
+    // }
+  };
+  return (
+    <div className={'transition-all'}>
+      {hasPw ? (
+        <p className={'max-w-lg w-full mx-auto'}>
+          You have now unlocked sale access and are in the queue. Please check
+          back here when the sale begins.
+        </p>
+      ) : (
+        <Form {...form}>
+          <m.form
+            animate={controls}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 w-full  max-w-2xl mx-auto"
+          >
+            <input
+              type={'hidden'}
+              name={'id'}
+              value={lock.id}
+              {...form.register('id')}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({field}) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type={'password'}
+                      className={
+                        'border-l-0 border-r-0 border-t-0 rounded-none text-lead !placeholder-background pl-0 focus:pl-3'
+                      }
+                      placeholder="Enter Password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              size="lg"
+              className={
+                'w-full  bg-background hover:bg-transparent hover:text-background text-foreground border-background hover:border'
+              }
+            >
+              Enter The Sale
+            </Button>
+          </m.form>
+        </Form>
+      )}
+    </div>
+  );
+}
+
+export function LockScreen({
+  lock,
+  sections,
+}: {
+  lock: LockFragment;
+  sections: Promise<GetEntitiesQuery> | null;
+}) {
+  if (lock.customLockScreen) {
+    return <CustomLockScreen lock={lock} sections={sections} />;
+  }
+  if (lock.password) {
+    return <PasswordLockScreen lock={lock} />;
+  }
+
+  return <CountdownLockScreen lock={lock} />;
+}
+
+const AppointmentResponsiveDialog = () => {
+  const [open, setOpen] = React.useState(false);
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  if (isDesktop)
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <button
+            className={
+              'text-heading font-semibold underline decoration-1 underline-offset-8 uppercase text-background'
+            }
+          >
+            Book an Appointment to Shop in Person
+          </button>
+        </DialogTrigger>
+        <DialogContent variant="wide">
+          <DialogHeader>
+            <DialogTitle>Book an Appointment</DialogTitle>
+            <DialogDescription>
+              Our showroom is open by appointment only, Monday through Thursday.
+              To schedule your visit, please contact us with your preferred date
+              and time.
+            </DialogDescription>
+          </DialogHeader>
+          <AppointmentForm submitBtn={'Book Now'} />
+        </DialogContent>
+      </Dialog>
+    );
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <button
+          className={
+            'text-mid font-light tracking-widest mx-auto underline decoration-1 underline-offset-8 uppercase text-background'
+          }
+        >
+          Book an Appointment to Shop in Person
+        </button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Book An Appointment</DrawerTitle>
+          <DrawerDescription>
+            Our showroom is open by appointment only, Monday through Thursday.
+            To schedule your visit, please contact us with your preferred date
+            and time.
+          </DrawerDescription>
+        </DrawerHeader>
+        <div className={'max-h-[75vh] overflow-y-auto px-gutter'}>
+          <AppointmentForm submitBtn={'Book Now'} />
+        </div>
+
+        <DrawerFooter className="pt-2">
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+};
 const AppointmentPopup = () => {
   const [open, setOpen] = React.useState(false);
   return (
@@ -502,3 +790,213 @@ const NewsletterPopup = () => {
     </Drawer>
   );
 };
+
+function NewsletterForm({
+  hasSubmitBtn = true,
+  id,
+  submitBtn,
+  password,
+}: {
+  submitBtn: string;
+  hasSubmitBtn?: boolean;
+  id?: string;
+  password: string;
+}) {
+  const form = useForm<z.infer<typeof newsletterSchema>>({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      email: '',
+      consent: false,
+    },
+  });
+  const [subscribed, setSubscribed] = useState(false);
+  const [copiedText, copy] = useCopyToClipboard();
+  const [showCopiedToClipboardCB, setShowCopiedToClipboardCB] = useState(false);
+  const isLoading = false;
+  const onSubmit = (data: z.infer<typeof newsletterSchema>) => {
+    const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
+    const options = {
+      method: 'POST',
+      headers: {revision: '2023-02-22', 'content-type': 'application/json'},
+      body: JSON.stringify({
+        data: {
+          type: 'subscription',
+          attributes: {
+            list_id: 'Wimtnj',
+            custom_source: id,
+            email: data.email,
+          },
+        },
+      }),
+    };
+    fetch(url, options)
+      .then((res) => {
+        if (res.ok) {
+          // analytics.trackEvent(AnalyticsFormEvents.MainNewsletterSignup, {
+          //   location: 'footer',
+          //   componentID: '9c448a26-16bf-4011-ba0a-1d651eebd649',
+          // });
+          // setSubmissionState('success');
+          form.reset();
+          setSubscribed(true);
+          toast({
+            title: 'You are now subscribed to our newsletter.',
+            description:
+              'We will keep you posted on upcoming promotions and releases.',
+          });
+        } else {
+          toast({
+            title: 'Uh oh! Something went wrong.',
+            description:
+              'There was a problem with your request. Please try again later.',
+          });
+        }
+      })
+      .catch((err) => {
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description:
+            'There was a problem with your request. Please try again later.',
+        });
+        // @TODO add sentry error
+        console.error('error:' + err);
+      });
+  };
+
+  function copyPassword() {
+    copy(password);
+    setShowCopiedToClipboardCB(true);
+    setTimeout(() => {
+      setShowCopiedToClipboardCB(false);
+    }, 2000);
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="lg:h-[122px] h-[111px] space-y-4 max-w-2xl mx-auto w-full text-left"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({field}) => (
+            <FormItem>
+              <div className={'h-[21px]'}>
+                <AnimatePresence>
+                  {!subscribed && (
+                    <m.div animate={{opacity: 1}} exit={{opacity: 0}}>
+                      <FormLabel>
+                        Sign up to receive the password for the private sale
+                      </FormLabel>
+                    </m.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <FormControl>
+                <div
+                  className={
+                    'border border-background text-mid flex justify-between items-center h-[41px] '
+                  }
+                >
+                  <AnimatePresence>
+                    {subscribed ? (
+                      <Heading
+                        as={'h3'}
+                        className={
+                          'font-semibold uppercase text-center mx-auto cursor-pointer h-full text-mid flex justify-center items-center'
+                        }
+                        onClick={() => copyPassword()}
+                      >
+                        <AnimatePresence>
+                          {showCopiedToClipboardCB ? (
+                            <m.span
+                              initial={{opacity: 0}}
+                              animate={{opacity: 1}}
+                              exit={{opacity: 0}}
+                            >
+                              Copied to Clipboard
+                            </m.span>
+                          ) : (
+                            <m.span
+                              initial={{opacity: 0}}
+                              animate={{opacity: 1}}
+                              exit={{opacity: 0}}
+                            >
+                              Password: {password}
+                            </m.span>
+                          )}
+                        </AnimatePresence>
+                      </Heading>
+                    ) : (
+                      <>
+                        <input
+                          className={
+                            'h-full flex-1 bg-transparent border-l-0 border-y-0 text-mid font-semibold  placeholder-background py-2 border-r border-background'
+                          }
+                          data-1p-ignore
+                          placeholder={'Email Address'}
+                          {...field}
+                        />
+
+                        <button
+                          type="submit"
+                          disabled={isLoading}
+                          className={
+                            ' px-5 outline-offset-0  h-full flex-shrink-0 font-semibold'
+                          }
+                        >
+                          {isLoading ? <p>Loading...</p> : submitBtn}
+                        </button>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className={'h-[14px]'}>
+          <AnimatePresence>
+            {!subscribed && (
+              <m.div animate={{opacity: 1}} exit={{opacity: 0}}>
+                <FormField
+                  control={form.control}
+                  name="consent"
+                  render={({field}) => (
+                    <FormItem>
+                      <div className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            I agree to receive the newsletter. See more about
+                            our{' '}
+                            <Link
+                              className={'underline'}
+                              to={'/policies/privacy-policy'}
+                            >
+                              Privacy Policy
+                            </Link>
+                            .
+                          </FormLabel>
+                        </div>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </m.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </form>
+    </Form>
+  );
+}

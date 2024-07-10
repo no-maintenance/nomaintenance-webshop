@@ -43,19 +43,27 @@ const isActiveLock = (
     password,
   } = lock;
   const {type, slug} = ctx;
-
+  const isExpired = isAfterDate(scheduledUnlockTime);
   for (const e of exemptions) {
     if (slug === e.slug) return false;
   }
 
-  if (isAfterDate(scheduledUnlockTime) && (alwaysUnlockOnTime || !password))
-    return false;
+  if (isExpired && (alwaysUnlockOnTime || !password)) return false;
 
   // @TODO implement password authentication
   // if (alwaysUnlockForAuthenticatedUser) {
   //   const token = session.get(`pw-${lock.id}`);
   // }
-
+  if (password) {
+    const token = session.get(`pw-${lock.id}`);
+    if (!token) {
+      return true;
+    } else {
+      if (alwaysUnlockForAuthenticatedUser || isExpired) {
+        return false;
+      }
+    }
+  }
   if (!isGlobal) {
     if (type !== PageType.Page && type !== PageType.Editorial) return false;
     for (const page of pageLocks) {
@@ -87,6 +95,14 @@ const selectLockReducer = (
   else return activeLock;
 };
 
+export const hasLockPasswordCookie = (
+  session: AppSession,
+  lock: LockFragment | null,
+) => {
+  if (!lock?.id) return false;
+  return session.get('bypass-page-protection') === lock.id;
+};
+
 /**
  * Finds the lock to activate on the current route, if one is available.
  *
@@ -110,6 +126,7 @@ export const isHome = (req: Request, context: AppLoadContext) => {
   const delocalizedPath = delocalizePath(path, context.i18n);
   return delocalizedPath === '/';
 };
+
 export function getRouteSlugInfo(
   context: AppLoadContext,
   request: Request,

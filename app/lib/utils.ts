@@ -1,9 +1,10 @@
-import {BaseI18n, createSubfolderLocaleParser} from '~/i18n';
+import type {BaseI18n} from '~/i18n';
+import {createSubfolderLocaleParser} from '~/i18n';
 
 import {type ClassValue, clsx} from 'clsx';
 import {twMerge} from 'tailwind-merge';
-import {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
-import {FulfillmentStatus} from '@shopify/hydrogen/customer-account-api-types';
+import type {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
+import type {FulfillmentStatus} from '@shopify/hydrogen/customer-account-api-types';
 
 export const subfolderLocaleParser = createSubfolderLocaleParser({
   parser: ({COUNTRY, language, delimiter}) =>
@@ -18,6 +19,36 @@ export const isAfterDate = (time?: string) => {
   if (!time) return false;
   return +new Date(time) - +new Date() <= 0;
 };
+
+export function setCookie(name: string, value: string, days: number) {
+  let expires = '';
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = '; expires=' + date.toUTCString();
+  }
+  document.cookie = name + '=' + (value || '') + expires + '; path=/';
+}
+
+export function getCookie(name) {
+  const nameEQ = name + '=';
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+export const parseCookie = (str: string) =>
+  str
+    .split(';')
+    .map((v) => v.split('='))
+    .reduce((acc, v) => {
+      acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
+      return acc;
+    }, {});
 
 export function isNewArrival(date: string, daysOld = 30) {
   return (

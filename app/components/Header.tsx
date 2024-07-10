@@ -84,7 +84,7 @@ export function Header({
   );
 }
 
-function MinimalHeader({headerStyle}: {headerStyle: HeaderStyle}) {
+export function MinimalHeader({headerStyle}: {headerStyle: HeaderStyle}) {
   return (
     <>
       <img

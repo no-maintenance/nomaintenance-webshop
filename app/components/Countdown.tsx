@@ -111,13 +111,14 @@ function VerboseTimer({time, size, className}: Omit<TimerProps, 'variant'>) {
   const {days, hours, minutes, seconds} = time;
   const labelStyles = cn('hidden', CounterSize.Large === size && 'lg:inline');
   const separatorStyles = cn('separator lg:pl-2');
+  // @TODO refactor Client only in timer
   return (
     <div
       className={cn(
         size === CounterSize.Large && 'timer-large',
         size === CounterSize.Small && 'timer-small',
         !days && 'with-seconds',
-        'flex justify-center py-2 flex-nowrap text-background font-bold timer',
+        'flex justify-center flex-nowrap text-background font-bold timer',
         className,
       )}
     >

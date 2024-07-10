@@ -67,6 +67,8 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
+        'js-cookie',
+        'cookie',
         'lodash.debounce',
         'cross-fetch',
         '@sentry/react',
