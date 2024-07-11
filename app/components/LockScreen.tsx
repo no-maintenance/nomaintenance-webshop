@@ -337,13 +337,13 @@ function PasswordForm({lock, isLive}: {lock: LockFragment; isLive: boolean}) {
           transition: {duration: 0.3},
         });
       }
-      if (actionData?.status === 401) {
-        toast({
-          variant: 'destructive',
-          title: 'Incorrect Password',
-          description: 'Please double check your password and try again.',
-        });
-      }
+      // if (actionData?.status === 401) {
+      //   toast({
+      //     variant: 'destructive',
+      //     title: 'Incorrect Password',
+      //     description: 'Please double check your password and try again.',
+      //   });
+      // }
     }
   }, [actionData]);
 
