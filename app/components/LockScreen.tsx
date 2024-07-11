@@ -262,6 +262,15 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
             >
               Now Live
             </Heading>
+            {!hasLockPassword && (
+              <h3
+                className={
+                  'font-light tracking-widest uppercase text-background text-mid'
+                }
+              >
+                Register to our mailing list for entry details.
+              </h3>
+            )}
           </hgroup>
         ) : (
           <div className={'xl:h-[86px] lg:h-[71px] h-[108px] w-full'}>
