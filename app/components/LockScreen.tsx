@@ -14,7 +14,7 @@ import {cn, isAfterDate} from '~/lib/utils';
 import React, {Suspense, useEffect, useMemo, useState} from 'react';
 import {HeroFactory} from '~/components/Hero';
 import {Heading, PageHeader} from '~/components/Text';
-import {Await, Form, useActionData} from '@remix-run/react';
+import {Await, Form, useActionData, useRevalidator} from '@remix-run/react';
 import {BlockFactory} from '~/components/blocks/BlockFactory';
 import {ClientOnly} from '~/lib/client-only';
 import {Button} from '~/components/ui/button';
@@ -191,12 +191,12 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
 
 function PasswordLockScreen({lock}: {lock: LockFragment}) {
   const {
-    background,
     scheduledUnlockTime,
     alwaysUnlockOnTime,
     password,
     alwaysUnlockForAuthenticatedUser,
   } = lock;
+  const revalidator = useRevalidator();
   const controls = useAnimationControls();
   const {hasLockPassword} = useBaseLayoutData();
   const [timeLeft, isLive] = useCountdown(scheduledUnlockTime);
@@ -214,8 +214,13 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
   }, [isLive, hasLockPassword]);
   useEffect(() => {
     const queueExitAnimation = async () => {
-      await controls.start({opacity: 0, transition: {duration: 0.5}});
+      await controls.start({
+        opacity: 0,
+        backgroundColor: '#fff',
+        transition: {duration: 3},
+      });
       window.location.reload();
+      // revalidator.revalidate();
     };
     if (!isProtected) {
       queueExitAnimation();
@@ -226,7 +231,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
     isAfterDate(scheduledUnlockTime),
   );
   return (
-    <m.div animate={controls}>
+    <m.div animate={controls} className={'min-h-screen bg-foreground'}>
       <img
         alt={'logo for No Maintenance'}
         className={
@@ -246,7 +251,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
           >
             Summer &#39;24
           </Heading>
-          <PasswordForm lock={lock} />
+          <PasswordForm isLive={isLive} lock={lock} />
         </div>
 
         {isLive ? (
@@ -257,13 +262,6 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
             >
               Now Live
             </Heading>
-            <h3
-              className={
-                'font-light tracking-widest uppercase text-background text-mid'
-              }
-            >
-              Register for the mailing list to receive access
-            </h3>
           </hgroup>
         ) : (
           <div className={'xl:h-[86px] lg:h-[71px] h-[108px] w-full'}>
@@ -306,7 +304,7 @@ function Counter({lock}: {lock: LockFragment}) {
   );
 }
 
-function PasswordForm({lock}: {lock: LockFragment}) {
+function PasswordForm({lock, isLive}: {lock: LockFragment; isLive: boolean}) {
   const {hasLockPassword} = useBaseLayoutData();
   const controls = useAnimationControls();
   const actionData = useActionData();
@@ -319,7 +317,9 @@ function PasswordForm({lock}: {lock: LockFragment}) {
       pwRef.current.value = '';
     }
     if (actionData?.status === 200) {
-      setHasPw(true);
+      if (!isLive) {
+        setHasPw(true);
+      }
     } else {
       if (actionData?.status === 401 || actionData?.status === 500) {
         setFocus();
@@ -394,7 +394,7 @@ export function LockScreen({
     return <CountdownLockScreen lock={lock} />;
   };
   return (
-    <div className={'bg-foreground min-h-screen'}>
+    <div className={' min-h-screen'}>
       <Switcher />
     </div>
   );
