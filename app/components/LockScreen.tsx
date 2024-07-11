@@ -4,12 +4,17 @@ import type {
   LockFragment,
 } from '~/__generated__/hygraph.generated';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
-import {Countdown, CounterSize, Timer} from '~/components/Countdown';
+import {
+  Countdown,
+  CounterSize,
+  Timer,
+  useCountdown,
+} from '~/components/Countdown';
 import {cn, isAfterDate} from '~/lib/utils';
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useMemo, useState} from 'react';
 import {HeroFactory} from '~/components/Hero';
 import {Heading, PageHeader} from '~/components/Text';
-import {Await, useFetcher} from '@remix-run/react';
+import {Await, Form, useActionData} from '@remix-run/react';
 import {BlockFactory} from '~/components/blocks/BlockFactory';
 import {ClientOnly} from '~/lib/client-only';
 import {Button} from '~/components/ui/button';
@@ -38,10 +43,10 @@ import {
 import {toast} from '~/components/ui/use-toast';
 import {AppointmentForm, newsletterSchema} from '~/components/blocks/FormBlock';
 import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
-import {z} from 'zod';
+import type {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {
-  Form,
+  Form as HookForm,
   FormControl,
   FormField,
   FormItem,
@@ -52,9 +57,9 @@ import {Input} from '~/components/ui/input';
 import {Checkbox} from '~/components/ui/checkbox';
 import {useBaseLayoutData} from '~/routes/($locale)+/_layout';
 import {AnimatePresence, m, useAnimationControls} from 'framer-motion';
-import type {action} from '~/routes/api+/setPassword';
 import {useCopyToClipboard} from 'react-use';
 import logo from '~/assets/logo.png?url';
+import {useFocus} from '~/hooks/useFocus';
 
 function CustomLockScreen({
   lock,
@@ -143,7 +148,7 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
             fallback={
               <div
                 className={
-                  'xl:h-[86px] lg:h-[70px] md:h-[108px] h-[93px] w-full'
+                  'xl:h-[86px] lg:h-[70px] sm:h-[108px] h-[93px] w-full'
                 }
               ></div>
             }
@@ -192,9 +197,36 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
     password,
     alwaysUnlockForAuthenticatedUser,
   } = lock;
-  const pastDate = isAfterDate(scheduledUnlockTime);
+  const controls = useAnimationControls();
+  const {hasLockPassword} = useBaseLayoutData();
+  const [timeLeft, isLive] = useCountdown(scheduledUnlockTime);
+  const isProtected = useMemo(() => {
+    if (
+      (hasLockPassword && alwaysUnlockForAuthenticatedUser) ||
+      (alwaysUnlockOnTime && isLive) ||
+      (isLive && !password) ||
+      (!scheduledUnlockTime && hasLockPassword && password) ||
+      (isLive && hasLockPassword)
+    ) {
+      return false;
+    }
+    return true;
+  }, [isLive, hasLockPassword]);
+  useEffect(() => {
+    const queueExitAnimation = async () => {
+      await controls.start({opacity: 0, transition: {duration: 0.5}});
+      window.location.reload();
+    };
+    if (!isProtected) {
+      queueExitAnimation();
+    }
+  }, [isProtected]);
+
+  const [pastDate, setPastDate] = useState<boolean>(
+    isAfterDate(scheduledUnlockTime),
+  );
   return (
-    <div>
+    <m.div animate={controls}>
       <img
         alt={'logo for No Maintenance'}
         className={
@@ -216,7 +248,8 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
           </Heading>
           <PasswordForm lock={lock} />
         </div>
-        {password && pastDate ? (
+
+        {!password && isLive ? (
           <hgroup>
             <Heading
               as={'h2'}
@@ -233,115 +266,77 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
             </h3>
           </hgroup>
         ) : (
-          <Counter lock={lock} />
+          <div className={'xl:h-[86px] lg:h-[71px] h-[108px] w-full'}>
+            <ClientOnly fallback={null}>
+              {() => <Counter lock={lock} />}
+            </ClientOnly>
+          </div>
         )}
         <NewsletterForm password={lock.password} submitBtn={'Submit'} />
         <AppointmentResponsiveDialog />
       </section>
-    </div>
+    </m.div>
   );
 }
 
 function Counter({lock}: {lock: LockFragment}) {
   const {scheduledUnlockTime} = lock;
   return (
-    <div>
-      <ClientOnly
-        fallback={
-          <div
-            className={'xl:h-[86px] lg:h-[72px] md:h-[108px] h-[93px] w-full'}
-          ></div>
-        }
-      >
-        {() => (
-          <Countdown
-            launchDate={scheduledUnlockTime}
-            isLiveAtInit={isAfterDate(scheduledUnlockTime)}
-          >
-            {({timeLeft, isLive}) => {
-              if (isLive) {
-                window.location.reload();
-              }
-              return <Timer time={timeLeft} size={CounterSize.Large} />;
-            }}
-          </Countdown>
-        )}
-      </ClientOnly>
-      <div className={'text-center'}>
-        <h2
-          className={
-            'font-light tracking-widest uppercase text-background text-mid'
-          }
-        >
-          Time Until Private Sale
-        </h2>
-      </div>
-    </div>
+    <Countdown
+      launchDate={scheduledUnlockTime}
+      isLiveAtInit={isAfterDate(scheduledUnlockTime)}
+    >
+      {({timeLeft, isLive}) => {
+        return (
+          <div>
+            <Timer time={timeLeft} size={CounterSize.Large} />
+            <div className={'text-center'}>
+              <h2
+                className={
+                  'font-light tracking-widest uppercase text-background text-mid'
+                }
+              >
+                Time Until Private Sale
+              </h2>
+            </div>
+          </div>
+        );
+      }}
+    </Countdown>
   );
 }
 
 function PasswordForm({lock}: {lock: LockFragment}) {
   const {hasLockPassword} = useBaseLayoutData();
   const controls = useAnimationControls();
-  const fetcher = useFetcher<typeof action>();
+  const actionData = useActionData();
+  const [pwRef, setFocus] = useFocus<HTMLInputElement>();
+
   const [hasPw, setHasPw] = useState<boolean>(hasLockPassword);
-  const pwFormSchema = z.object({
-    password: z.string({
-      required_error:
-        'A password is required. Join our mailing list and check your inbox for details.',
-    }),
-    id: z.string(),
-  });
-  const form = useForm<z.infer<typeof pwFormSchema>>({
-    resolver: zodResolver(pwFormSchema),
-    defaultValues: {
-      password: '',
-      id: lock.id,
-    },
-  });
+
   useEffect(() => {
-    if (fetcher.data?.status === 401) {
-      toast({
-        variant: 'destructive',
-        title: 'Incorrect Password',
-        description: 'Please double check your password and try again.',
-      });
-      form.reset();
-      form.setFocus('password');
+    if (pwRef?.current) {
+      pwRef.current.value = '';
+    }
+    if (actionData?.status === 200) {
+      setHasPw(true);
+    } else {
+      setFocus();
       // form.setError('password', {type: 'manual', message: 'Incorrect entry'});
       controls.start({
         x: [0, -5, 5, -5, 5, 0],
         transition: {duration: 0.3},
       });
+      if (actionData?.status === 401) {
+        toast({
+          variant: 'destructive',
+          title: 'Incorrect Password',
+          description: 'Please double check your password and try again.',
+        });
+      }
     }
-    if (fetcher.data?.status === 200) {
-      setHasPw(true);
-    }
-  }, [fetcher.data]);
-  const onSubmit = (data: z.infer<typeof pwFormSchema>) => {
-    const formData = new FormData();
-    formData.append('id', data.id);
-    formData.append('password', data.password);
-    fetcher.submit(formData, {
-      method: 'POST',
-      action: '/api/setPassword',
-    });
-    // if (data.password === lock.password) {
-    //   setHasPw(true);
-    // } else {
-    //   form.setError('password', {type: 'manual', message: 'Incorrect entry'});
-    //   controls.start({
-    //     x: [0, -5, 5, -5, 5, 0],
-    //     transition: {duration: 0.3},
-    //   });
-    //   form.reset({password: ''});
-    //   toast({
-    //     variant: 'destructive',
-    //     title: 'Incorrect Password',
-    //     description: 'Please double check your password and try again.',
-    //   });
-    // }
-  };
+  }, [actionData]);
+
   return (
     <div className={'transition-all'}>
       {hasPw ? (
@@ -350,37 +345,20 @@ function PasswordForm({lock}: {lock: LockFragment}) {
           back here when the sale begins.
         </p>
       ) : (
-        <Form {...form}>
-          <m.form
-            animate={controls}
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 w-full  max-w-2xl mx-auto"
-          >
-            <input
-              type={'hidden'}
-              name={'id'}
-              value={lock.id}
-              {...form.register('id')}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({field}) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type={'password'}
-                      className={
-                        'border-l-0 border-r-0 border-t-0 rounded-none text-lead !placeholder-background pl-0 focus:pl-3'
-                      }
-                      placeholder="Enter Password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <m.div animate={controls} className=" w-full  max-w-2xl mx-auto">
+          <Form method={'post'} className={'space-y-4'}>
+            <input type={'hidden'} name={'lock_id'} value={lock.id} />
+            <FormItem>
+              <Input
+                ref={pwRef}
+                type={'password'}
+                name={'password'}
+                className={
+                  'border-l-0 border-r-0 border-t-0 rounded-none text-lead !placeholder-background pl-0 focus:pl-3'
+                }
+                placeholder="Enter Password"
+              />
+            </FormItem>
             <Button
               type="submit"
               size="lg"
@@ -390,8 +368,8 @@ function PasswordForm({lock}: {lock: LockFragment}) {
             >
               Enter The Sale
             </Button>
-          </m.form>
-        </Form>
+          </Form>
+        </m.div>
       )}
     </div>
   );
@@ -905,7 +883,7 @@ function NewsletterForm({
   }
 
   return (
-    <Form {...form}>
+    <HookForm {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="lg:h-[122px] h-[111px] space-y-4 max-w-2xl mx-auto w-full text-left"
@@ -1030,6 +1008,6 @@ function NewsletterForm({
           </AnimatePresence>
         </div>
       </form>
-    </Form>
+    </HookForm>
   );
 }

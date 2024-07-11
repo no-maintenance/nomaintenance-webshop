@@ -1,10 +1,5 @@
-import React, {
-  cloneElement,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-} from 'react';
+import type {ReactElement, ReactNode} from 'react';
+import React, {cloneElement, useEffect, useRef} from 'react';
 import {useFetcher} from '@remix-run/react';
 import clsx from 'clsx';
 

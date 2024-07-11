@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react';
 import {createElement, Fragment, useEffect, useMemo, useState} from 'react';
 
-import {cn} from '~/lib/utils';
+import {cn, isAfterDate} from '~/lib/utils';
 import {Heading} from '~/components/Text';
 
 export type Time = {
@@ -66,15 +66,11 @@ export function calculateTimeLeft(end: string) {
   return {timeLeft, isLive};
 }
 
-export const Countdown = ({
-  launchDate,
-  isLiveAtInit,
-  children,
-}: CountdownProps) => {
+export function useCountdown(launchDate: string) {
   const [timeLeft, setTimeLeft] = useState(
     calculateTimeLeft(launchDate).timeLeft,
   );
-  const [isLive, setIsLive] = useState<boolean>(isLiveAtInit);
+  const [isLive, setIsLive] = useState<boolean>(isAfterDate(launchDate));
   useEffect(() => {
     const timer = setTimeout(() => {
       const {timeLeft, isLive} = calculateTimeLeft(launchDate);
@@ -84,7 +80,15 @@ export const Countdown = ({
 
     return () => clearTimeout(timer);
   });
+  return [timeLeft, isLive];
+}
 
+export const Countdown = ({
+  launchDate,
+  isLiveAtInit,
+  children,
+}: CountdownProps) => {
+  const [timeLeft, isLive] = useCountdown(launchDate);
   return createElement(
     Fragment,
     null,

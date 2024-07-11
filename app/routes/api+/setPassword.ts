@@ -3,10 +3,11 @@ import {createCookie, json} from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 
 export async function action({request, context}: ActionFunctionArgs) {
+  console.log('set PW');
   const formData = await request.formData();
   const pw = String(formData.get('password'));
-  const id = String(formData.get('id'));
-  console.log(id);
+  const id = String(formData.get('lock_id'));
+  console.log('set password', pw, id);
   invariant(id, 'Error ID is required');
   const {lock} = await context.hygraph.query().GetLock({where: {id}});
   if (!lock?.password) {

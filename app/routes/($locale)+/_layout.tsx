@@ -6,11 +6,12 @@ import {
   useRouteError,
 } from '@remix-run/react';
 import type {
+  ActionFunctionArgs,
   AppLoadContext,
   LoaderFunctionArgs,
   SerializeFrom,
 } from '@shopify/remix-oxygen';
-import {defer} from '@shopify/remix-oxygen';
+import {defer, json} from '@shopify/remix-oxygen';
 import {useRouteLoaderData} from 'react-router';
 import {CacheLong, CacheShort, useNonce} from '@shopify/hydrogen'; // import LockLayout from '~/components/LockLayout';
 import {getLock, hasLockPasswordCookie} from '~/lib/locks.server';
@@ -35,6 +36,7 @@ import {LockScreen} from '~/components/LockScreen';
 import React from 'react';
 import {LazyMotion} from 'framer-motion';
 import {CacheBalanced} from '~/lib/cache';
+import invariant from 'tiny-invariant';
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   currentUrl,
@@ -72,6 +74,43 @@ export function getPathSlug({request, context, params}: LoaderFunctionArgs) {
   const path = new URL(request.url).pathname;
   const delocalizedPath = delocalizePath(path, context.i18n);
   return delocalizedPath === '/' ? 'home' : hygraphSlug ?? editorialHandle;
+}
+
+export async function action({request, context}: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const pw = String(formData.get('password'));
+  const id = String(formData.get('lock_id'));
+  invariant(id, 'Error ID is required');
+  const {lock} = await context.hygraph.query().GetLock({where: {id}});
+  if (!lock?.password) {
+    return json({
+      status: 500,
+      message: 'Sorry an unknown error has occurred. Please try again later.',
+    });
+  }
+  if (lock.password === pw) {
+    await context.session.set('bypass-page-protection', id);
+    return json(
+      {
+        status: 200,
+        message: '',
+      },
+      {
+        headers: {
+          'Set-Cookie': await context.session.commit(),
+        },
+      },
+    );
+  } else {
+    return json({
+      status: 401,
+      message: 'Please double check your password and try again.',
+    });
+  }
+  return json({
+    status: 500,
+    message: 'Sorry an unknown error has occurred. Please try again later.',
+  });
 }
 
 export async function loader({request, context, params}: LoaderFunctionArgs) {
