@@ -249,7 +249,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
           <PasswordForm lock={lock} />
         </div>
 
-        {!password && isLive ? (
+        {isLive ? (
           <hgroup>
             <Heading
               as={'h2'}
@@ -321,12 +321,13 @@ function PasswordForm({lock}: {lock: LockFragment}) {
     if (actionData?.status === 200) {
       setHasPw(true);
     } else {
-      setFocus();
-      // form.setError('password', {type: 'manual', message: 'Incorrect entry'});
-      controls.start({
-        x: [0, -5, 5, -5, 5, 0],
-        transition: {duration: 0.3},
-      });
+      if (actionData?.status === 401 || actionData?.status === 500) {
+        setFocus();
+        controls.start({
+          x: [0, -5, 5, -5, 5, 0],
+          transition: {duration: 0.3},
+        });
+      }
       if (actionData?.status === 401) {
         toast({
           variant: 'destructive',
