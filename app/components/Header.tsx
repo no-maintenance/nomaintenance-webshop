@@ -395,9 +395,10 @@ const FullScreenNav = ({open, menu}: FullScreenNavProps) => {
                     <li key={link.id} className={''}>
                       <HygraphLink
                         hygraphLink={link}
-                        className={
-                          'font-medium text-display  animated-underline uppercase'
-                        }
+                        className={`${
+                          link.label?.toLowerCase() === 'sale' &&
+                          'text-destructive'
+                        } font-medium text-display  animated-underline uppercase`}
                       >
                         {link.label}
                       </HygraphLink>
