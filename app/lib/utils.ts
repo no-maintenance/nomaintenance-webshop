@@ -58,7 +58,11 @@ export function isNewArrival(date: string, daysOld = 30) {
 }
 
 export function isDiscounted(price: MoneyV2, compareAtPrice: MoneyV2) {
-  if (compareAtPrice?.amount > price?.amount) {
+  if (
+    compareAtPrice?.amount &&
+    price?.amount &&
+    parseFloat(compareAtPrice?.amount) > parseFloat(price?.amount)
+  ) {
     return true;
   }
   return false;

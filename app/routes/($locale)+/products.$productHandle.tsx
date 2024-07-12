@@ -5,13 +5,13 @@ import {Await, useLoaderData, useNavigate} from '@remix-run/react';
 
 import type {ShopifyAnalyticsProduct, Storefront} from '@shopify/hydrogen';
 import {
+  Analytics,
   AnalyticsPageType,
   flattenConnection,
   getSelectedProductOptions,
   getSeoMeta,
   Money,
   ShopPayButton,
-  Analytics,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
@@ -203,7 +203,8 @@ export default function Product() {
   const isOnSale =
     selectedVariant?.price?.amount &&
     selectedVariant?.compareAtPrice?.amount &&
-    selectedVariant?.price?.amount < selectedVariant?.compareAtPrice?.amount;
+    parseFloat(selectedVariant?.price?.amount) <
+      parseFloat(selectedVariant?.compareAtPrice?.amount);
 
   useEffect(() => {
     if (data) lastData.current = data;
