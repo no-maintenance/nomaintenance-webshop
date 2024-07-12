@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import {MediaFile, flattenConnection, Money, useMoney} from '@shopify/hydrogen';
 import type {ShopifyAnalyticsProduct, Video} from '@shopify/hydrogen';
+import {flattenConnection, MediaFile, Money, useMoney} from '@shopify/hydrogen';
 import type {MoneyV2, Product} from '@shopify/hydrogen/storefront-api-types';
 import type {ComponentProps} from 'react';
 import type {HydrogenImageProps} from '@shopify/hydrogen-react/Image';
@@ -54,7 +54,6 @@ export function ProductCard({
   } else if (isNewArrival(product.publishedAt)) {
     cardLabel = t('cart_actions.new');
   }
-
   const productAnalytics: ShopifyAnalyticsProduct = {
     productGid: product.id,
     variantGid: firstVariant.id,
@@ -66,6 +65,11 @@ export function ProductCard({
   };
   const {media, handle, title, variants} = product;
 
+  function isSoldOut(product: ProductCardFragment): boolean {
+    return product.variants.nodes.every((variant) => !variant.availableForSale);
+  }
+
+  console.log(isSoldOut(product));
   return (
     <Link
       onClick={onClick}
@@ -96,18 +100,22 @@ export function ProductCard({
             </Text>
             <div className={'truncate-e h-10 group'}>
               <div className=" gap-4 group-hover:hidden block">
-                <Text className="flex gap-4">
-                  <Money withoutTrailingZeros data={price!} />
-                  {isDiscounted(
-                    price as MoneyV2,
-                    compareAtPrice as MoneyV2,
-                  ) && (
-                    <CompareAtPrice
-                      className={'opacity-50'}
-                      data={compareAtPrice as MoneyV2}
-                    />
-                  )}
-                </Text>
+                {isSoldOut(product) ? (
+                  <Text className="flex gap-4 opacity-50">SOLD OUT</Text>
+                ) : (
+                  <Text className="flex gap-4">
+                    <Money withoutTrailingZeros data={price!} />
+                    {isDiscounted(
+                      price as MoneyV2,
+                      compareAtPrice as MoneyV2,
+                    ) && (
+                      <CompareAtPrice
+                        className={'opacity-50'}
+                        data={compareAtPrice as MoneyV2}
+                      />
+                    )}
+                  </Text>
+                )}
               </div>
               <div className={'hidden group-hover:block'}>
                 <div className={'flex gap-x-3  flex-wrap '}>
