@@ -152,8 +152,6 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     url: request.url,
   });
   const combinedListing = cListingRes[0];
-  console.log('listingRes', combinedListing, product.id);
-  // const combinedListing = listingRes?.products ? listingRes.products[0]
   return defer({
     product,
     shop,
