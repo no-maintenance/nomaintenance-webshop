@@ -408,7 +408,7 @@ export function ProductForm({
             <div className={'flex gap-4'}>
               {combinedListing && (
                 <div className={'flex-1'}>
-                  <CombinedListingSelectBox />
+                  <CombinedListingSelectBox key={product.handle} />
                 </div>
               )}
               {getMetafield('quantity_selector', product.metafields) && (
@@ -501,7 +501,7 @@ function CombinedListingSelectBox() {
   const {product, combinedListing} = useLoaderData<typeof loader>();
   const location = useLocation();
   const navigate = useNavigate();
-
+  console.log(product.handle);
   return (
     <Select
       onValueChange={(e) => {
