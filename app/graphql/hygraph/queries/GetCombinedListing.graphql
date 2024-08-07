@@ -1,0 +1,9 @@
+query GetCombinedListings($where: CombinedListingWhereInput!) {
+    combinedListings(where: $where) {
+        products {
+            gid
+            alias
+            slug
+        }
+    }
+}

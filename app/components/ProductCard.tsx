@@ -69,7 +69,6 @@ export function ProductCard({
     return product.variants.nodes.every((variant) => !variant.availableForSale);
   }
 
-  console.log(isSoldOut(product));
   return (
     <Link
       onClick={onClick}

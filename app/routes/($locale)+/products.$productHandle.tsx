@@ -1,7 +1,7 @@
 import {Suspense, useEffect, useRef, useState} from 'react';
 import type {type LoaderFunctionArgs, MetaArgs} from '@shopify/remix-oxygen';
 import {defer, redirect} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, useNavigate} from '@remix-run/react';
+import {Await, useLoaderData, useLocation, useNavigate} from '@remix-run/react';
 
 import type {ShopifyAnalyticsProduct, Storefront} from '@shopify/hydrogen';
 import {
@@ -29,7 +29,7 @@ import type {
 } from '~/__generated__/storefrontapi.generated';
 import {Heading, Section, Text} from '~/components/Text';
 import {seoPayload} from '~/lib/seo.server';
-import {routeHeaders} from '~/lib/cache';
+import {CacheBalanced, routeHeaders} from '~/lib/cache';
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments'; // import {KlaviyoBackInStock} from '~/components/KlavivyoForm';
 import {ProductGallery} from '~/components/ProductGallery';
 import {ProductSwimlane} from '~/components/ProductSwimlane';
@@ -40,7 +40,9 @@ import {cn, parseNumberFromShopGid} from '~/lib/utils';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select';
@@ -68,6 +70,8 @@ import {
 } from '~/components/ui/drawer';
 import {useCopyToClipboard} from '~/hooks/useCopyToClipboard';
 import {SoldOutButton} from '~/components/blocks/ProductBlock';
+import {Button} from '~/components/ui/button';
+import {MinusIcon, PlusIcon} from 'lucide-react';
 
 export const headers = routeHeaders;
 
@@ -137,19 +141,26 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     brand: product.vendor,
     price: selectedVariant.price.amount,
   };
-
+  const {combinedListings: cListingRes} = await context.hygraph
+    .query(CacheBalanced)
+    .GetCombinedListings({
+      where: {products_some: {gid: product.id}},
+    });
   const seo = seoPayload.product({
     product,
     selectedVariant,
     url: request.url,
   });
-
+  const combinedListing = cListingRes[0];
+  console.log('listingRes', combinedListing, product.id);
+  // const combinedListing = listingRes?.products ? listingRes.products[0]
   return defer({
     product,
     shop,
     storeDomain: shop.primaryDomain.url,
     hasSizeGuide: Boolean(sizeGuideLegacyId),
     sizeGuide: sizeGuidePromise,
+    combinedListing,
     recommended,
     analytics: {
       pageType: AnalyticsPageType.product,
@@ -370,7 +381,9 @@ export function ProductForm({
   showVariantTitle?: boolean;
   variants: ProductVariantFragmentFragment[];
 }) {
-  const {product, analytics, storeDomain} = useLoaderData<typeof loader>();
+  const {product, analytics, storeDomain, combinedListing} =
+    useLoaderData<typeof loader>();
+  const [quantity, setQuantity] = useState(1);
   /**
    * Likewise, we're defaulting to the first variant for purposes
    * of add to cart if there is none returned from the loader.
@@ -381,7 +394,7 @@ export function ProductForm({
 
   const productAnalytics: ShopifyAnalyticsProduct = {
     ...analytics.products[0],
-    quantity: 1,
+    quantity,
   };
 
   return (
@@ -394,6 +407,51 @@ export function ProductForm({
         />
         {selectedVariant && (
           <div className="grid items-stretch gap-4">
+            <div className={'flex gap-4'}>
+              {combinedListing && (
+                <div className={'flex-1'}>
+                  <CombinedListingSelectBox />
+                </div>
+              )}
+              {getMetafield('quantity_selector', product.metafields) && (
+                <div className={'flex-1'}>
+                  <Button variant="outline" asChild className={'px-0'}>
+                    <div className={'flex w-full'}>
+                      <Button
+                        variant="link"
+                        className={'flex-1 px-0'}
+                        disabled={quantity <= 1}
+                        onClick={() =>
+                          quantity > 1 && setQuantity(quantity - 1)
+                        }
+                      >
+                        <MinusIcon size={7} />
+                      </Button>
+                      <div className={'flex-1 px-4'}>
+                        <input
+                          onChange={(e) =>
+                            setQuantity(parseInt(e.target.value))
+                          }
+                          type={'number'}
+                          className={
+                            'p-0 border-0 text-center no-arrows w-16 text-fine'
+                          }
+                          value={quantity}
+                        />
+                      </div>
+
+                      <Button
+                        variant="link"
+                        className={'flex-1 px-0 text-right'}
+                        onClick={() => setQuantity(quantity + 1)}
+                      >
+                        <PlusIcon size={7} />
+                      </Button>
+                    </div>
+                  </Button>
+                </div>
+              )}
+            </div>
             {isOutOfStock ? (
               <SoldOutButton
                 initSelectedVariant={selectedVariant}
@@ -402,18 +460,17 @@ export function ProductForm({
               />
             ) : (
               <AddToCartButton
-                size={'sm'}
                 className={'w-full'}
                 lines={[
                   {
                     merchandiseId: selectedVariant.id!,
-                    quantity: 1,
+                    quantity,
                   },
                 ]}
                 data-test="add-to-cart"
                 analytics={{
                   products: [productAnalytics],
-                  totalValue: parseFloat(productAnalytics.price),
+                  totalValue: parseFloat(productAnalytics.price) * quantity,
                 }}
               >
                 <Text
@@ -442,7 +499,31 @@ export function ProductForm({
     </div>
   );
 }
+function CombinedListingSelectBox() {
+  const {product, combinedListing} = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  return (
+    <Select
+      onValueChange={(e) => {
+        navigate(e + location.search);
+      }}
+      defaultValue={`/products/${product.handle}`}
+    >
+      <SelectTrigger>
+        <SelectValue className={'text-fine'} />
+      </SelectTrigger>
+      <SelectContent>
+        {combinedListing.products.map((p) => (
+          <SelectItem key={p.gid} value={`/products/${p.slug}`}>
+            {p.alias}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 function ProductListbox({option}: {option: VariantOption}) {
   const {product} = useLoaderData<typeof loader>();
   const selectedVariant = product.selectedVariant!;
@@ -830,7 +911,8 @@ query Product(
             {namespace: "product_tab", key: "details"},
             {namespace: "product_tab", key: "measurements"},
             {namespace: "product_tab", key: "size"},
-            {namespace: "custom", key: "show_policies_product_tab"}
+            {namespace: "custom", key: "show_policies_product_tab"},
+            {namespace: "display", key: "quantity_selector"}
         ]) {
             value
             key

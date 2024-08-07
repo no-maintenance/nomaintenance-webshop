@@ -15496,6 +15496,8 @@ export enum PrefersColor {
 
 export type Product = Entity & Node & {
   __typename?: 'Product';
+  /** The title that will be displayed in the dropdown on the product page for a conbined listing */
+  alias?: Maybe<Scalars['String']['output']>;
   combinedListings: Array<CombinedListing>;
   /** The time the document was created */
   createdAt: Scalars['DateTime']['output'];
@@ -15652,6 +15654,7 @@ export type ProductConnection = {
 };
 
 export type ProductCreateInput = {
+  alias?: InputMaybe<Scalars['String']['input']>;
   combinedListings?: InputMaybe<CombinedListingCreateManyInlineInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   event?: InputMaybe<EventCreateManyInlineInput>;
@@ -15699,6 +15702,25 @@ export type ProductManyWhereInput = {
   OR?: InputMaybe<Array<ProductWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']['input']>;
+  alias?: InputMaybe<Scalars['String']['input']>;
+  /** All values containing the given string. */
+  alias_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values ending with the given string. */
+  alias_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are contained in given list. */
+  alias_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  alias_not?: InputMaybe<Scalars['String']['input']>;
+  /** All values not containing the given string. */
+  alias_not_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values not ending with the given string */
+  alias_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are not contained in given list. */
+  alias_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** All values not starting with the given string. */
+  alias_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values starting with the given string. */
+  alias_starts_with?: InputMaybe<Scalars['String']['input']>;
   combinedListings_every?: InputMaybe<CombinedListingWhereInput>;
   combinedListings_none?: InputMaybe<CombinedListingWhereInput>;
   combinedListings_some?: InputMaybe<CombinedListingWhereInput>;
@@ -15865,6 +15887,8 @@ export type ProductManyWhereInput = {
 };
 
 export enum ProductOrderByInput {
+  AliasAsc = 'alias_ASC',
+  AliasDesc = 'alias_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   GidAsc = 'gid_ASC',
@@ -15884,6 +15908,7 @@ export enum ProductOrderByInput {
 }
 
 export type ProductUpdateInput = {
+  alias?: InputMaybe<Scalars['String']['input']>;
   combinedListings?: InputMaybe<CombinedListingUpdateManyInlineInput>;
   event?: InputMaybe<EventUpdateManyInlineInput>;
   gid?: InputMaybe<Scalars['String']['input']>;
@@ -15914,6 +15939,7 @@ export type ProductUpdateManyInlineInput = {
 };
 
 export type ProductUpdateManyInput = {
+  alias?: InputMaybe<Scalars['String']['input']>;
   legacyResourceId?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -15977,6 +16003,25 @@ export type ProductWhereInput = {
   OR?: InputMaybe<Array<ProductWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']['input']>;
+  alias?: InputMaybe<Scalars['String']['input']>;
+  /** All values containing the given string. */
+  alias_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values ending with the given string. */
+  alias_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are contained in given list. */
+  alias_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  alias_not?: InputMaybe<Scalars['String']['input']>;
+  /** All values not containing the given string. */
+  alias_not_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values not ending with the given string */
+  alias_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are not contained in given list. */
+  alias_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** All values not starting with the given string. */
+  alias_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values starting with the given string. */
+  alias_starts_with?: InputMaybe<Scalars['String']['input']>;
   combinedListings_every?: InputMaybe<CombinedListingWhereInput>;
   combinedListings_none?: InputMaybe<CombinedListingWhereInput>;
   combinedListings_some?: InputMaybe<CombinedListingWhereInput>;
@@ -20808,6 +20853,13 @@ type BlockPrimitive_Product_Fragment = { __typename: 'Product', gid: string, id:
 
 export type BlockPrimitiveFragment = BlockPrimitive_Archive_Fragment | BlockPrimitive_Collection_Fragment | BlockPrimitive_CustomizedSection_Fragment | BlockPrimitive_Event_Fragment | BlockPrimitive_Form_Fragment | BlockPrimitive_Gallery_Fragment | BlockPrimitive_Lock_Fragment | BlockPrimitive_MixedMedia_Fragment | BlockPrimitive_Product_Fragment;
 
+export type GetCombinedListingsQueryVariables = Exact<{
+  where: CombinedListingWhereInput;
+}>;
+
+
+export type GetCombinedListingsQuery = { __typename?: 'Query', combinedListings: Array<{ __typename?: 'CombinedListing', products: Array<{ __typename?: 'Product', gid: string, alias?: string | null, slug: string }> }> };
+
 export type GetEditorialQueryVariables = Exact<{
   where: EditorialWhereUniqueInput;
 }>;
@@ -21434,6 +21486,17 @@ export const ProductGidFragmentDoc = gql`
   gid
 }
     `;
+export const GetCombinedListingsDocument = gql`
+    query GetCombinedListings($where: CombinedListingWhereInput!) {
+  combinedListings(where: $where) {
+    products {
+      gid
+      alias
+      slug
+    }
+  }
+}
+    `;
 export const GetEditorialDocument = gql`
     query GetEditorial($where: EditorialWhereUniqueInput!) {
   editorial(where: $where) {
@@ -21621,6 +21684,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetCombinedListings(variables: GetCombinedListingsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCombinedListingsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetCombinedListingsQuery>(GetCombinedListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCombinedListings', 'query', variables);
+    },
     GetEditorial(variables: GetEditorialQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetEditorialQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetEditorialQuery>(GetEditorialDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetEditorial', 'query', variables);
     },

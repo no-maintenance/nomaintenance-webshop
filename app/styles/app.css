@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 /* Tokens */
-
 @layer base {
   [data-theme="default"] {
     --foreground: rgba(0, 0, 0, 1);
@@ -452,5 +451,12 @@ ul[role='listbox'] {
     tr {
       @apply border-t-0 border-b;
     }
+  }
+}
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
