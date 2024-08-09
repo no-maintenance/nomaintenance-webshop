@@ -262,7 +262,10 @@ export default function Product() {
                   </Heading>
                 </div>
 
-                <ProductForm variants={product?.variants.nodes || []} />
+                <ProductForm
+                  key={product.handle}
+                  variants={product?.variants.nodes || []}
+                />
               </div>
               <ProductInfoPopups />
               <Suspense>
