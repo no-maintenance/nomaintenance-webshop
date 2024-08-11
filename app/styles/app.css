@@ -361,10 +361,10 @@ shop-pay-button {
 
 .size-chart {
   table {
-    @apply w-full table-fixed;
+    @apply !w-full table-fixed ;
   }
   tr {
-    @apply border-t;
+    @apply border-t !w-auto;
   }
   td,
   th {
@@ -372,6 +372,7 @@ shop-pay-button {
     text-align: left;
     min-height: 41px;
     padding: 10px 0 8px;
+    @apply !w-auto;
   }
 }
 .desktop-nav {
