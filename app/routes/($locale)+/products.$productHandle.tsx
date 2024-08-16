@@ -385,6 +385,7 @@ export function ProductForm({
   const {product, analytics, storeDomain, combinedListing} =
     useLoaderData<typeof loader>();
   const [quantity, setQuantity] = useState(1);
+  console.log(product);
   /**
    * Likewise, we're defaulting to the first variant for purposes
    * of add to cart if there is none returned from the loader.
@@ -414,7 +415,8 @@ export function ProductForm({
                   <CombinedListingSelectBox key={product.handle} />
                 </div>
               )}
-              {getMetafield('quantity_selector', product.metafields) && (
+              {getMetafield('quantity_selector', product.metafields) ==
+                'true' && (
                 <div className={'flex-1'}>
                   <Button variant="outline" asChild className={'px-0'}>
                     <div className={'flex w-full'}>
