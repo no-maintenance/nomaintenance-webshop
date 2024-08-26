@@ -120,16 +120,18 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
     getPathSlug({request, context, params}) ??
     '73801813333362060615849066158275';
 
-  const {locks, layouts} = await context.hygraph.query(CacheLong()).GetGlobals({
-    locksWhere: {
-      isEnabled: true,
-    },
-    layoutsWhere: {
-      pages_some: {
-        slug,
+  const {locks, layouts} = await context.hygraph
+    .query(CacheShort())
+    .GetGlobals({
+      locksWhere: {
+        isEnabled: true,
       },
-    },
-  });
+      layoutsWhere: {
+        pages_some: {
+          slug,
+        },
+      },
+    });
   const lock = getLock(context, request, params, locks);
   const pageLayout = layouts[0];
   const {blocks, ...layoutConfig} = getAppearance(context, lock, pageLayout);
