@@ -171,7 +171,7 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
                             'font-light tracking-widest uppercase text-background text-mid'
                           }
                         >
-                          Until Our Private Sale Begins
+                          Until The Webshop Goes Live
                         </h2>
                       </div>
                     </div>
