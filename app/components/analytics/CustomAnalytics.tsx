@@ -122,7 +122,6 @@ export function Pixels({
       {tokens?.meta && (
         <>
           <Script
-            type={'text/partytown'}
             nonce={nonce}
             dangerouslySetInnerHTML={{
               __html: `
