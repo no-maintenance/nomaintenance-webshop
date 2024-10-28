@@ -605,7 +605,7 @@ const NewsletterPopup = () => {
         <DialogTrigger asChild>
           <span
             className={
-              'uppercase text-heading decoration-1 underline font-light mx-auto cursor-pointer'
+              'uppercase text-heading decoration-1 mx-auto underline font-light cursor-pointer'
             }
           >
             Sign up for our Mailing List to Receive Access

@@ -4,6 +4,7 @@ import {RemixServer} from '@remix-run/react';
 import {isbot} from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
 import {createContentSecurityPolicy} from '@shopify/hydrogen';
+import {GOOGLE_TLDS} from '~/lib/const';
 
 export function handleError(error: unknown, {request}: any) {
   Sentry.captureRemixServerException(error, 'remix.server', request);
@@ -38,12 +39,23 @@ export default async function handleRequest(
       '*.klaviyo.com',
       'api.emailjs.com',
       'preview.nomaintenance.us',
+      '*.google.com',
+      'https://*.google-analytics.com',
+      'https://*.analytics.google.com',
+      'https://*.googletagmanager.com',
+      'https://*.g.doubleclick.net',
+      ...GOOGLE_TLDS,
     ].filter(Boolean),
     imgSrc: [
       "'self'",
       'data:',
       'https://cdn.shopify.com',
       'https://us-west-2.graphassets.com',
+      'https://*.google-analytics.com',
+      'https://*.analytics.google.com',
+      'https://*.googletagmanager.com',
+      'https://*.g.doubleclick.net',
+      ...GOOGLE_TLDS,
     ],
     mediaSrc: [
       'https://us-west-2.graphassets.com',
@@ -56,14 +68,18 @@ export default async function handleRequest(
       'fonts.gstatic.com',
       'res.cloudinary.com',
     ],
-    frameSrc: ["'self'"],
+    frameSrc: [
+      "'self'",
+      '*.googletagmanager.com',
+      'https://td.doubleclick.net',
+    ],
     workerSrc: ["'self'", 'blob:'],
     scriptSrc: [
+      MODE === 'development' ? 'testing.nomaintenance.us' : null,
       "'self'",
       '*.klaviyo.com',
       'https://unpkg.com',
       'https://cdn.shopify.com',
-      MODE === 'development' ? 'testing.nomaintenance.us' : null,
       '*.googletagmanager.com',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],

@@ -244,10 +244,6 @@ export function Document({
               />
 
               <Toaster />
-              <Script
-                type="text/javascript"
-                src={`//static.klaviyo.com/onsite/js/klaviyo.js?company_id=RDT3xD`}
-              ></Script>
               <ScrollRestoration nonce={nonce} />
               <Scripts nonce={nonce} />
             </body>
