@@ -7,7 +7,9 @@ import {createContentSecurityPolicy} from '@shopify/hydrogen';
 import {GOOGLE_TLDS} from '~/lib/const';
 
 export function handleError(error: unknown, {request}: any) {
-  Sentry.captureRemixServerException(error, 'remix.server', request);
+  if (process.env.NODE_ENV === 'production') {
+    Sentry.captureRemixServerException(error, 'remix.server', request);
+  }
 }
 
 // Sentry.init({ @TODO investigate why this breaks miniflare build in production
@@ -44,6 +46,7 @@ export default async function handleRequest(
       'https://*.analytics.google.com',
       'https://*.googletagmanager.com',
       'https://*.g.doubleclick.net',
+      'https://*.facebook.com',
       ...GOOGLE_TLDS,
     ].filter(Boolean),
     imgSrc: [
@@ -55,6 +58,7 @@ export default async function handleRequest(
       'https://*.analytics.google.com',
       'https://*.googletagmanager.com',
       'https://*.g.doubleclick.net',
+      'https://*.facebook.com',
       ...GOOGLE_TLDS,
     ],
     mediaSrc: [
@@ -81,6 +85,8 @@ export default async function handleRequest(
       'https://unpkg.com',
       'https://cdn.shopify.com',
       '*.googletagmanager.com',
+      'https://connect.facebook.net',
+      'https://googleads.g.doubleclick.net',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],
   });
