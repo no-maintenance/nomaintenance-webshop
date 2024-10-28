@@ -145,10 +145,10 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     {
       headers: {
         'Set-Cookie': await context.session.commit(),
-        // enable partytown atomic mode
-        // @see: https://partytown.builder.io/atomics
-        'Cross-Origin-Embedder-Policy': 'credentialless',
-        'Cross-Origin-Opener-Policy': 'same-origin',
+        // // enable partytown atomic mode
+        // // @see: https://partytown.builder.io/atomics
+        // 'Cross-Origin-Embedder-Policy': 'credentialless',
+        // 'Cross-Origin-Opener-Policy': 'same-origin',
       },
     },
   );
@@ -225,9 +225,9 @@ export function Document({
         {allowIndexing ? null : (
           <meta name="robots" content="noindex, nofollow" />
         )}
-        <Pixels tokens={tokens} nonce={nonce} />
         <Meta />
         <Links />
+        <Pixels tokens={tokens} nonce={nonce} />
       </head>
       <GlobalThemeContext.Provider value={t?.themes ?? GLOBAL_DEFAULT_VALUE}>
         <ChildThemeContext.Provider
@@ -268,7 +268,9 @@ export function ErrorBoundary() {
     errorMessage = error.message;
   }
 
-  captureRemixErrorBoundaryError(error);
+  if (process.env.NODE_ENV === 'production') {
+    captureRemixErrorBoundaryError(error);
+  }
 
   return (
     <Document

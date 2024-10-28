@@ -94,8 +94,7 @@ export function Pixels({
           ></Script>
 
           <Script
-            async
-            id="gtag-init"
+            nonce={nonce}
             dangerouslySetInnerHTML={{
               __html: `
                       window.dataLayer = window.dataLayer || [];
@@ -103,7 +102,6 @@ export function Pixels({
                               dataLayer.push(arguments);
                           };
                         window.gtag('js', new Date());
-
                         window.gtag('config', '${tokens.ga4}', { 'debug_mode':${DEBUG_TRACKING}});
                       `,
             }}
