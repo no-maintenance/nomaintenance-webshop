@@ -140,11 +140,11 @@ export async function loader({context, request}: LoaderFunctionArgs) {
         klaviyo: context.env.KLAVIYO_COMPANY_ID,
         ga4: context.env.GA4_ID,
         meta: context.env.META_PIXEL_ID,
+        pinterest: context.env.PINTEREST_ID,
       },
     },
     {
       headers: {
-        'Set-Cookie': await context.session.commit(),
         // // enable partytown atomic mode
         // // @see: https://partytown.builder.io/atomics
         // 'Cross-Origin-Embedder-Policy': 'credentialless',
@@ -163,26 +163,26 @@ export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
   return (
-    <Document
-      nonce={nonce}
-      lang={data.i18n.language.code}
-      themes={data?.themes}
-      tokens={data?.analyticsTokens}
+    <Analytics.Provider
+      cart={data?.cart}
+      shop={data?.shop}
+      consent={data?.consent}
     >
-      <Analytics.Provider
-        cart={data?.cart}
-        shop={data?.shop}
-        consent={data?.consent}
+      <Document
+        nonce={nonce}
+        lang={data?.i18n?.language.code}
+        themes={data?.themes}
+        tokens={data?.analyticsTokens}
       >
         <Outlet />
         <CustomAnalytics />
-      </Analytics.Provider>
-      {/*<LazyMotion features={domAnimation}>*/}
-      {/*  <AnimatePresence mode="popLayout">*/}
-      {/*    <AnimatedOutlet key={nextMatch.id} />*/}
-      {/*  </AnimatePresence>*/}
-      {/*</LazyMotion>*/}
-    </Document>
+        {/*<LazyMotion features={domAnimation}>*/}
+        {/*  <AnimatePresence mode="popLayout">*/}
+        {/*    <AnimatedOutlet key={nextMatch.id} />*/}
+        {/*  </AnimatePresence>*/}
+        {/*</LazyMotion>*/}
+      </Document>
+    </Analytics.Provider>
   );
 }
 
@@ -205,11 +205,12 @@ export function Document({
   env?: Record<string, string>;
   allowIndexing?: boolean;
   direction?: 'ltr' | 'rtl';
-  tokens?: {
+  tokens: {
     gtm?: string;
     klaviyo?: string;
     meta?: string;
     ga4?: string;
+    pinterest?: string;
   };
 }) {
   const t = createRootThemeCss(themes);

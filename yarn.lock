@@ -690,30 +690,30 @@
   resolved "https://registry.yarnpkg.com/@builder.io/partytown/-/partytown-0.10.2.tgz#102c909f805c945a638e249275003ef6ba828287"
   integrity sha512-A9U+4PREWcS+CCYzKGIPovtGB/PBgnH/8oQyCE6Nr9drDJk6cMPpLQIEajpGPmG9tYF7N3FkRvhXm/AS9+0iKg==
 
-"@cloudflare/workerd-darwin-64@1.20240304.0":
-  version "1.20240304.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-darwin-64/-/workerd-darwin-64-1.20240304.0.tgz#eda9c7baca5310eebe44514bfb8d15f48a379c4d"
-  integrity sha512-rfHlvsWzkqEEQNvm14AOE/BYHYzB9wxQHCaZZEgwOuTl5KpDcs9La0N0LaDTR78ESumIWOcifVmko2VTrZb7TQ==
+"@cloudflare/workerd-darwin-64@1.20241022.0":
+  version "1.20241022.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-darwin-64/-/workerd-darwin-64-1.20241022.0.tgz#1d22149152ad32672971e3be48ab1491ff236eb3"
+  integrity sha512-1NNYun37myMTgCUiPQEJ0cMal4mKZVTpkD0b2tx9hV70xji+frVJcSK8YVLeUm1P+Rw1d/ct8DMgQuCpsz3Fsw==
 
-"@cloudflare/workerd-darwin-arm64@1.20240304.0":
-  version "1.20240304.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-darwin-arm64/-/workerd-darwin-arm64-1.20240304.0.tgz#56078067f7e5018f1cc842d9e9aa305d994de1f0"
-  integrity sha512-IXGOxHsPdRYfAzcY6IroI1PDvx3hhXf18qFCloHp8Iw5bzLgq/PTjcp10Z/2xedZ2hVlfpHy1eEptsTmi9YeNw==
+"@cloudflare/workerd-darwin-arm64@1.20241022.0":
+  version "1.20241022.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-darwin-arm64/-/workerd-darwin-arm64-1.20241022.0.tgz#6ec4e4fd1427ac09d9cfea38db849799755029e5"
+  integrity sha512-FOO/0P0U82EsTLTdweNVgw+4VOk5nghExLPLSppdOziq6IR5HVgP44Kmq5LdsUeHUhwUmfOh9hzaTpkNzUqKvw==
 
-"@cloudflare/workerd-linux-64@1.20240304.0":
-  version "1.20240304.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-linux-64/-/workerd-linux-64-1.20240304.0.tgz#7bd44af401ca2d1252ab67b0f6fc9eae20da7d37"
-  integrity sha512-G1BEzbw9TFIeMvc425F145IetC7fuH4KOkGhseLq9y/mt5PfDWkghwmXSK+q0BiMwm0XAobtzVlHcEr2u4WlRQ==
+"@cloudflare/workerd-linux-64@1.20241022.0":
+  version "1.20241022.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-linux-64/-/workerd-linux-64-1.20241022.0.tgz#0297222e46ce8b2c55b591ae87ee2bbb85830e20"
+  integrity sha512-RsNc19BQJG9yd+ngnjuDeG9ywZG+7t1L4JeglgceyY5ViMNMKVO7Zpbsu69kXslU9h6xyQG+lrmclg3cBpnhYA==
 
-"@cloudflare/workerd-linux-arm64@1.20240304.0":
-  version "1.20240304.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20240304.0.tgz#b25b915279768309c322755d2b787a7197efac33"
-  integrity sha512-LLk/d/y77TRu6QOG3CJUI2cD3Ff2lSg0ts6G83bsm9ZK+WKObWFFSPBy9l81m3EnlKFh7RZCzxN4J10kuDaO8w==
+"@cloudflare/workerd-linux-arm64@1.20241022.0":
+  version "1.20241022.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20241022.0.tgz#7637092b14129c94ddb87990221d38623e4fd498"
+  integrity sha512-x5mUXpKxfsosxcFmcq5DaqLs37PejHYVRsNz1cWI59ma7aC4y4Qn6Tf3i0r9MwQTF/MccP4SjVslMU6m4W7IaA==
 
-"@cloudflare/workerd-windows-64@1.20240304.0":
-  version "1.20240304.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20240304.0.tgz#9001ae03e722cd087d10feee59c54f132231e45f"
-  integrity sha512-I/j6nVpM+WDPg+bYUAiKLkwQsjrXFjpOGHvwYmcM44hnDjgODzk7AbVssEIXnhEO3oupBeuKvffr0lvX0Ngmpw==
+"@cloudflare/workerd-windows-64@1.20241022.0":
+  version "1.20241022.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20241022.0.tgz#64f05a2bc475e1450154942c060555184e6350de"
+  integrity sha512-eBCClx4szCOgKqOlxxbdNszMqQf3MRG1B9BRIqEM/diDfdR9IrZ8l3FaEm+l9gXgPmS6m1NBn40aWuGBl8UTSw==
 
 "@cspotcode/source-map-support@0.8.1":
   version "0.8.1"
@@ -2898,7 +2898,7 @@
   resolved "https://registry.yarnpkg.com/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.4.1.tgz#4bf920912f67cae5f2d264f58df81abfea68dadf"
   integrity sha512-+DvS92F9ezicfswqrvIRM2njcYJbd5mb9CUgtrHCHmvn7pPPa+nMDRu1o1bYYz/l5IB2NVGNJWiH7h1E58IF2A==
 
-"@parcel/watcher@2.4.1", "@parcel/watcher@^2.3.0":
+"@parcel/watcher@^2.3.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@parcel/watcher/-/watcher-2.4.1.tgz#a50275151a1bb110879c6123589dba90c19f1bf8"
   integrity sha512-HNjmfLQEVRZmHRET336f20H/8kOozUGwk7yajvsonjNxbj2wBTK1WsQuHkD5yYh9RxFGL2EyDHryOihOwUoKDA==
@@ -4158,15 +4158,13 @@
     ts-error "1.0.6"
     zod "3.22.3"
 
-"@shopify/cli@3.63.0":
-  version "3.63.0"
-  resolved "https://registry.yarnpkg.com/@shopify/cli/-/cli-3.63.0.tgz#bc0b01b782dd95b7d72f44121bd088505ea7aef8"
-  integrity sha512-5QCjuWkEhFGcOGjYk/07hA+ifVeiWQgzE2ILB8PnS+6ecTOOHtVJp9nP8IjiyzyPARrw+9KcE1udR+8JYil57w==
+"@shopify/cli@3.68.0":
+  version "3.68.0"
+  resolved "https://registry.yarnpkg.com/@shopify/cli/-/cli-3.68.0.tgz#70a2324bc685ed37b710c7c5b373ba0d106c1b42"
+  integrity sha512-j4iLs130oani255kAg74wZWdAsT8wGElLlvxLKACKHCsmMKz7ehQd+7o+ePGMNX7AZVVWvte/n4gwFHEbsG3Jw==
   dependencies:
     "@ast-grep/napi" "0.11.0"
     esbuild "0.19.8"
-  optionalDependencies:
-    "@parcel/watcher" "2.4.1"
 
 "@shopify/graphql-codegen@^0.0.2":
   version "0.0.2"
@@ -4185,34 +4183,34 @@
   dependencies:
     "@shopify/graphql-codegen" "^0.0.2"
 
-"@shopify/hydrogen-react@2024.4.4":
-  version "2024.4.4"
-  resolved "https://registry.yarnpkg.com/@shopify/hydrogen-react/-/hydrogen-react-2024.4.4.tgz#c45b4e312dc15b3903621348d5279220549c6041"
-  integrity sha512-t2sOZWPHO3RUtMpSG9oFRXcQYjmjnaV6Yn+Yo9BtafAd1d8iSq1m0kMR/deOtf6C1WaHWiUX/nZmjXymJVwibw==
+"@shopify/hydrogen-react@2024.7.6":
+  version "2024.7.6"
+  resolved "https://registry.yarnpkg.com/@shopify/hydrogen-react/-/hydrogen-react-2024.7.6.tgz#6a25d1a35e316ada276aa3f61f8756a28c51c70e"
+  integrity sha512-uwn9t0C3MFaRF+pU8zniFXYv8yLMMqC7NypcOf08rDrJAxdlMc0nHIbYb1Y2CKPolhQpBNXK3sYRyFiSKEMmvQ==
   dependencies:
     "@google/model-viewer" "^1.12.1"
-    "@xstate/fsm" "^2.0.0"
-    "@xstate/react" "^3.2.1"
+    "@xstate/fsm" "2.0.0"
+    "@xstate/react" "3.2.1"
     graphql "^16.6.0"
     type-fest "^4.5.0"
     worktop "^0.7.3"
 
-"@shopify/hydrogen@2024.4.7":
-  version "2024.4.7"
-  resolved "https://registry.yarnpkg.com/@shopify/hydrogen/-/hydrogen-2024.4.7.tgz#09dba43e20f5daacb973acd284a4dcd87f4a3568"
-  integrity sha512-xIQsLhiwI2ae9JzgrHJ0gbNREhh4cr7MW0n2xKimrYIYEEu+ZAm5upI6/IOVPmMra6huG2zC8grEjEzIfkisrQ==
+"@shopify/hydrogen@2024.7.9":
+  version "2024.7.9"
+  resolved "https://registry.yarnpkg.com/@shopify/hydrogen/-/hydrogen-2024.7.9.tgz#2d08a3ae4ffebbd95589d1592e5f8005d1314ecd"
+  integrity sha512-ajJNhqajrHpebnTs7QIQDZPDanHxaknQvJCvaqJCAk4jRYuWiK6re2WTiCvdd3QA+l7QbSIU+7L4tfgswYopGw==
   dependencies:
-    "@shopify/hydrogen-react" "2024.4.4"
+    "@shopify/hydrogen-react" "2024.7.6"
     content-security-policy-builder "^2.2.0"
     source-map-support "^0.5.21"
     type-fest "^4.5.0"
     use-resize-observer "^9.1.0"
     worktop "^0.7.3"
 
-"@shopify/mini-oxygen@^3.0.0":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@shopify/mini-oxygen/-/mini-oxygen-3.0.3.tgz#8a718f44090fc231b46a39eb92d6cbcd69331424"
-  integrity sha512-66HPatRPh8II3JMXEv2yk2wmIo7IWoio2McBKNb3VQjlTtuOw8TE398dX3alGcX7LI3utxqRSvuayY8RKT3ofQ==
+"@shopify/mini-oxygen@3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@shopify/mini-oxygen/-/mini-oxygen-3.0.6.tgz#5410fab894574658d9d60e47048b97e99ca71376"
+  integrity sha512-hLaAuMgSn3lKgNEDEkJ049Bo7ScpCIqaO85iuJaNEYYzb+I3HSu4hzA/iRc5nkn9MSJ6TSpyMtpO9vXgvDIdZg==
   dependencies:
     "@miniflare/cache" "^2.14.2"
     "@miniflare/core" "^2.14.2"
@@ -4224,13 +4222,13 @@
     body-parser "1.20.2"
     connect "^3.7.0"
     get-port "^7.0.0"
-    miniflare "3.20240304.2"
+    miniflare "^3.20240925.0"
     mrmime "1.0.1"
     source-map "^0.7.4"
     source-map-support "^0.5.21"
     stack-trace "^1.0.0-pre2"
-    undici "^5.28.2"
-    ws "^8.16.0"
+    undici "^6.11.1"
+    ws "^8.17.1"
 
 "@shopify/oxygen-cli@4.4.9":
   version "4.4.9"
@@ -4242,7 +4240,7 @@
     "@bugsnag/node" "^7.23.0"
     async "^3.2.5"
 
-"@shopify/oxygen-workers-types@^4.0.0":
+"@shopify/oxygen-workers-types@4.1.2":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@shopify/oxygen-workers-types/-/oxygen-workers-types-4.1.2.tgz#9ef415c0d40fbd133aa4d3fb1adce288602f455e"
   integrity sha512-UypDLh4/BR56i8kq+iZk4meJQd584A9I/RH2kQah/I0UK6k8ohWl5ehfwaxOwAtc/fDSsj+2WA6fbOLRa9FtKA==
@@ -4260,10 +4258,10 @@
   resolved "https://registry.yarnpkg.com/@shopify/prettier-config/-/prettier-config-1.1.2.tgz#612f87c0cd1196e8b43c85425e587d0fa7f1172d"
   integrity sha512-5ugCL9sPGzmOaZjeRGaWUWhHgAbemrS6z+R7v6gwiD+BiqSeoFhIY+imLpfdFCVpuOGalpHeCv6o3gv++EHs0A==
 
-"@shopify/remix-oxygen@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@shopify/remix-oxygen/-/remix-oxygen-2.0.4.tgz#7910ba0b2ac1a2614e09756b80bfc7045337c279"
-  integrity sha512-B5an8tvbr02ncNdaZQaAOyfJZL0FguJ46umC20Vk+JPbTmoJ5bMsnYU5Y+9sLMlNZY32TtRmpl5R3LPWrEFcDg==
+"@shopify/remix-oxygen@2.0.8":
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@shopify/remix-oxygen/-/remix-oxygen-2.0.8.tgz#720e7f9563b585d0523d3ba8957c2c7d1f4255cc"
+  integrity sha512-pJ60Y8Ul0n5hyE+2QQ0BIdDQa0C0KdqM4tqASNTQi50QnTSevkvh9SuIdDK3KaW6l7utd37QddKxSVrlyyS5Eg==
 
 "@sindresorhus/is@^5.2.0":
   version "5.6.0"
@@ -4927,17 +4925,17 @@
   resolved "https://registry.yarnpkg.com/@xobotyi/scrollbar-width/-/scrollbar-width-1.9.5.tgz#80224a6919272f405b87913ca13b92929bdf3c4d"
   integrity sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==
 
-"@xstate/fsm@^2.0.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@xstate/fsm/-/fsm-2.1.0.tgz#269f0bc411f3eac0dd04e55d51cbd07411a04f9a"
-  integrity sha512-oJlc0iD0qZvAM7If/KlyJyqUt7wVI8ocpsnlWzAPl97evguPbd+oJbRM9R4A1vYJffYH96+Bx44nLDE6qS8jQg==
+"@xstate/fsm@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@xstate/fsm/-/fsm-2.0.0.tgz#221db16b606df3f4675f5be6058b633ec4b8b44a"
+  integrity sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==
 
-"@xstate/react@^3.2.1":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@xstate/react/-/react-3.2.2.tgz#ddf0f9d75e2c19375b1e1b7335e72cb99762aed8"
-  integrity sha512-feghXWLedyq8JeL13yda3XnHPZKwYDN5HPBLykpLeuNpr9178tQd2/3d0NrH6gSd0sG5mLuLeuD+ck830fgzLQ==
+"@xstate/react@3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@xstate/react/-/react-3.2.1.tgz#ac7b78e8c1d6d3802dfb29a6499f18e48b3dfdb3"
+  integrity sha512-L/mqYRxyBWVdIdSaXBHacfvS8NKn3sTKbPb31aRADbE9spsJ1p+tXil0GVQHPlzrmjGeozquLrxuYGiXsFNU7g==
   dependencies:
-    use-isomorphic-layout-effect "^1.1.2"
+    use-isomorphic-layout-effect "^1.0.0"
     use-sync-external-store "^1.0.0"
 
 "@zxing/text-encoding@0.9.0":
@@ -9973,10 +9971,10 @@ mini-svg-data-uri@^1.2.3:
   resolved "https://registry.yarnpkg.com/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz#8ab0aabcdf8c29ad5693ca595af19dd2ead09939"
   integrity sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==
 
-miniflare@3.20240304.2:
-  version "3.20240304.2"
-  resolved "https://registry.yarnpkg.com/miniflare/-/miniflare-3.20240304.2.tgz#74bc71935e0ad39a73d12f1ee0d010f7acac8380"
-  integrity sha512-yQ5TBKv7TlvF8khFvvH+1WWk8cBnaLgNzcbJ5DLQOdecxdDxUCVlN38HThd6Nhcz6EY+ckDkww8FkugUbSSpIQ==
+miniflare@^3.20240925.0:
+  version "3.20241022.0"
+  resolved "https://registry.yarnpkg.com/miniflare/-/miniflare-3.20241022.0.tgz#31b8a2bc53b411ac814b55db9c31aebfe475f344"
+  integrity sha512-x9Fbq1Hmz1f0osIT9Qmj78iX4UpCP2EqlZnA/tzj/3+I49vc3Kq0fNqSSKplcdf6HlCHdL3fOBicmreQF4BUUQ==
   dependencies:
     "@cspotcode/source-map-support" "0.8.1"
     acorn "^8.8.0"
@@ -9985,11 +9983,11 @@ miniflare@3.20240304.2:
     exit-hook "^2.2.1"
     glob-to-regexp "^0.4.1"
     stoppable "^1.1.0"
-    undici "^5.28.2"
-    workerd "1.20240304.0"
-    ws "^8.11.0"
+    undici "^5.28.4"
+    workerd "1.20241022.0"
+    ws "^8.17.1"
     youch "^3.2.2"
-    zod "^3.20.6"
+    zod "^3.22.3"
 
 minimatch@9.0.3:
   version "9.0.3"
@@ -13200,7 +13198,7 @@ undici@5.28.2:
   dependencies:
     "@fastify/busboy" "^2.0.0"
 
-undici@^5.28.2:
+undici@^5.28.4:
   version "5.28.4"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.28.4.tgz#6b280408edb6a1a604a9b20340f45b422e373068"
   integrity sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==
@@ -13211,6 +13209,11 @@ undici@^6.10.1:
   version "6.19.2"
   resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.2.tgz#231bc5de78d0dafb6260cf454b294576c2f3cd31"
   integrity sha512-JfjKqIauur3Q6biAtHJ564e3bWa8VvT+7cSiOJHFbX4Erv6CLGDpg8z+Fmg/1OI/47RA+GI2QZaF48SSaLvyBA==
+
+undici@^6.11.1:
+  version "6.20.1"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.20.1.tgz#fbb87b1e2b69d963ff2d5410a40ffb4c9e81b621"
+  integrity sha512-AjQF1QsmqfJys+LXfGTNum+qw4S88CojRInG/6t31W/1fk6G59s92bnAvGz5Cmur+kQv2SURXEvvudLmbrE8QA==
 
 unified@^10.0.0:
   version "10.1.2"
@@ -13382,7 +13385,7 @@ use-callback-ref@^1.3.0:
   dependencies:
     tslib "^2.0.0"
 
-use-isomorphic-layout-effect@^1.1.2:
+use-isomorphic-layout-effect@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz#497cefb13d863d687b08477d9e5a164ad8c1a6fb"
   integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
@@ -13691,16 +13694,16 @@ wordwrap@^1.0.0:
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
-workerd@1.20240304.0:
-  version "1.20240304.0"
-  resolved "https://registry.yarnpkg.com/workerd/-/workerd-1.20240304.0.tgz#7dcfa5318fe3d8e0606028ef92b968040bd16190"
-  integrity sha512-/tYxdypPh9NKQje9r7bgBB73vAQfCQZbEPjNlxE/ml7jNKMHnRZv/D+By4xO0IPAifa37D0sJFokvYOahz1Lqw==
+workerd@1.20241022.0:
+  version "1.20241022.0"
+  resolved "https://registry.yarnpkg.com/workerd/-/workerd-1.20241022.0.tgz#45ab10642009b4573ae78df784e0a8c5b338914e"
+  integrity sha512-jyGXsgO9DRcJyx6Ovv7gUyDPc3UYC2i/E0p9GFUg6GUzpldw4Y93y9kOmdfsOnKZ3+lY53veSiUniiBPE6Q2NQ==
   optionalDependencies:
-    "@cloudflare/workerd-darwin-64" "1.20240304.0"
-    "@cloudflare/workerd-darwin-arm64" "1.20240304.0"
-    "@cloudflare/workerd-linux-64" "1.20240304.0"
-    "@cloudflare/workerd-linux-arm64" "1.20240304.0"
-    "@cloudflare/workerd-windows-64" "1.20240304.0"
+    "@cloudflare/workerd-darwin-64" "1.20241022.0"
+    "@cloudflare/workerd-darwin-arm64" "1.20241022.0"
+    "@cloudflare/workerd-linux-64" "1.20241022.0"
+    "@cloudflare/workerd-linux-arm64" "1.20241022.0"
+    "@cloudflare/workerd-windows-64" "1.20241022.0"
 
 worktop@^0.7.3:
   version "0.7.3"
@@ -13755,10 +13758,15 @@ ws@^7.4.5:
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.10.tgz#58b5c20dc281633f6c19113f39b349bd8bd558d9"
   integrity sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==
 
-ws@^8.11.0, ws@^8.12.0, ws@^8.13.0, ws@^8.15.0, ws@^8.16.0, ws@^8.2.2:
+ws@^8.12.0, ws@^8.13.0, ws@^8.15.0, ws@^8.2.2:
   version "8.17.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.17.1.tgz#9293da530bb548febc95371d90f9c878727d919b"
   integrity sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==
+
+ws@^8.17.1:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"
@@ -13881,7 +13889,7 @@ zod@3.22.3:
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.3.tgz#2fbc96118b174290d94e8896371c95629e87a060"
   integrity sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==
 
-zod@^3.17.3, zod@^3.20.6, zod@^3.22.2, zod@^3.23.5, zod@^3.23.8:
+zod@^3.17.3, zod@^3.22.2, zod@^3.22.3, zod@^3.23.5, zod@^3.23.8:
   version "3.23.8"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
   integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==

@@ -1,26 +1,25 @@
-import {Await} from '@remix-run/react';
-import invariant from 'tiny-invariant';
-import {
-  type LoaderFunctionArgs,
-  type ActionFunctionArgs,
-  json,
-} from '@shopify/remix-oxygen';
-import {CartForm, type CartQueryDataReturn} from '@shopify/hydrogen';
-
-import {isLocalPath} from '~/lib/utils';
-import {Cart} from '~/components/Cart';
+import {Await, type MetaFunction, useRouteLoaderData} from '@remix-run/react';
+import {Suspense} from 'react';
+import type {CartQueryDataReturn} from '@shopify/hydrogen';
+import {CartForm} from '@shopify/hydrogen';
+import {json, type ActionFunctionArgs} from '@shopify/remix-oxygen';
 import {useRootLoaderData} from '~/root';
+import {Cart} from '~/components/Cart';
+
+export const meta: MetaFunction = () => {
+  return [{title: `No Maintenance | Cart`}];
+};
 
 export async function action({request, context}: ActionFunctionArgs) {
   const {cart} = context;
 
-  const [formData, customerAccessToken] = await Promise.all([
-    request.formData(),
-    context.customerAccount.getAccessToken(),
-  ]);
+  const formData = await request.formData();
 
   const {action, inputs} = CartForm.getFormInput(formData);
-  invariant(action, 'No cartAction defined');
+
+  if (!action) {
+    throw new Error('No action provided');
+  }
 
   let status = 200;
   let result: CartQueryDataReturn;
@@ -35,7 +34,7 @@ export async function action({request, context}: ActionFunctionArgs) {
     case CartForm.ACTIONS.LinesRemove:
       result = await cart.removeLines(inputs.lineIds);
       break;
-    case CartForm.ACTIONS.DiscountCodesUpdate:
+    case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
 
       // User inputted discount code
@@ -48,36 +47,44 @@ export async function action({request, context}: ActionFunctionArgs) {
 
       result = await cart.updateDiscountCodes(discountCodes);
       break;
-    case CartForm.ACTIONS.BuyerIdentityUpdate:
+    }
+    case CartForm.ACTIONS.GiftCardCodesUpdate: {
+      const formGiftCardCode = inputs.giftCardCode;
+
+      // User inputted gift card code
+      const giftCardCodes = (
+        formGiftCardCode ? [formGiftCardCode] : []
+      ) as string[];
+
+      // Combine gift card codes already applied on cart
+      giftCardCodes.push(...inputs.giftCardCodes);
+
+      result = await cart.updateGiftCardCodes(giftCardCodes);
+      break;
+    }
+    case CartForm.ACTIONS.BuyerIdentityUpdate: {
       result = await cart.updateBuyerIdentity({
         ...inputs.buyerIdentity,
-        customerAccessToken,
       });
       break;
+    }
     default:
-      invariant(false, `${action} cart action is not defined`);
+      throw new Error(`${action} cart action is not defined`);
   }
 
-  /**
-   * The Cart ID may change after each mutation. We need to update it each time in the session.
-   */
-  const cartId = result.cart.id;
-  const headers = cart.setCartId(result.cart.id);
+  const cartId = result?.cart?.id;
+  const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
+  const {cart: cartResult, errors} = result;
 
   const redirectTo = formData.get('redirectTo') ?? null;
-  if (typeof redirectTo === 'string' && isLocalPath(redirectTo)) {
+  if (typeof redirectTo === 'string') {
     status = 303;
     headers.set('Location', redirectTo);
   }
 
-  const {cart: cartResult, errors, userErrors} = result;
-
-  headers.append('Set-Cookie', await context.session.commit());
-
   return json(
     {
       cart: cartResult,
-      userErrors,
       errors,
       analytics: {
         cartId,
@@ -85,11 +92,6 @@ export async function action({request, context}: ActionFunctionArgs) {
     },
     {status, headers},
   );
-}
-
-export async function loader({context}: LoaderFunctionArgs) {
-  const {cart} = context;
-  return json(await cart.get());
 }
 
 export default function CartRoute() {

@@ -7,7 +7,27 @@ import type {
 } from './types';
 import {fetchI18nJson} from './fetchI18nJson.server';
 import {getLocaleFromRequest} from './getLocaleFromRequest.server';
+import defaultCountry from '../../public/locales/country/US.json';
+import defaultLanguage from '../../public/locales/language/en.json';
+import {subfolderLocaleParser} from '~/lib/utils';
 
+export const DEFAULT_I18N = {
+  isDefault: true,
+  country: defaultCountry as {
+    code: CountryCode;
+    name: string;
+    languages: ['en'];
+  },
+  language: defaultLanguage as {
+    name: string;
+    code: LanguageCode;
+    translation: any;
+  },
+  prefix: subfolderLocaleParser({
+    country: defaultCountry.code as CountryCode,
+    language: defaultLanguage.code as LanguageCode,
+  }),
+};
 /**
  * Extract the locale from the request url and fetch the locale json file
  * from the /public/locales folder

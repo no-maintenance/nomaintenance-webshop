@@ -8,12 +8,14 @@ import '@total-typescript/ts-reset';
 import type {
   CustomerAccount,
   HydrogenCart,
+  HydrogenEnv,
   HydrogenSessionData,
   Storefront,
 } from '@shopify/hydrogen';
 import type {AppSession} from '~/lib/session';
 import {createHygraphClient} from '~/lib/createHygraphClient.server';
 import {I18n} from '~/i18n';
+import {createAppLoadContext} from '~/lib/context';
 
 declare global {
   /**
@@ -37,7 +39,7 @@ declare global {
   /**
    * Declare expected Env parameter in fetch handler.
    */
-  interface Env {
+  interface Env extends HydrogenEnv {
     SESSION_SECRET: string;
     PUBLIC_STOREFRONT_API_TOKEN: string;
     PRIVATE_STOREFRONT_API_TOKEN: string;
@@ -58,26 +60,19 @@ declare global {
     KLAVIYO_PRIVATE_KEY: string;
     META_PIXEL_ID: string;
     GA4_ID: string;
+    PINTEREST_ID: string;
   }
 }
 
 declare module '@shopify/remix-oxygen' {
-  /**
-   * Declare local additions to the Remix loader context.
-   */
-  interface AppLoadContext {
-    env: Env;
-    cart: HydrogenCart;
-    storefront: Storefront;
-    customerAccount: CustomerAccount;
-    session: AppSession;
-    waitUntil: ExecutionContext['waitUntil'];
+  interface AppLoadContext
+    extends Awaited<ReturnType<typeof createAppLoadContext>> {
     i18n: I18n;
     hygraph: ReturnType<typeof createHygraphClient>;
+    // to change context type, change the return of createAppLoadContext() instead
   }
 
-  /**
-   * Declare local additions to the Remix session data.
-   */
-  interface SessionData extends HydrogenSessionData {}
+  interface SessionData extends HydrogenSessionData {
+    // declare local additions to the Remix session data here
+  }
 }

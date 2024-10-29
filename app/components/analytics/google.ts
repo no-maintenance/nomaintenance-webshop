@@ -84,3 +84,10 @@ export class GoogleAnalytics extends AnalyticsPixel {
     window.gtag('event', 'sidecart_view', payload);
   }
 }
+
+//
+// export function GA4Analytics() {
+//   return (
+//
+//   )
+// }

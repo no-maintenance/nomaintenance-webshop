@@ -1,14 +1,10 @@
-import {
-  cartBuyerIdentityUpdateDefault,
-  Script,
-  useAnalytics,
-} from '@shopify/hydrogen';
+import {Script, useAnalytics} from '@shopify/hydrogen';
 import {useEffect} from 'react';
 import {GoogleAnalytics} from './google';
-import {Partytown} from '@builder.io/partytown/react';
-import {maybeProxyRequest} from '~/lib/utils';
 import {MetaAnalytics} from './meta';
 import {KlaviyoAnalytics} from './klaviyo';
+import {ClientOnly} from '~/lib/client-only';
+import {PinterestTag} from '~/components/analytics/pinterest';
 
 export function CustomAnalytics() {
   const {subscribe, cart} = useAnalytics();
@@ -74,14 +70,16 @@ export function Pixels({
   nonce,
 }: {
   nonce?: string;
-  tokens?: {
+  tokens: {
     gtm?: string;
     klaviyo?: string;
     meta?: string;
     ga4?: string;
+    pinterest?: string;
   };
 }) {
   const DEBUG_TRACKING = true;
+  const {canTrack} = useAnalytics();
   if (process.env.NODE_ENV === 'development' && !DEBUG_TRACKING) return null;
   return (
     <>
@@ -92,11 +90,12 @@ export function Pixels({
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${tokens.ga4}`}
           ></Script>
-
-          <Script
-            nonce={nonce}
-            dangerouslySetInnerHTML={{
-              __html: `
+          <ClientOnly>
+            {() => (
+              <Script
+                nonce={nonce}
+                dangerouslySetInnerHTML={{
+                  __html: `
                       window.dataLayer = window.dataLayer || [];
                       window.gtag = function () {
                               dataLayer.push(arguments);
@@ -104,8 +103,10 @@ export function Pixels({
                         window.gtag('js', new Date());
                         window.gtag('config', '${tokens.ga4}', { 'debug_mode':${DEBUG_TRACKING}});
                       `,
-            }}
-          ></Script>
+                }}
+              ></Script>
+            )}
+          </ClientOnly>
         </>
       )}
       {tokens?.klaviyo && (
@@ -118,11 +119,12 @@ export function Pixels({
         </>
       )}
       {tokens?.meta && (
-        <>
-          <Script
-            nonce={nonce}
-            dangerouslySetInnerHTML={{
-              __html: `
+        <ClientOnly>
+          {() => (
+            <Script
+              nonce={nonce}
+              dangerouslySetInnerHTML={{
+                __html: `
                     !function(f,b,e,v,n,t,s)
                   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
                   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -134,9 +136,13 @@ export function Pixels({
                   window.fbq('init', '${tokens.meta}');
                   window.fbq('track', 'PageView');
                     `,
-            }}
-          ></Script>
-        </>
+              }}
+            ></Script>
+          )}
+        </ClientOnly>
+      )}
+      {!!tokens?.pinterest && nonce && (
+        <PinterestTag id={tokens.pinterest} nonce={nonce} />
       )}
     </>
   );

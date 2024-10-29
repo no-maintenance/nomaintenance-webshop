@@ -8,6 +8,7 @@ import {statusMessage} from '~/lib/utils';
 import {Link} from '~/components/Link';
 import {Heading, PageHeader, Text} from '~/components/Text';
 import {CUSTOMER_ORDER_QUERY} from '~/graphql/customer-account/CustomerOrderQuery';
+import type {FulfillmentStatus} from '@shopify/hydrogen/customer-account-api-types';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Order ${data?.order?.name}`}];
@@ -57,26 +58,16 @@ export async function loader({request, context, params}: LoaderFunctionArgs) {
         ? fulfillments[0].status
         : ('OPEN' as FulfillmentStatus);
 
-    return json(
-      {
-        order,
-        lineItems,
-        discountValue,
-        discountPercentage,
-        fulfillmentStatus,
-      },
-      {
-        headers: {
-          'Set-Cookie': await context.session.commit(),
-        },
-      },
-    );
+    return json({
+      order,
+      lineItems,
+      discountValue,
+      discountPercentage,
+      fulfillmentStatus,
+    });
   } catch (error) {
     throw new Response(error instanceof Error ? error.message : undefined, {
       status: 404,
-      headers: {
-        'Set-Cookie': await context.session.commit(),
-      },
     });
   }
 }

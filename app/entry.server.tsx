@@ -8,7 +8,7 @@ import {GOOGLE_TLDS} from '~/lib/const';
 
 export function handleError(error: unknown, {request}: any) {
   if (process.env.NODE_ENV === 'production') {
-    Sentry.captureRemixServerException(error, 'remix.server', request);
+    Sentry.captureRemixServerException(error, 'remix.server', request, true);
   }
 }
 
@@ -47,6 +47,9 @@ export default async function handleRequest(
       'https://*.googletagmanager.com',
       'https://*.g.doubleclick.net',
       'https://*.facebook.com',
+      'https://s.pinimg.com',
+      'https://google.com',
+      'https://ct.pinterest.com',
       ...GOOGLE_TLDS,
     ].filter(Boolean),
     imgSrc: [
@@ -59,6 +62,7 @@ export default async function handleRequest(
       'https://*.googletagmanager.com',
       'https://*.g.doubleclick.net',
       'https://*.facebook.com',
+      'https://google.com',
       ...GOOGLE_TLDS,
     ],
     mediaSrc: [
@@ -76,6 +80,7 @@ export default async function handleRequest(
       "'self'",
       '*.googletagmanager.com',
       'https://td.doubleclick.net',
+      'https://ct.pinterest.com',
     ],
     workerSrc: ["'self'", 'blob:'],
     scriptSrc: [
@@ -87,6 +92,8 @@ export default async function handleRequest(
       '*.googletagmanager.com',
       'https://connect.facebook.net',
       'https://googleads.g.doubleclick.net',
+      'https://s.pinimg.com',
+      'https://ct.pinterest.com',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],
   });

@@ -90,17 +90,10 @@ export async function action({request, context}: ActionFunctionArgs) {
   }
   if (lock.password === pw) {
     await context.session.set('bypass-page-protection', id);
-    return json(
-      {
-        status: 200,
-        message: '',
-      },
-      {
-        headers: {
-          'Set-Cookie': await context.session.commit(),
-        },
-      },
-    );
+    return json({
+      status: 200,
+      message: '',
+    });
   } else {
     return json({
       status: 401,
