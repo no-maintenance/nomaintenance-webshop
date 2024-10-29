@@ -43,7 +43,6 @@ export async function action({request, context}: ActionFunctionArgs) {
       variantId,
     }),
   });
-  console.log(response.ok);
   if (!response.ok) {
     errors.generic = `Sorry, an error has occurred. Please try again later`;
     const d = (await response.json()) as any;

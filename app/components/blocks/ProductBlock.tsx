@@ -432,7 +432,6 @@ function ProductVariantSelector({
   selectedVariant: ProductVariant;
   type?: 'buttons' | 'listbox';
 }) {
-  console.log(selectedVariant);
   return (
     <VariantSelector
       handle={product.handle}
@@ -481,7 +480,6 @@ function ProductVariantSelector({
                   (v) => v.value === selectedOption,
                 );
                 if (opt) {
-                  console.log(opt.variant);
                   setSelectedVariant(opt.variant as ProductVariant);
                 }
               }}

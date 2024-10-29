@@ -7,7 +7,6 @@ export function FacebookPixel({id}: {id: string}) {
   const {ready} = register('Facebook');
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
-    if (!window) return;
     if (!loaded) {
       ReactPixel.init(
         id,

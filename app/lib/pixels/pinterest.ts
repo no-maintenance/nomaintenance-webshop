@@ -31,7 +31,6 @@ export default {
     const em = {
       em: userEmail,
     };
-    console.log('pinterest init');
     // @ts-ignore
     !(function (e) {
       if (!window.pintrk) {

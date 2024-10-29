@@ -7,7 +7,6 @@ export function Class({className, children}: ClassRendererProps) {
   const [isButton, buttonVariant, otherClasses] =
     extractButtonVariant(className);
   if (isButton) {
-    console.log([isButton, buttonVariant, otherClasses]);
     return (
       <Button variant={buttonVariant} className={otherClasses}>
         {children}

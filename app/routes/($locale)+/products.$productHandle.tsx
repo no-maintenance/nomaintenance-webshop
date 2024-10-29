@@ -207,7 +207,6 @@ export default function Product() {
   const lastData = useRef({});
   const data = useLoaderData<typeof loader>() || lastData.current;
   const {product, storeDomain, recommended} = data || lastData.current;
-  console.log(product);
   const {media, title, vendor, descriptionHtml, metafields} = product;
   const selectedVariant = product.selectedVariant!;
   const isOnSale =
@@ -508,7 +507,6 @@ function CombinedListingSelectBox() {
   const {product, combinedListing} = useLoaderData<typeof loader>();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(product.handle);
   return (
     <Select
       onValueChange={(e) => {
