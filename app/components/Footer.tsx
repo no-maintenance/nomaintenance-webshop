@@ -35,7 +35,11 @@ export function Footer({
         className={'col-span-2 sm:col-span-1 flex justify-center sm-max:mt-4'}
       >
         <div className={'sm:max-w-md md:max-w-sm w-full max-w-[295px]'}>
-          <NewsletterForm submitBtn={'Submit'} id={'footer'} />
+          <NewsletterForm
+            submitBtn={'Submit'}
+            id={'footer'}
+            source={'footer'}
+          />
         </div>
       </div>
       <h6

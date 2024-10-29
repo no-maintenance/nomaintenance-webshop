@@ -239,3 +239,5 @@ export const GOOGLE_TLDS = [
   'https://*.google.co.zw',
   'https://*.google.cat',
 ];
+
+export const CONV_ADDED_TO_CART = 1;

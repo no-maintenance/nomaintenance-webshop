@@ -33,6 +33,7 @@ import {
 } from '~/lib/const';
 
 import emailjs from '@emailjs/browser';
+import {useAnalytics} from '@shopify/hydrogen';
 
 export function FormBlock({
   type,
@@ -50,7 +51,13 @@ export function FormBlock({
       case 'appointments':
         return <AppointmentForm submitBtn={submitButtonLabel} />;
       case 'newsletter':
-        return <NewsletterForm submitBtn={submitButtonLabel} id={id} />;
+        return (
+          <NewsletterForm
+            submitBtn={submitButtonLabel}
+            id={id}
+            source={'block'}
+          />
+        );
       default:
         return null;
     }
@@ -426,11 +433,15 @@ export function NewsletterForm({
   hasSubmitBtn = true,
   id,
   submitBtn,
+  source,
 }: {
   submitBtn: string;
   hasSubmitBtn?: boolean;
   id?: string;
+  source: string;
 }) {
+  const {publish} = useAnalytics();
+
   const form = useForm<z.infer<typeof newsletterSchema>>({
     resolver: zodResolver(newsletterSchema),
     defaultValues: {
@@ -464,6 +475,8 @@ export function NewsletterForm({
           //   componentID: '9c448a26-16bf-4011-ba0a-1d651eebd649',
           // });
           // setSubmissionState('success');
+          publish('custom_newsletter_signup', {source, data});
+
           form.reset();
           toast({
             title: 'You are now subscribed to our newsletter.',

@@ -26,6 +26,7 @@ declare global {
       SENTRY_AUTH_TOKEN: string | undefined;
       SENTRY_DSN: string;
       NODE_ENV: 'production' | 'development';
+      DEBUG_TRACKING: boolean | undefined;
     };
   };
 
@@ -61,6 +62,7 @@ declare global {
     META_PIXEL_ID: string;
     GA4_ID: string;
     PINTEREST_ID: string;
+    DEBUG_TRACKING: string;
   }
 }
 

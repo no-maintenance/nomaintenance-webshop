@@ -67,6 +67,7 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
+        'react-ga4',
         'js-cookie',
         'cookie',
         'lodash.debounce',

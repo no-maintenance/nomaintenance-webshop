@@ -10,6 +10,7 @@ import {Button} from '~/components/ui/button';
 import type {action as backInStockAction} from '~/routes/api+/subscribe.restock';
 import {useFocus} from '~/hooks/useFocus';
 import {toast} from '~/components/ui/use-toast';
+import {useAnalytics} from '@shopify/hydrogen';
 
 export function KlaviyoBackInStock({
   source,
@@ -20,13 +21,16 @@ export function KlaviyoBackInStock({
   variantId: string;
   cb?: () => void;
 }) {
+  const {publish, shop, cart, prevCart} = useAnalytics();
+
   const formRef = useRef<HTMLFormElement>(null);
   const fetcher = useFetcher<typeof backInStockAction>();
   const isLoading = fetcher.state !== 'idle';
   const data = fetcher.data;
   useEffect(() => {
-    console.log(fetcher, data);
     if (formRef.current && data?.status === 'success') {
+      publish('custom_back_in_stock', data);
+
       formRef.current.reset();
       toast({
         title: 'You are now subscribed to receive back in stock notifications',

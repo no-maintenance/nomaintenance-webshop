@@ -207,6 +207,7 @@ export default function Product() {
   const lastData = useRef({});
   const data = useLoaderData<typeof loader>() || lastData.current;
   const {product, storeDomain, recommended} = data || lastData.current;
+  console.log(product);
   const {media, title, vendor, descriptionHtml, metafields} = product;
   const selectedVariant = product.selectedVariant!;
   const isOnSale =
@@ -304,6 +305,8 @@ export default function Product() {
               handle: product.handle,
               compareAtPrice: selectedVariant.compareAtPrice,
               quantity: 1,
+              productType: product.productType,
+              // category:
             },
           ],
         }}
@@ -893,6 +896,7 @@ query Product(
         title
         vendor
         handle
+        productType
         descriptionHtml
         description
         options {

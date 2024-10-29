@@ -42,8 +42,9 @@ import {
 } from '~/components/ui/theme';
 import {seoPayload} from '~/lib/seo.server';
 import {Toaster} from '~/components/ui/toaster';
-import {CustomAnalytics, Pixels} from '~/components/analytics/CustomAnalytics';
-import {SEO_PLACEHOLDER} from '~/lib/const'; // import {parseAcceptLanguage} from 'intl-parse-accept-language';
+import {SEO_PLACEHOLDER} from '~/lib/const';
+import {Pixels} from '~/components/analytics/CustomAnalytics';
+import yn from 'yn'; // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
@@ -142,6 +143,10 @@ export async function loader({context, request}: LoaderFunctionArgs) {
         meta: context.env.META_PIXEL_ID,
         pinterest: context.env.PINTEREST_ID,
       },
+      ENV: {
+        DEBUG_TRACKING: yn(context.env.DEBUG_TRACKING, {default: false}),
+        NODE_ENV: process.env.NODE_ENV,
+      },
     },
     {
       headers: {
@@ -164,9 +169,9 @@ export default function App() {
   const data = useLoaderData<typeof loader>();
   return (
     <Analytics.Provider
-      cart={data?.cart}
-      shop={data?.shop}
-      consent={data?.consent}
+      cart={data.cart}
+      shop={data.shop}
+      consent={data.consent}
     >
       <Document
         nonce={nonce}
@@ -175,12 +180,15 @@ export default function App() {
         tokens={data?.analyticsTokens}
       >
         <Outlet />
-        <CustomAnalytics />
-        {/*<LazyMotion features={domAnimation}>*/}
-        {/*  <AnimatePresence mode="popLayout">*/}
-        {/*    <AnimatedOutlet key={nextMatch.id} />*/}
-        {/*  </AnimatePresence>*/}
-        {/*</LazyMotion>*/}
+        <Script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `window.process = ${JSON.stringify({
+              env: data.ENV,
+            })}`,
+          }}
+        />
+        <Pixels tokens={data?.analyticsTokens} nonce={nonce} />
       </Document>
     </Analytics.Provider>
   );
@@ -228,7 +236,6 @@ export function Document({
         )}
         <Meta />
         <Links />
-        <Pixels tokens={tokens} nonce={nonce} />
       </head>
       <GlobalThemeContext.Provider value={t?.themes ?? GLOBAL_DEFAULT_VALUE}>
         <ChildThemeContext.Provider
@@ -237,13 +244,6 @@ export function Document({
           <ThemeConsumer asChild>
             <body suppressHydrationWarning={true}>
               {children}
-              <script
-                nonce={nonce}
-                dangerouslySetInnerHTML={{
-                  __html: `window.ENV = ${JSON.stringify(env)}`,
-                }}
-              />
-
               <Toaster />
               <ScrollRestoration nonce={nonce} />
               <Scripts nonce={nonce} />
