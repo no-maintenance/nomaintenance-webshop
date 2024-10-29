@@ -9,7 +9,12 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
   );
 
   useEffect(() => {
-    if (scriptStatus !== 'done' || !window.klaviyo) return;
+    if (
+      typeof window === 'undefined' ||
+      scriptStatus !== 'done' ||
+      !window.klaviyo
+    )
+      return;
     subscribe('product_viewed', (data) => {
       const product = data.products[0];
       const item = {
@@ -64,7 +69,7 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
     subscribe('custom_newsletter_signup', (data) => {});
 
     ready();
-  }, [scriptStatus, window.klaviyo]);
+  }, [scriptStatus]);
   return null;
   // return (
   //   <Script

@@ -5,9 +5,9 @@
   "version": "1.0.7",
   "type": "module",
   "scripts": {
-    "build": "yarn partytown && shopify hydrogen build",
+    "build": "shopify hydrogen build",
     "dev": "shopify hydrogen dev --codegen --debug",
-    "preview": "npm run build && shopify hydrogen preview",
+    "preview": "shopify hydrogen preview",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen",
