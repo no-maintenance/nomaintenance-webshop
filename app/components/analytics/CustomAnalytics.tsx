@@ -18,7 +18,6 @@ export function Pixels({
     pinterest?: string;
   };
 }) {
-  console.log(tokens);
   // if (process.env.NODE_ENV === 'development' && !process.env.DEBUG_TRACKING)
   //   return null;
   return (

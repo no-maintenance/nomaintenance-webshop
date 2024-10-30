@@ -66,7 +66,9 @@ export function PinterestPixel({id}: {id: string}) {
         ],
       });
     });
-
+    subscribe('custom_newsletter_signup', (data) => {
+      ReactPinterest.track('lead', {});
+    });
     // Mark this analytics integration as ready as soon as it's done setting up
     ready();
   }, []);

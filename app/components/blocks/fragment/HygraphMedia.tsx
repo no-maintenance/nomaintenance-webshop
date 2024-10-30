@@ -77,15 +77,7 @@ export function HygraphMultiMedia({
     ) : (
       <>
         <HygraphMedia
-          className={cn(
-            aspect === '4/5'
-              ? 'aspect-[4/5]'
-              : aspect === 'square'
-                ? 'aspect-square'
-                : aspect === '16/9' && 'aspect-[16/9]',
-            className,
-            'md:hidden block',
-          )}
+          className={cn(className, 'md:hidden block')}
           {...asset.portrait}
         />
         <HygraphMedia
@@ -147,14 +139,8 @@ function HygraphMedia({
   return mimeType.startsWith('image/') ? (
     <img className={classes} srcSet={src} src={image} alt={alt ?? ''} />
   ) : mimeType.startsWith('video/') ? (
-    <video
-      className={classes}
-      controls={false}
-      autoPlay={true}
-      muted={true}
-      src={url}
-      loop
-      playsInline
-    />
+    <video className={classes} controls={false} autoPlay muted loop playsInline>
+      <source src={url} type={mimeType} />
+    </video>
   ) : null;
 }

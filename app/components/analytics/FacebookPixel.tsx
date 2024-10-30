@@ -2,6 +2,7 @@ import {Script, useAnalytics, useLoadScript} from '@shopify/hydrogen';
 import {useEffect, useRef, useState} from 'react';
 import ReactPixel from '~/lib/pixels/fb';
 import {getAddToCartValue} from '~/components/analytics/CustomAnalytics';
+import ReactGA from 'react-ga4';
 
 const PIXEL_NAME = 'Facebook';
 function log(...args: any) {
@@ -79,10 +80,9 @@ export function FacebookPixel({id}: {id: string}) {
       });
     });
     // Custom events
-    subscribe('custom_checkbox_toggled', (data) => {
-      log('Custom checkbox toggled:', data);
+    subscribe('custom_newsletter_signup', (data) => {
+      ReactPixel.track('Lead', {});
     });
-
     // Mark this analytics integration as ready as soon as it's done setting up
     ready();
   }, []);

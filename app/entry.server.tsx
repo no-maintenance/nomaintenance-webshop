@@ -50,13 +50,14 @@ export default async function handleRequest(
       'https://s.pinimg.com',
       'https://google.com',
       'https://ct.pinterest.com',
+      '*.graphassets.com',
       ...GOOGLE_TLDS,
     ].filter(Boolean),
     imgSrc: [
       "'self'",
       'data:',
       'https://cdn.shopify.com',
-      'https://us-west-2.graphassets.com',
+      '*.graphassets.com',
       'https://*.google-analytics.com',
       'https://*.analytics.google.com',
       'https://*.googletagmanager.com',
@@ -82,6 +83,7 @@ export default async function handleRequest(
       'https://td.doubleclick.net',
       'https://ct.pinterest.com',
       '*.facebook.com',
+      '*.graphassets.com',
     ],
     workerSrc: ["'self'", 'blob:'],
     scriptSrc: [
