@@ -141,6 +141,12 @@ function HygraphMedia({
   ) : mimeType.startsWith('video/') ? (
     <video className={classes} controls={false} autoPlay muted loop playsInline>
       <source src={url} type={mimeType} />
+      <img
+        className={classes}
+        src={
+          'https://us-west-2.graphassets.com/clu2m9k5f0d2a07lfbuhgdhdg/cm2vkv1j9fxhn07n19sda9a87'
+        }
+      />
     </video>
   ) : null;
 }
