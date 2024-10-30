@@ -115,30 +115,16 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
     <div className=" flex items-center flex-col justify-center min-h-screen relative">
       <div
         className={
-          'relative h-full max-h-screen bg-foreground flex-1 w-full block md:pt-0 pt-32 md:flex md:flex-col items-center justify-center md:min-h-[620px] overflow-hidden'
+          'relative h-full max-h-screen flex-1 w-full block md:pt-0 pt-32 md:flex md:flex-col items-center justify-center md:min-h-[620px] overflow-hidden'
         }
       >
         <div className={'block'}>
-          <video
-            className={'absolute top-0 left-0 h-full w-full object-cover'}
-            controls={false}
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source
-              src={
-                'https://cdn.shopify.com/videos/c/o/v/181389fd158641b7a71aa865d2f82cfe.mp4'
-              }
-              type={'video/mp4'}
+          {background && (
+            <HygraphMultiMedia
+              className={'absolute top-0 left-0 h-full w-full object-cover'}
+              media={[background]}
             />
-            <img
-              src={
-                'https://cdn.shopify.com/s/files/1/0422/9319/9005/files/videoframe_1570.png?v=1730276314'
-              }
-            />
-          </video>
+          )}
         </div>
         <div
           className={
