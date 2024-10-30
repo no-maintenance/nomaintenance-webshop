@@ -115,7 +115,7 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
     <div className=" flex items-center flex-col justify-center min-h-screen relative">
       <div
         className={
-          'relative h-full max-h-screen flex-1 w-full block md:pt-0 pt-32 md:flex md:flex-col items-center justify-center md:min-h-[620px] overflow-hidden'
+          'relative h-full max-h-screen bg-foreground flex-1 w-full block md:pt-0 pt-32 md:flex md:flex-col items-center justify-center md:min-h-[620px] overflow-hidden'
         }
       >
         <div className={'block'}>
