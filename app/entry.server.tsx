@@ -101,6 +101,7 @@ export default async function handleRequest(
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],
   });
+
   const body = await renderToReadableStream(
     <NonceProvider>
       <RemixServer context={remixContext} url={request.url} />
