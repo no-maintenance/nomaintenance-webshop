@@ -81,6 +81,7 @@ export default async function handleRequest(
       '*.googletagmanager.com',
       'https://td.doubleclick.net',
       'https://ct.pinterest.com',
+      '*.facebook.com',
     ],
     workerSrc: ["'self'", 'blob:'],
     scriptSrc: [
@@ -94,6 +95,7 @@ export default async function handleRequest(
       'https://googleads.g.doubleclick.net',
       'https://s.pinimg.com',
       'https://ct.pinterest.com',
+      '*.pinimg.com',
     ].filter(Boolean),
     styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],
   });

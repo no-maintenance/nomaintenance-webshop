@@ -61,6 +61,7 @@ export default {
     }
 
     initialized = window && !!window.fbq;
+    // eslint-disable
     // @ts-ignore
     !(function (f, b, e, v, n, t, s) {
       if (f.fbq) return;
@@ -85,19 +86,11 @@ export default {
       'script',
       'https://connect.facebook.net/en_US/fbevents.js',
     );
+    fbq('init', pixelId, advancedMatching); // Insert your Pixel ID here
+    fbq('track', 'PageView');
 
-    if (!pixelId) {
-      warn('Please insert pixel id for initializing');
-    } else {
-      if (options.autoConfig === false) {
-        fbq('set', 'autoConfig', false, pixelId);
-      }
-
-      fbq('init', pixelId, advancedMatching);
-
-      initialized = true;
-      debug = options.debug;
-    }
+    initialized = true;
+    debug = options.debug;
   },
 
   pageView() {

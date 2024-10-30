@@ -6,7 +6,7 @@ declare global {
   }
 }
 let initialized = false;
-let debug = false;
+const debug = false;
 
 const verifyInit = () => {
   if (!initialized) {
@@ -31,6 +31,8 @@ export default {
     const em = {
       em: userEmail,
     };
+    console.log('pinterest init', uniqueTagId, options);
+    // eslint-disable
     // @ts-ignore
     !(function (e) {
       if (!window.pintrk) {
@@ -45,15 +47,8 @@ export default {
         r.parentNode.insertBefore(t, r);
       }
     })('https://s.pinimg.com/ct/core.js');
-
-    if (!uniqueTagId) {
-      console.warn('Please insert unique Tag id for initializing');
-    } else {
-      pintrk('load', uniqueTagId, userEmail ? em : {});
-
-      initialized = true;
-      debug = options.debug;
-    }
+    pintrk('load', uniqueTagId, {em: userEmail});
+    initialized = true;
   },
 
   pageView() {
@@ -61,14 +56,13 @@ export default {
       return;
     }
 
-    pintrk('page');
-
     if (debug) {
       log("called pintrk('page');");
     }
   },
 
   track(title, data) {
+    console.log('verifyInit()', verifyInit());
     if (!verifyInit()) {
       return;
     }
@@ -76,7 +70,7 @@ export default {
     pintrk('track', title, data);
 
     if (debug) {
-      log(`called fbq('track', '${title}');`);
+      log(`called pintrk('track', '${title}');`);
       if (data) {
         log('with data', data);
       }

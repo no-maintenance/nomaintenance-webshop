@@ -1,28 +1,33 @@
-import {useAnalytics, useLoadScript} from '@shopify/hydrogen';
-import {useEffect, useState} from 'react';
+import {Script, useAnalytics, useLoadScript} from '@shopify/hydrogen';
+import {useEffect, useRef, useState} from 'react';
 import ReactPixel from '~/lib/pixels/fb';
 import {getAddToCartValue} from '~/components/analytics/CustomAnalytics';
+
+const PIXEL_NAME = 'Facebook';
+function log(...args: any) {
+  if (process.env.DEBUG_TRACKING) {
+    console.log(PIXEL_NAME, ...args);
+  }
+}
 export function FacebookPixel({id}: {id: string}) {
   const {register, subscribe, cart} = useAnalytics();
-  const {ready} = register('Facebook');
-  const [loaded, setLoaded] = useState(false);
+  const {ready} = register(PIXEL_NAME);
   useEffect(() => {
-    if (!loaded) {
-      ReactPixel.init(
-        id,
-        {},
-        {
-          autoConfig: true, // set pixel's autoConfig. More info: https://developers.facebook.com/docs/facebook-pixel/advanced/
-          debug: !!process.env.DEBUG_TRACKING, // enable logs
-        },
-      );
-      setLoaded(true);
-      return;
-    }
+    ReactPixel.init(
+      id,
+      {},
+      {
+        autoConfig: true, // set pixel's autoConfig. More info: https://developers.facebook.com/docs/facebook-pixel/advanced/
+        debug: !!process.env.DEBUG_TRACKING, // enable logs
+      },
+    );
+
+    // Standard events
     subscribe('page_viewed', (data) => {
-      ReactPixel.pageView();
+      log('Page viewed:', data);
     });
     subscribe('product_viewed', (data) => {
+      log('Product viewed:', data);
       const p = data.products[0];
       const payload = {
         content_ids: [p.id],
@@ -31,19 +36,8 @@ export function FacebookPixel({id}: {id: string}) {
       };
       ReactPixel.track('ViewContent', payload);
     });
-    subscribe('product_added_to_cart', (data) => {
-      const m = data?.currentLine?.merchandise;
-      const p = m?.product;
-      ReactPixel.track('AddToCart', {
-        currency: m?.price?.currencyCode,
-        value: getAddToCartValue(parseInt(m?.price?.amount ?? '0')),
-        content_ids: [m?.id],
-        content_name: p?.title,
-        content_type: 'product',
-        content: [{id: m?.id, quantity: data?.currentLine}],
-      });
-    });
     subscribe('collection_viewed', (data) => {
+      log('Collection viewed:', data);
       const payload = {
         content_ids: [data.collection.id],
         content_type: 'product_group',
@@ -53,6 +47,7 @@ export function FacebookPixel({id}: {id: string}) {
       ReactPixel.track('ViewContent', payload);
     });
     subscribe('cart_viewed', (data) => {
+      log(' Cart viewed:', data);
       // const payload = {
       //   value: data.cart?.cost?.totalAmount?.amount,
       //   currency: data.cart?.cost?.totalAmount?.currencyCode,
@@ -67,11 +62,30 @@ export function FacebookPixel({id}: {id: string}) {
       // };
       // window.fbq('trackCustom', 'ViewCart', payload);
     });
-    subscribe('custom_newsletter_signup', (data) => {
-      ReactPixel.track('Lead', {});
+    subscribe('cart_updated', (data) => {
+      log('Cart updated:', data);
+    });
+    subscribe('product_added_to_cart', (data) => {
+      console.log('product_added_to_cart', data);
+      const m = data?.currentLine?.merchandise;
+      const p = m?.product;
+      ReactPixel.track('AddToCart', {
+        currency: m?.price?.currencyCode,
+        value: getAddToCartValue(parseInt(m?.price?.amount ?? '0')),
+        content_ids: [m?.id],
+        content_name: p?.title,
+        content_type: 'product',
+        content: [{id: m?.id, quantity: data?.currentLine}],
+      });
+    });
+    // Custom events
+    subscribe('custom_checkbox_toggled', (data) => {
+      log('Custom checkbox toggled:', data);
     });
 
+    // Mark this analytics integration as ready as soon as it's done setting up
     ready();
-  }, [loaded]);
+  }, []);
+
   return null;
 }
