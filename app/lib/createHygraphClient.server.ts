@@ -74,7 +74,7 @@ export function createHygraphClient({
         return withCache(
           [
             'hygraph',
-            'v1',
+            'v2',
             operationName,
             operationType,
             JSON.stringify(variables),

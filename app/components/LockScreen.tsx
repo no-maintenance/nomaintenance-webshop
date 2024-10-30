@@ -120,31 +120,7 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
       >
         <div className={'block'}>
           <video
-            className={
-              'md:hidden block absolute top-0 left-0 h-full w-full object-cover'
-            }
-            controls={false}
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source
-              src={
-                'https://cdn.shopify.com/videos/c/o/v/44a7f0f05a08458db4e0389ab79eb4ef.mp4'
-              }
-              type={'video/mp4'}
-            />
-            <img
-              src={
-                'https://cdn.shopify.com/s/files/1/0422/9319/9005/files/videoframe_553.png?v=1730276343'
-              }
-            />
-          </video>
-          <video
-            className={
-              'hidden md:block absolute top-0 left-0 h-full w-full object-cover'
-            }
+            className={'absolute top-0 left-0 h-full w-full object-cover'}
             controls={false}
             autoPlay
             muted
