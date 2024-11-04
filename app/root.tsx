@@ -172,16 +172,16 @@ export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
   return (
-    <Analytics.Provider
-      cart={data.cart}
-      shop={data.shop}
-      consent={data.consent}
+    <Document
+      nonce={nonce}
+      lang={data?.i18n?.language?.code}
+      themes={data?.themes}
+      tokens={data?.analyticsTokens}
     >
-      <Document
-        nonce={nonce}
-        lang={data?.i18n?.language?.code}
-        themes={data?.themes}
-        tokens={data?.analyticsTokens}
+      <Analytics.Provider
+        cart={data.cart}
+        shop={data.shop}
+        consent={data.consent}
       >
         <Outlet />
         <Script
@@ -193,8 +193,8 @@ export default function App() {
           }}
         />
         <Pixels tokens={data?.analyticsTokens} nonce={nonce} />
-      </Document>
-    </Analytics.Provider>
+      </Analytics.Provider>
+    </Document>
   );
 }
 

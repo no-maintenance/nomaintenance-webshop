@@ -18,8 +18,6 @@ export function Pixels({
     pinterest?: string;
   };
 }) {
-  // if (process.env.NODE_ENV === 'development' && !process.env.DEBUG_TRACKING)
-  //   return null;
   return (
     <>
       <ThirdPartyAnalyticsIntegration />

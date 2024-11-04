@@ -9,12 +9,6 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
   );
 
   useEffect(() => {
-    if (
-      typeof window === 'undefined' ||
-      scriptStatus !== 'done' ||
-      !window.klaviyo
-    )
-      return;
     subscribe('product_viewed', (data) => {
       const product = data.products[0];
       const item = {
