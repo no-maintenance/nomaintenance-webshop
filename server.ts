@@ -89,6 +89,7 @@ export default {
         env,
         cache: await caches.open(HYGRAPH_CACHE_NAME),
         waitUntil,
+        request,
       });
       /**
        * Create a client for Customer Account API.

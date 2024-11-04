@@ -20,10 +20,12 @@ export function createHygraphClient({
   env,
   cache,
   waitUntil,
+  request,
 }: {
   env: Env;
   cache: Cache;
   waitUntil: ExecutionContext['waitUntil'];
+  request: Request;
 }) {
   const token =
     env.HYGRAPH_ENV === 'DRAFT'
@@ -36,34 +38,8 @@ export function createHygraphClient({
       'hyg-stale-while-revalidate': '30',
     },
   });
-  // const clientTimingWrapper: SdkFunctionWrapper = async <T>(
-  //   action: () => Promise<T>,
-  //   operationName: string,
-  //   operationType?: string,
-  //   variables?: any,
-  // ): Promise<T> => {
-  //   const startTime = new Date();
-  //   console.log(startTime);
-  //   return withCache(
-  //     [
-  //       'hygraph',
-  //       operationName,
-  //       operationType,
-  //       JSON.stringify(variables),
-  //       lastModified,
-  //     ],
-  //     CacheLong(),
-  //     async ({addDebugData}) => {
-  //       const response = await action();
-  //       addDebugData({displayName: operationName});
-  //       return response;
-  //     },
-  //   );
-  //   // const result = await action();
-  //   // console.log('request duration (ms)', new Date() - startTime);
-  //   // return result.data;
-  // };
-  const withCache = createWithCache({cache, waitUntil});
+
+  const withCache = createWithCache({cache, waitUntil, request});
   const query = (
     cache: AllCacheOptions = CacheLong(),
     client: GraphQLClient = graphQLClient,
@@ -71,15 +47,18 @@ export function createHygraphClient({
     return getSdk(
       client,
       async (action, operationName, operationType, variables) => {
-        return withCache(
-          [
-            'hygraph',
-            'v2',
-            operationName,
-            operationType,
-            JSON.stringify(variables),
-          ],
-          env.HYGRAPH_ENV === 'DRAFT' ? CacheNone() : cache,
+        return withCache.run(
+          {
+            cacheKey: [
+              'hygraph',
+              'v2',
+              operationName,
+              operationType,
+              JSON.stringify(variables),
+            ],
+            cacheStrategy: env.HYGRAPH_ENV === 'DRAFT' ? CacheNone() : cache,
+            shouldCacheResult: (result) => !result?.errors,
+          },
           async () => {
             return await action();
           },

@@ -435,7 +435,9 @@ function ProductVariantSelector({
   return (
     <VariantSelector
       handle={product.handle}
-      options={product.options}
+      options={product.options.filter(
+        (option) => option.optionValues.length > 1,
+      )}
       variants={variants}
     >
       {({option}) => {

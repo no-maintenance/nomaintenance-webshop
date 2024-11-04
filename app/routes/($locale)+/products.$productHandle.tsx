@@ -11,6 +11,7 @@ import {
   getSelectedProductOptions,
   getSeoMeta,
   Money,
+  VariantSelector,
   ShopPayButton,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
@@ -22,7 +23,6 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types';
 
 import type {VariantOption} from '~/components/VariantSelector';
-import {VariantSelector} from '~/components/VariantSelector';
 import type {
   ProductQuery,
   ProductVariantFragmentFragment,
@@ -334,7 +334,9 @@ function ProductVariantSelector({
   return (
     <VariantSelector
       handle={product.handle}
-      options={product.options}
+      options={product.options.filter(
+        (option) => option.optionValues.length > 1,
+      )}
       variants={variants}
     >
       {({option}) => {
@@ -899,7 +901,9 @@ query Product(
         description
         options {
             name
-            values
+            optionValues {
+              name
+            }
         }
         selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
             ...ProductVariantFragment

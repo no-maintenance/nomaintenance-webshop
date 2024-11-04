@@ -370,7 +370,9 @@ export type FeaturedProductsByIdsQuery = {
           >;
         };
         options: Array<
-          Pick<StorefrontAPI.ProductOption, 'name' | 'values' | 'id'>
+          Pick<StorefrontAPI.ProductOption, 'name' | 'id'> & {
+            optionValues: Array<Pick<StorefrontAPI.ProductOptionValue, 'name'>>;
+          }
         >;
       }
     >
@@ -958,36 +960,6 @@ export type StoreRobotsQueryVariables = StorefrontAPI.Exact<{
 
 export type StoreRobotsQuery = {shop: Pick<StorefrontAPI.Shop, 'id'>};
 
-export type SitemapsQueryVariables = StorefrontAPI.Exact<{
-  urlLimits?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-}>;
-
-export type SitemapsQuery = {
-  products: {
-    nodes: Array<
-      Pick<
-        StorefrontAPI.Product,
-        'updatedAt' | 'handle' | 'onlineStoreUrl' | 'title'
-      > & {
-        featuredImage?: StorefrontAPI.Maybe<
-          Pick<StorefrontAPI.Image, 'url' | 'altText'>
-        >;
-      }
-    >;
-  };
-  collections: {
-    nodes: Array<
-      Pick<StorefrontAPI.Collection, 'updatedAt' | 'handle' | 'onlineStoreUrl'>
-    >;
-  };
-  pages: {
-    nodes: Array<
-      Pick<StorefrontAPI.Page, 'updatedAt' | 'handle' | 'onlineStoreUrl'>
-    >;
-  };
-};
-
 export type FeaturedItemsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
@@ -1086,7 +1058,7 @@ interface GeneratedQueryTypes {
     return: CollectionInfoQuery;
     variables: CollectionInfoQueryVariables;
   };
-  '#graphql\nquery FeaturedProductsByIds($ids: [ID!]!, $country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language)  {\n    nodes(ids: $ids) {\n        ... on Product {\n            id\n            title\n            publishedAt\n            handle\n            vendor\n            descriptionHtml\n            media(first: 6) {\n                nodes {\n                    ...Media\n                }\n            }\n            variants(first: 10) {\n                nodes {\n                    title\n                    id\n                    availableForSale\n                    price {\n                        amount\n                        currencyCode\n                    }\n                    compareAtPrice {\n                        amount\n                        currencyCode\n                    }\n                    selectedOptions {\n                        name\n                        value\n                    }\n                    product {\n                        handle\n                        title\n                    }\n                }\n            }\n            options {\n                name\n                values\n                id\n            }\n        }\n    }\n}\n#graphql\nfragment Media on Media {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n        url\n    }\n    ... on MediaImage {\n        id\n        image {\n            id\n            url\n            width\n            height\n        }\n    }\n    ... on Video {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on Model3d {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on ExternalVideo {\n        id\n        embedUrl\n        host\n    }\n}\n\n': {
+  '#graphql\nquery FeaturedProductsByIds($ids: [ID!]!, $country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language)  {\n    nodes(ids: $ids) {\n        ... on Product {\n            id\n            title\n            publishedAt\n            handle\n            vendor\n            descriptionHtml\n            media(first: 6) {\n                nodes {\n                    ...Media\n                }\n            }\n            variants(first: 10) {\n                nodes {\n                    title\n                    id\n                    availableForSale\n                    price {\n                        amount\n                        currencyCode\n                    }\n                    compareAtPrice {\n                        amount\n                        currencyCode\n                    }\n                    selectedOptions {\n                        name\n                        value\n                    }\n                    product {\n                        handle\n                        title\n                    }\n                }\n            }\n            options {\n                name\n                optionValues {\n                  name\n                }\n                id\n            }\n        }\n    }\n}\n#graphql\nfragment Media on Media {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n        url\n    }\n    ... on MediaImage {\n        id\n        image {\n            id\n            url\n            width\n            height\n        }\n    }\n    ... on Video {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on Model3d {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on ExternalVideo {\n        id\n        embedUrl\n        host\n    }\n}\n\n': {
     return: FeaturedProductsByIdsQuery;
     variables: FeaturedProductsByIdsQueryVariables;
   };
@@ -1129,10 +1101,6 @@ interface GeneratedQueryTypes {
   '#graphql\n  query StoreRobots($country: CountryCode, $language: LanguageCode)\n   @inContext(country: $country, language: $language) {\n    shop {\n      id\n    }\n  }\n': {
     return: StoreRobotsQuery;
     variables: StoreRobotsQueryVariables;
-  };
-  '#graphql\n  query sitemaps($urlLimits: Int, $language: LanguageCode)\n  @inContext(language: $language) {\n    products(\n      first: $urlLimits\n      query: "published_status:\'online_store:visible\'"\n    ) {\n      nodes {\n        updatedAt\n        handle\n        onlineStoreUrl\n        title\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n    collections(\n      first: $urlLimits\n      query: "published_status:\'online_store:visible\'"\n    ) {\n      nodes {\n        updatedAt\n        handle\n        onlineStoreUrl\n      }\n    }\n    pages(first: $urlLimits, query: "published_status:\'published\'") {\n      nodes {\n        updatedAt\n        handle\n        onlineStoreUrl\n      }\n    }\n  }\n': {
-    return: SitemapsQuery;
-    variables: SitemapsQueryVariables;
   };
   '#graphql\nquery FeaturedItems(\n    $country: CountryCode\n    $language: LanguageCode\n    $pageBy: Int = 12\n) @inContext(country: $country, language: $language) {\n    featuredCollections: collections(first: 3, sortKey: UPDATED_AT) {\n        nodes {\n            ...FeaturedCollectionDetails\n        }\n    }\n    featuredProducts: products(first: $pageBy, query: "available_for_sale:true") {\n        nodes {\n            ...ProductCard\n        }\n    }\n}\n\n#graphql\nfragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    media(first: 2) {\n        nodes {\n            ...Media\n        }\n    }\n    variants(first: 10) {\n        nodes {\n            title\n            id\n            availableForSale\n            price {\n                amount\n                currencyCode\n            }\n            compareAtPrice {\n                amount\n                currencyCode\n            }\n            selectedOptions {\n                name\n                value\n            }\n            product {\n                handle\n                title\n            }\n        }\n    }\n}\n#graphql\nfragment Media on Media {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n        url\n    }\n    ... on MediaImage {\n        id\n        image {\n            id\n            url\n            width\n            height\n        }\n    }\n    ... on Video {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on Model3d {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on ExternalVideo {\n        id\n        embedUrl\n        host\n    }\n}\n\n\n#graphql\nfragment FeaturedCollectionDetails on Collection {\n    id\n    title\n    handle\n    image {\n        altText\n        width\n        height\n        url\n    }\n}\n\n': {
     return: FeaturedItemsQuery;

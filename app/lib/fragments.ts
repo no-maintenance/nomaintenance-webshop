@@ -272,7 +272,9 @@ query FeaturedProductsByIds($ids: [ID!]!, $country: CountryCode, $language: Lang
             }
             options {
                 name
-                values
+                optionValues {
+                  name
+                }
                 id
             }
         }
