@@ -224,7 +224,6 @@ function CartSummary({
     page: ' sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background rounded w-full',
   };
   const {t} = useTranslation();
-
   return (
     <section aria-labelledby="summary-heading" className={summary[layout]}>
       <h2 id="summary-heading" className="sr-only">
@@ -507,6 +506,7 @@ export function CartEmpty({
   const scrollRef = useRef(null);
   const {y} = useScroll(scrollRef);
   const {t} = useTranslation();
+  console.log(t);
 
   const container = {
     drawer: clsx([

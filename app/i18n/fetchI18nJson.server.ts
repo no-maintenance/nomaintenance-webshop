@@ -38,19 +38,33 @@ export async function fetchI18nJson<DefaultI18n extends BaseI18n>({
   if (!locale.prefix || locale.isDefault) {
     return Promise.resolve(locale);
   }
+  const withCache = createWithCache({cache, waitUntil, request});
 
-  // @TODO cache locale fetching
-  const fetchJsonCountry = fetchJson<DefaultI18n>({
-    resource: 'country',
-    asset: locale.country.code,
-    request,
-  });
+  const fetchJsonCountry = withCache.run(
+    {
+      cacheKey: ['i18n-country', locale.country.code],
+      cacheStrategy: CacheNone(),
+      shouldCacheResult: (result) => !result?.errors,
+    },
+    fetchJson<DefaultI18n>({
+      resource: 'country',
+      asset: locale.country.code,
+      request,
+    }),
+  );
 
-  const fetchJsonLanguage = fetchJson<DefaultI18n>({
-    resource: 'language',
-    asset: locale.language.code,
-    request,
-  });
+  const fetchJsonLanguage = withCache.run(
+    {
+      cacheKey: ['i18n-language', locale.country.code],
+      cacheStrategy: CacheNone(),
+      shouldCacheResult: (result) => !result?.errors,
+    },
+    fetchJson<DefaultI18n>({
+      resource: 'language',
+      asset: locale.language.code,
+      request,
+    }),
+  );
 
   const [countryJson, languageJson] = await Promise.all([
     fetchJsonCountry,
