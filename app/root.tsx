@@ -179,7 +179,7 @@ export default function App() {
     >
       <Document
         nonce={nonce}
-        lang={data?.i18n?.language.code}
+        lang={data.consent.language}
         themes={data?.themes}
         tokens={data?.analyticsTokens}
       >

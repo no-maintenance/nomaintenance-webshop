@@ -39,31 +39,18 @@ export async function fetchI18nJson<DefaultI18n extends BaseI18n>({
     return Promise.resolve(locale);
   }
 
-  const fetchJsonCountry = createWithCache<BaseI18n['country']>({
-    cache,
-    waitUntil,
-  })(
-    ['i18n-country', locale.country.code],
-    CacheNone(),
-    fetchJson<DefaultI18n>({
-      resource: 'country',
-      asset: locale.country.code,
-      request,
-    }),
-  );
+  // @TODO cache locale fetching
+  const fetchJsonCountry = fetchJson<DefaultI18n>({
+    resource: 'country',
+    asset: locale.country.code,
+    request,
+  });
 
-  const fetchJsonLanguage = createWithCache<BaseI18n['language']>({
-    cache,
-    waitUntil,
-  })(
-    ['i18n-language', locale.language.code],
-    CacheNone(),
-    fetchJson<DefaultI18n>({
-      resource: 'language',
-      asset: locale.language.code,
-      request,
-    }),
-  );
+  const fetchJsonLanguage = fetchJson<DefaultI18n>({
+    resource: 'language',
+    asset: locale.language.code,
+    request,
+  });
 
   const [countryJson, languageJson] = await Promise.all([
     fetchJsonCountry,
@@ -74,13 +61,11 @@ export async function fetchI18nJson<DefaultI18n extends BaseI18n>({
     return [];
   });
   if (!countryJson) {
-    // eslint-disable-next-line no-console
     console.error(`Failed to fetch country json for ${locale.country}`);
     return Promise.resolve(locale);
   }
 
   if (!languageJson) {
-    // eslint-disable-next-line no-console
     console.error(`Failed to fetch language json for ${locale.language}`);
     return Promise.resolve(locale);
   }
