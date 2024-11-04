@@ -9,6 +9,9 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
   );
 
   useEffect(() => {
+    if (scriptStatus !== 'done') return;
+    const klaviyo = window.klaviyo || [];
+
     subscribe('product_viewed', (data) => {
       const product = data.products[0];
       const item = {
@@ -24,8 +27,8 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
           CompareAtPrice: product.compareAtPrice,
         },
       };
-      window.klaviyo.push(['track', 'Viewed Product', item]);
-      window.klaviyo.push(['trackViewedItem', item]);
+      klaviyo.push(['track', 'Viewed Product', item]);
+      klaviyo.push(['trackViewedItem', item]);
     });
     subscribe('collection_viewed', (data) => {});
     subscribe('cart_viewed', (data) => {});
@@ -58,10 +61,9 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
           ImageURL: i.merchandise.image?.url,
         })),
       };
-      window.klaviyo.push(['track', 'Added to Cart', payload]);
+      klaviyo.push(['track', 'Added to Cart', payload]);
     });
     subscribe('custom_newsletter_signup', (data) => {});
-
     ready();
   }, [scriptStatus]);
   return null;
