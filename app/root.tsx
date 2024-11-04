@@ -135,6 +135,10 @@ export async function loader({context, request}: LoaderFunctionArgs) {
       consent: {
         checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
         storefrontAccessToken: context.env.PUBLIC_STOREFRONT_API_TOKEN,
+        withPrivacyBanner: true,
+        // localize the privacy banner
+        country: context.storefront.i18n.country,
+        language: context.storefront.i18n.language,
       },
       analyticsTokens: {
         gtm: context.env.GOOGLE_TAG_MANAGER_ID,
