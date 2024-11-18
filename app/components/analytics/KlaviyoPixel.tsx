@@ -1,17 +1,16 @@
-import {useAnalytics, useLoadScript} from '@shopify/hydrogen';
+import {Script, useAnalytics, useLoadScript} from '@shopify/hydrogen';
 import {useEffect} from 'react';
 
 export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
   const {register, subscribe} = useAnalytics();
   const {ready} = register('Klaviyo');
-  const scriptStatus = useLoadScript(
-    `//static.klaviyo.com/onsite/js/${id}/klaviyo.js`,
-  );
+  // const scriptStatus = useLoadScript(
+  //   `//static.klaviyo.com/onsite/js/${id}/klaviyo.js`,
+  // );
 
   useEffect(() => {
-    if (scriptStatus !== 'done') return;
+    // if (scriptStatus !== 'done') return;
     const klaviyo = window.klaviyo || [];
-
     subscribe('product_viewed', (data) => {
       const product = data.products[0];
       const item = {
@@ -65,14 +64,13 @@ export function KlaviyoPixel({id, nonce}: {id: string; nonce?: string}) {
     });
     subscribe('custom_newsletter_signup', (data) => {});
     ready();
-  }, [scriptStatus]);
-  return null;
-  // return (
-  //   <Script
-  //     async
-  //     nonce={nonce}
-  //     type="text/javascript"
-  //     src={`//static.klaviyo.com/onsite/js/${id}/klaviyo.js`}
-  //   />
-  // );
+  }, []);
+  return (
+    <Script
+      async
+      nonce={nonce}
+      type="text/javascript"
+      src={`//static.klaviyo.com/onsite/js/${id}/klaviyo.js`}
+    />
+  );
 }

@@ -39,6 +39,7 @@ export default async function handleRequest(
       'https://cdn.shopify.com',
       'blob:',
       '*.klaviyo.com',
+      'https://klaviyo.com',
       'api.emailjs.com',
       'preview.nomaintenance.us',
       '*.google.com',
@@ -76,6 +77,8 @@ export default async function handleRequest(
       'cdn.shopify.com',
       'fonts.gstatic.com',
       'res.cloudinary.com',
+      'https://klaviyo.com',
+      'https://*.klaviyo.com',
     ],
     frameSrc: [
       "'self'",
@@ -90,6 +93,7 @@ export default async function handleRequest(
       MODE === 'development' ? 'testing.nomaintenance.us' : null,
       "'self'",
       '*.klaviyo.com',
+      'https://klaviyo.com',
       'https://unpkg.com',
       'https://cdn.shopify.com',
       '*.googletagmanager.com',
@@ -99,7 +103,12 @@ export default async function handleRequest(
       'https://ct.pinterest.com',
       '*.pinimg.com',
     ].filter(Boolean),
-    styleSrc: ["'self'", '*.klaviyo.com', 'fonts.googleapis.com'],
+    styleSrc: [
+      "'self'",
+      '*.klaviyo.com',
+      'https://klaviyo.com',
+      'fonts.googleapis.com',
+    ],
   });
 
   const body = await renderToReadableStream(

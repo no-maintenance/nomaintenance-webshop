@@ -14,7 +14,7 @@ export function ThirdPartyAnalyticsIntegration() {
   useEffect(() => {
     // Standard events
     subscribe('page_viewed', (data) => {
-      log('Page viewed:', data);
+      console.log('Page viewed:', data);
     });
     subscribe('product_viewed', (data) => {
       log('Product viewed:', data);
