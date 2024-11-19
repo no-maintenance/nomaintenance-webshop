@@ -276,7 +276,7 @@ export function AppointmentForm({submitBtn}: {submitBtn: string}) {
       <form
         ref={formRef}
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
+        className="space-y-4 md:space-y-8"
       >
         <FormField
           control={form.control}

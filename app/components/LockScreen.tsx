@@ -195,8 +195,8 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
     alwaysUnlockOnTime,
     password,
     alwaysUnlockForAuthenticatedUser,
+    background,
   } = lock;
-  const revalidator = useRevalidator();
   const controls = useAnimationControls();
   const {hasLockPassword} = useBaseLayoutData();
   const [timeLeft, isLive] = useCountdown(scheduledUnlockTime);
@@ -215,8 +215,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
   useEffect(() => {
     const queueExitAnimation = async () => {
       await controls.start({
-        opacity: 0,
-        backgroundColor: '#fff',
+        opacity: 1,
         transition: {duration: 3},
       });
       window.location.reload();
@@ -227,62 +226,67 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
     }
   }, [isProtected]);
 
-  const [pastDate, setPastDate] = useState<boolean>(
-    isAfterDate(scheduledUnlockTime),
-  );
   return (
-    <m.div animate={controls} className={'min-h-screen bg-foreground'}>
-      <img
-        alt={'logo for No Maintenance'}
+    <div className={'min-h-screen'}>
+      <m.div
+        animate={controls}
         className={
-          'mx-auto md:absolute top-0 left-0 block w-[200px] sm:w-[250px] md:w-[300px] lg:w-[350px] z-10'
+          'absolute bg-background w-full h-full inset-0 z-[2000001] pointer-events-none opacity-0'
         }
-        src={logo}
-      />
-      <section
-        className={
-          'px-gutter text-background text-center space-y-8 md:space-y-12 w-full  md:pt-80'
-        }
-      >
-        <div className={'space-y-6'}>
-          <Heading
-            as={'h1'}
-            className={'tracking-widest uppercase mx-auto text-center'}
-          >
-            Summer &#39;24
-          </Heading>
-          <PasswordForm isLive={isLive} lock={lock} />
-        </div>
-
-        {isLive ? (
-          <hgroup>
+      ></m.div>
+      <div className={'z-10 relative'}>
+        <img
+          alt={'logo for No Maintenance'}
+          className={
+            'mx-auto md:absolute top-0 left-0 block w-[200px] sm:w-[250px] md:w-[300px] lg:w-[350px] z-10'
+          }
+          src={logo}
+        />
+        <section
+          className={
+            'px-gutter text-background text-center space-y-8 md:space-y-12 w-full  md:pt-80'
+          }
+        >
+          <div className={'space-y-6'}>
             <Heading
-              as={'h2'}
-              className={'uppercase text-oversize font-semibold'}
+              as={'h1'}
+              className={'tracking-widest uppercase mx-auto text-center'}
             >
-              Now Live
+              Private Sale &#39;24
             </Heading>
-            {!hasLockPassword && (
-              <h3
-                className={
-                  'font-light tracking-widest uppercase text-background text-mid'
-                }
-              >
-                Register to our mailing list for entry details.
-              </h3>
-            )}
-          </hgroup>
-        ) : (
-          <div className={'xl:h-[86px] lg:h-[71px] h-[108px] w-full'}>
-            <ClientOnly fallback={null}>
-              {() => <Counter lock={lock} />}
-            </ClientOnly>
+            <PasswordForm isLive={isLive} lock={lock} />
           </div>
-        )}
-        <NewsletterForm password={lock.password} submitBtn={'Submit'} />
-        <AppointmentResponsiveDialog />
-      </section>
-    </m.div>
+
+          {isLive ? (
+            <hgroup>
+              <Heading
+                as={'h2'}
+                className={'uppercase text-oversize font-semibold'}
+              >
+                Now Live
+              </Heading>
+              {!hasLockPassword && (
+                <h3
+                  className={
+                    'font-light tracking-widest uppercase text-background text-mid'
+                  }
+                >
+                  Register to our mailing list for entry details.
+                </h3>
+              )}
+            </hgroup>
+          ) : (
+            <div className={'xl:h-[86px] lg:h-[71px] h-[108px] w-full'}>
+              <ClientOnly fallback={null}>
+                {() => <Counter lock={lock} />}
+              </ClientOnly>
+            </div>
+          )}
+          <NewsletterForm password={lock.password} submitBtn={'Submit'} />
+          <AppointmentResponsiveDialog />
+        </section>
+      </div>
+    </div>
   );
 }
 
@@ -318,7 +322,7 @@ function PasswordForm({lock, isLive}: {lock: LockFragment; isLive: boolean}) {
   const controls = useAnimationControls();
   const actionData = useActionData();
   const [pwRef, setFocus] = useFocus<HTMLInputElement>();
-
+  console.log('hasLockPassword', hasLockPassword);
   const [hasPw, setHasPw] = useState<boolean>(hasLockPassword);
 
   useEffect(() => {
@@ -348,8 +352,8 @@ function PasswordForm({lock, isLive}: {lock: LockFragment; isLive: boolean}) {
   }, [actionData]);
 
   return (
-    <div className={'transition-all'}>
-      {hasPw ? (
+    <div className={''}>
+      {hasLockPassword ? (
         <p className={'max-w-lg w-full mx-auto'}>
           You have now unlocked sale access and are in the queue. Please check
           back here when the sale begins.
@@ -397,13 +401,29 @@ export function LockScreen({
       return <CustomLockScreen lock={lock} sections={sections} />;
     }
     if (lock.password) {
-      return <PasswordLockScreen lock={lock} />;
+      return (
+        <div className={'bg-foreground'}>
+          {lock?.background ? (
+            <HygraphMultiMedia
+              className={'absolute top-0 left-0 h-full w-full object-cover'}
+              media={[lock.background]}
+            />
+          ) : (
+            <div
+              className={
+                'absolute top-0 left-0 h-full w-full object-cover bg-foreground'
+              }
+            ></div>
+          )}
+          <PasswordLockScreen lock={lock} />
+        </div>
+      );
     }
 
     return <CountdownLockScreen lock={lock} />;
   };
   return (
-    <div className={' min-h-screen'}>
+    <div className={'min-h-screen'}>
       <Switcher />
     </div>
   );
@@ -442,13 +462,13 @@ const AppointmentResponsiveDialog = () => {
       <DrawerTrigger asChild>
         <button
           className={
-            'text-mid font-light tracking-widest mx-auto underline decoration-1 underline-offset-8 uppercase text-background'
+            'text-heading font-semibold underline decoration-1 underline-offset-8 uppercase text-background'
           }
         >
           Book an Appointment to Shop in Person
         </button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className={'max-h-[100vh]'}>
         <DrawerHeader className="text-left">
           <DrawerTitle>Book An Appointment</DrawerTitle>
           <DrawerDescription>
@@ -457,10 +477,9 @@ const AppointmentResponsiveDialog = () => {
             and time.
           </DrawerDescription>
         </DrawerHeader>
-        <div className={'max-h-[75vh] overflow-y-auto px-gutter'}>
+        <div className={' overflow-y-auto px-gutter'}>
           <AppointmentForm submitBtn={'Book Now'} />
         </div>
-
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
