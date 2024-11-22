@@ -12,7 +12,6 @@ import {
   getSeoMeta,
   Money,
   VariantSelector,
-  ShopPayButton,
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
@@ -500,18 +499,6 @@ export function ProductForm({
                 </AddToCartButton>
               )}
             </div>
-
-            {!isOutOfStock && (
-              <div
-                className={'leading-[0px] h-[var(--shop-pay-button-height)]'}
-              >
-                <ShopPayButton
-                  width="100%"
-                  variantIds={[selectedVariant?.id!]}
-                  storeDomain={storeDomain}
-                />
-              </div>
-            )}
           </div>
         )}
       </div>
