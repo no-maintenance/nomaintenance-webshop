@@ -154,6 +154,7 @@ fragment ProductCard on Product {
             ...Media
         }
     }
+    totalInventory
     variants(first: 10) {
         nodes {
             title

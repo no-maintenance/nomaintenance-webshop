@@ -39,20 +39,36 @@ export function ProductCard({
   idx,
 }: ProductCardProps) {
   let cardLabel;
+  let badge = <></>;
   const {t} = useTranslation();
   const cardProduct: Product = product as Product;
   if (!cardProduct?.variants?.nodes?.length) return null;
-
   const firstVariant = flattenConnection(cardProduct.variants)[0];
-
   if (!firstVariant) return null;
   const {price, compareAtPrice} = firstVariant;
   if (label) {
     cardLabel = label;
+    badge = <Badge className="absolute top-0 right-0 m-4">{cardLabel}</Badge>;
+  } else if (isSoldOut(product)) {
+    cardLabel = 'Sold Out';
+    badge = (
+      <Badge variant={'white'} className="absolute top-0 right-0 m-4">
+        {cardLabel}
+      </Badge>
+    );
+  } else if (product?.totalInventory && product.totalInventory < 10) {
+    cardLabel = 'Low Stock';
+    badge = (
+      <Badge variant={'destructive'} className="absolute top-0 right-0 m-4">
+        {cardLabel}
+      </Badge>
+    );
   } else if (isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2)) {
     cardLabel = 'Sale';
+    badge = <Badge className="absolute top-0 right-0 m-4">{cardLabel}</Badge>;
   } else if (isNewArrival(product.publishedAt)) {
     cardLabel = t('cart_actions.new');
+    badge = <Badge className="absolute top-0 right-0 m-4">{cardLabel}</Badge>;
   }
   const productAnalytics: ShopifyAnalyticsProduct = {
     productGid: product.id,
@@ -68,7 +84,6 @@ export function ProductCard({
   function isSoldOut(product: ProductCardFragment): boolean {
     return product.variants.nodes.every((variant) => !variant.availableForSale);
   }
-
   return (
     <Link
       onClick={onClick}
@@ -86,9 +101,7 @@ export function ProductCard({
                 title={title}
               />
             )}
-            {cardLabel && (
-              <Badge className="absolute top-0 right-0 m-4">{cardLabel}</Badge>
-            )}
+            {badge}
           </div>
           <div className="grid gap-1">
             <Text
