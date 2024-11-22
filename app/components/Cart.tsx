@@ -506,7 +506,6 @@ export function CartEmpty({
   const scrollRef = useRef(null);
   const {y} = useScroll(scrollRef);
   const {t} = useTranslation();
-  console.log(t);
 
   const container = {
     drawer: clsx([
