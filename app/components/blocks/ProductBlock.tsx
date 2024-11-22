@@ -7,6 +7,7 @@ import {
   Money,
   type ShopifyAnalyticsProduct,
   ShopPayButton,
+  VariantSelector,
   Video,
 } from '@shopify/hydrogen';
 import {SpacingWrapper} from '~/components/blocks/CustomizedSection';
@@ -28,7 +29,6 @@ import type {
 import {getFirstAvailableVariant} from '~/routes/($locale)+/products.$productHandle';
 import type {ProductVariantFragmentFragment} from '~/__generated__/storefrontapi.generated';
 import {AddToCartButton} from '~/components/AddToCartButton';
-import {VariantSelector} from '~/components/VariantSelector';
 import {useTranslation} from '~/i18n';
 import {useMediaQuery} from 'usehooks-ts';
 import {Dialog, DialogContent, DialogTrigger} from '~/components/ui/dialog';
@@ -332,7 +332,7 @@ export function SoldOutButton({
                 </Heading>
                 <div className={'w-full'}>
                   <ProductVariantSelector
-                    type={'buttons'}
+                    type={'listbox'}
                     product={product}
                     setSelectedVariant={setSelectedVariant}
                     selectedVariant={selectedVariant}

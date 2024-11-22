@@ -5,7 +5,7 @@ export function Grid({
   className,
   flow = 'row',
   gap = 'default',
-  items = 3,
+  items = 4,
   layout = 'default',
   ...props
 }: {

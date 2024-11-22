@@ -401,7 +401,6 @@ export function ProductForm({
     ...analytics.products[0],
     quantity,
   };
-
   return (
     <div className="grid gap-10">
       <div className="grid gap-10">
@@ -458,36 +457,50 @@ export function ProductForm({
                 </div>
               )}
             </div>
-            {isOutOfStock ? (
-              <SoldOutButton
-                initSelectedVariant={selectedVariant}
-                product={product}
-                variants={variants}
-              />
-            ) : (
-              <AddToCartButton
-                className={'w-full'}
-                lines={[
-                  {
-                    merchandiseId: selectedVariant.id!,
-                    quantity,
-                  },
-                ]}
-                data-test="add-to-cart"
-                analytics={{
-                  products: [productAnalytics],
-                  totalValue: parseFloat(productAnalytics.price) * quantity,
-                }}
-              >
-                <Text
-                  as="span"
-                  size={'fine'}
-                  className="flex items-center justify-center gap-2"
+            <div className={'relative'}>
+              {!isOutOfStock &&
+                product.selectedVariant.quantityAvailable < 5 && (
+                  <h6
+                    className={
+                      'text-red-500 text-fine font-semibold absolute top-0 -mt-5'
+                    }
+                  >
+                    Only {product.selectedVariant.quantityAvailable} left in
+                    stock — order soon.
+                  </h6>
+                )}
+              {isOutOfStock ? (
+                <SoldOutButton
+                  initSelectedVariant={selectedVariant}
+                  product={product}
+                  variants={variants}
+                />
+              ) : (
+                <AddToCartButton
+                  className={'w-full'}
+                  lines={[
+                    {
+                      merchandiseId: selectedVariant.id!,
+                      quantity,
+                    },
+                  ]}
+                  data-test="add-to-cart"
+                  analytics={{
+                    products: [productAnalytics],
+                    totalValue: parseFloat(productAnalytics.price) * quantity,
+                  }}
                 >
-                  <span>Add to Cart</span>
-                </Text>
-              </AddToCartButton>
-            )}
+                  <Text
+                    as="span"
+                    size={'fine'}
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <span>Add to Cart</span>
+                  </Text>
+                </AddToCartButton>
+              )}
+            </div>
+
             {!isOutOfStock && (
               <div
                 className={'leading-[0px] h-[var(--shop-pay-button-height)]'}

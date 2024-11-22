@@ -21,9 +21,11 @@ export function ProductSwimlane({
 }: ProductSwimlaneProps) {
   return (
     <Section padding="y" {...props}>
-      <Heading size="lead" className={cn('px-gutter pb-gutter')}>
-        {title}
-      </Heading>
+      {title && (
+        <Heading size="lead" className={cn('px-gutter pb-gutter')}>
+          {title}
+        </Heading>
+      )}
       <div className="swimlane hiddenScroll md:pb-8 md:scroll-px-8 lg:scroll-px-8 px-4 md:px-6 lg:px-8 xl:px-10">
         {products.nodes.map((product, idx) => (
           <ProductCard
