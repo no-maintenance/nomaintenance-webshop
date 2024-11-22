@@ -101,7 +101,7 @@ export function ProductCard({
                 title={title}
               />
             )}
-            {badge}
+            {cardLabel && badge}
           </div>
           <div className="grid gap-1">
             <Text
