@@ -1,12 +1,12 @@
 import type {CSSProperties, ReactNode} from 'react';
 import {createContext, useContext} from 'react';
 
+import {Sizes} from '~/__generated__/hygraph.generated';
 import type {
   GetThemesQuery,
   Maybe,
   ThemeFragment,
 } from '~/__generated__/hygraph.generated';
-import {Sizes} from '~/__generated__/hygraph.generated';
 import {Slot} from '@radix-ui/react-slot';
 import {cn} from '~/lib/utils';
 

@@ -24,6 +24,7 @@ export function CollectionBlock({gid}: BlockProps<'Collection'>) {
   }: {
     collection: CollectionFeedQuery['collection'];
   }) => {
+    console.log(collection);
     if (!collection) return;
     switch (settings.alternateLayout) {
       case 'swimlanes':
@@ -32,6 +33,28 @@ export function CollectionBlock({gid}: BlockProps<'Collection'>) {
             spacing={{verticalPadding, horizontalPadding}}
             defaults={{vertical: 'gutter-y', horizontal: ''}}
           >
+            <ProductSwimlane products={collection.products} count={12} />
+          </SpacingWrapper>
+        );
+      case 'swimlanesFull':
+        return (
+          <SpacingWrapper
+            spacing={{verticalPadding, horizontalPadding}}
+            defaults={{vertical: 'gutter-y', horizontal: ''}}
+          >
+            <div className={'gutter space-y-2'}>
+              {collection.title && (
+                <Heading as={'h2'} className={'font-semibold'}>
+                  {collection.title}
+                </Heading>
+              )}
+              {collection.descriptionHtml && (
+                <div
+                  className={'prose-lg max-w-4xl text-justify'}
+                  dangerouslySetInnerHTML={{__html: collection.descriptionHtml}}
+                ></div>
+              )}
+            </div>
             <ProductSwimlane products={collection.products} count={12} />
           </SpacingWrapper>
         );

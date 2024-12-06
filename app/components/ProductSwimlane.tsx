@@ -26,7 +26,7 @@ export function ProductSwimlane({
           {title}
         </Heading>
       )}
-      <div className="swimlane hiddenScroll md:pb-8 md:scroll-px-8 lg:scroll-px-8 px-4 md:px-6 lg:px-8 xl:px-10">
+      <div className="swimlane hiddenScroll md:scroll-px-8 lg:scroll-px-8 px-4 md:px-6 lg:px-8 xl:px-10">
         {products.nodes.map((product, idx) => (
           <ProductCard
             product={product}

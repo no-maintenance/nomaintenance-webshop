@@ -38,6 +38,7 @@ export function BlockSkeletonFactory({outline}: {outline: EntityWhereInput[]}) {
 
 export function BlockFactory({blocks}: {blocks: GetEntitiesQuery}) {
   const {entities} = blocks;
+  console.log(entities);
   return (
     <div>
       {entities &&

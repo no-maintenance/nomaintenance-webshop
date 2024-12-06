@@ -8,27 +8,24 @@ import type {
   GetEntitiesQuery,
   HeroesFragment,
 } from '~/__generated__/hygraph.generated';
-import {FormTypes} from '~/__generated__/hygraph.generated';
 import {isValidLocaleServer} from '~/i18n/isValidLocaleServer';
-import {HeroFactory} from '~/components/Hero';
 import {
   BlockFactory,
   BlockSkeletonFactory,
 } from '~/components/blocks/BlockFactory';
 import {CacheLong, getSeoMeta} from '@shopify/hydrogen';
-import {PageHeader} from '~/components/Text';
-import {cn} from '~/lib/utils';
+import {Heading, PageHeader, Section} from '~/components/Text';
+import {cn, isAfterDate} from '~/lib/utils';
 import {seoPayload} from '~/lib/seo.server';
-import {FormBlock} from '~/components/blocks/FormBlock';
 import {CacheBalanced} from '~/lib/cache';
+import {HeroFactory} from '~/components/Hero';
 
 export async function loader({params, context, request}: LoaderFunctionArgs) {
   if (!isValidLocaleServer(context, params)) {
     throw new Response(null, {status: 404});
   }
-  const {pageHandle} = params;
   const data = await getCriticalPageData(context, {
-    slug: pageHandle,
+    slug: 'mohair-redeemed',
   });
   if (!data) {
     throw new Response(null, {status: 404});

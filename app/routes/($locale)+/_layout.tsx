@@ -73,6 +73,7 @@ export function getPathSlug({request, context, params}: LoaderFunctionArgs) {
   // if slug is undefined, fallback with random number to ensure that "layoutsWhere" does not return any results.
   const path = new URL(request.url).pathname;
   const delocalizedPath = delocalizePath(path, context.i18n);
+  if (delocalizedPath === '/mohair-redeemed') return 'mohair-redeemed';
   return delocalizedPath === '/' ? 'home' : hygraphSlug ?? editorialHandle;
 }
 
@@ -108,7 +109,6 @@ export async function action({request, context}: ActionFunctionArgs) {
 
 export async function loader({request, context, params}: LoaderFunctionArgs) {
   const {pageHandle: hygraphSlug, editorialHandle} = params;
-
   const slug =
     getPathSlug({request, context, params}) ??
     '73801813333362060615849066158275';

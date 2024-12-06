@@ -50,8 +50,8 @@ export function DuplexHygraph({
     alternateLayout === 'duplex1_1'
       ? 'square'
       : alternateLayout === 'duplexTile'
-      ? 'fluid'
-      : '4/5';
+        ? 'fluid'
+        : '4/5';
   const maxHeight = 'md:max-h-[940px]';
   return (
     <SpacingWrapper spacing={{verticalPadding, horizontalPadding}}>
@@ -73,7 +73,7 @@ export function DuplexHygraph({
             {link && media.length < 2 ? (
               <HygraphLink hygraphLink={link}>
                 <HygraphMultiMedia
-                  className={cn('w-full', maxHeight)}
+                  className={cn('w-full object-cover', maxHeight)}
                   aspect={mediaAspectRatio}
                   media={media}
                 />
@@ -81,7 +81,7 @@ export function DuplexHygraph({
             ) : (
               <HygraphMultiMedia
                 hasCarousel
-                className={cn('w-full', maxHeight)}
+                className={cn('w-full object-cover', maxHeight)}
                 media={media}
                 aspect={mediaAspectRatio}
               />

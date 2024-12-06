@@ -1,6 +1,13 @@
 import type {Collection, Product} from '@shopify/hydrogen/storefront-api-types';
-import {ComponentType, ElementType, ReactElement, ReactNode} from 'react';
-import React, {createElement, Fragment, Suspense, useMemo} from 'react';
+import type {ElementType, ReactNode} from 'react';
+import React, {
+  ComponentType,
+  ReactElement,
+  createElement,
+  Fragment,
+  Suspense,
+  useMemo,
+} from 'react';
 import {Await} from '@remix-run/react';
 
 import {useBaseLayoutData} from '~/routes/($locale)+/_layout';
@@ -145,7 +152,7 @@ export async function getCollectionFeeds(
           id: gid,
           country: i18n.country,
           language: i18n.language,
-          first: 18,
+          first: 16,
         },
       });
     }),

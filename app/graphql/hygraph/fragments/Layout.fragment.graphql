@@ -8,6 +8,7 @@ fragment LayoutContent on Layout {
   title
   displayTitle
   mirrorLayout
+  isFluidHero
   heroes {
     ...Heroes
   }

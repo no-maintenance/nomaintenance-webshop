@@ -1,11 +1,12 @@
 import {Image, MediaFile} from '@shopify/hydrogen';
-import {ReactNode, useContext} from 'react';
+import type {ReactNode} from 'react';
+import {useContext} from 'react';
 
-import {
-  HeaderStyle,
+import type {
   HeroesFragment,
   LinkFragment,
 } from '~/__generated__/hygraph.generated';
+import {HeaderStyle} from '~/__generated__/hygraph.generated';
 import {useBaseLayoutData} from '~/routes/($locale)+/_layout';
 import {Link} from '~/components/Link';
 import {HygraphMultiMedia} from '~/components/blocks/fragment/HygraphMedia';
@@ -46,15 +47,18 @@ type HeroSettings = Omit<HeroProps, 'hero'>;
 export function HeroFactory({
   heroes,
   reverseLayout,
+  size,
 }: {
   heroes: HeroesFragment[];
   reverseLayout: boolean;
+  size: 'screen' | 'fluid';
 }) {
   const {layoutConfig} = useBaseLayoutData();
   const isFluid = layoutConfig.header === HeaderStyle.Fluid;
+  const s = size === 'screen' ? (isFluid ? 'screen' : 'navOffset') : 'fluid';
   if (heroes.length === 1) {
     const settings: HeroSettings = {
-      size: isFluid ? 'screen' : 'navOffset',
+      size: s,
       posX: 'left',
       posY: 'bottom',
       mode: HeroMode.Singular,
@@ -309,7 +313,10 @@ function HygraphHero({
           )}
         </TileHeader>
         {media && (
-          <TileBackground asChild>
+          <TileBackground
+            className={props.size === 'fluid' ? 'relative' : ''}
+            asChild
+          >
             <HygraphMultiMedia
               media={media}
               aspect={'fluid'}

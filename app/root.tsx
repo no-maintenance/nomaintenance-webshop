@@ -227,7 +227,7 @@ export function Document({
 }) {
   const t = createRootThemeCss(themes);
   return (
-    <html dir={direction} lang={lang} className={`h-full`}>
+    <html dir={direction} lang={lang}>
       <head>
         <meta charSet="utf-8" />
         <meta

@@ -65,6 +65,7 @@ export default async function handleRequest(
       'https://*.g.doubleclick.net',
       'https://*.facebook.com',
       'https://google.com',
+      'https://res.cloudinary.com/',
       ...GOOGLE_TLDS,
     ],
     mediaSrc: [
