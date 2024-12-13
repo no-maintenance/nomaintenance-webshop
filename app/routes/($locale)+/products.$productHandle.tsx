@@ -610,17 +610,19 @@ function ProductDetails({
           />
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="item-2">
-        <AccordionTrigger>Details</AccordionTrigger>
-        <AccordionContent>
-          <div
-            className={'prose'}
-            dangerouslySetInnerHTML={{
-              __html: convertSchemaToHtml(details),
-            }}
-          />
-        </AccordionContent>
-      </AccordionItem>
+      {details && (
+        <AccordionItem value="item-2">
+          <AccordionTrigger>Details</AccordionTrigger>
+          <AccordionContent>
+            <div
+              className={'prose'}
+              dangerouslySetInnerHTML={{
+                __html: convertSchemaToHtml(details),
+              }}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      )}
     </Accordion>
   );
 }

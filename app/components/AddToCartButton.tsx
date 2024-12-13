@@ -31,6 +31,7 @@ export function AddToCartButton({
   variant?: ButtonProps['variant'];
   props?: ButtonProps;
 }) {
+  console.log('add to cart', lines);
   return (
     <CartForm
       route="/cart"
