@@ -41,7 +41,11 @@ import {
   DrawerTrigger,
 } from '~/components/ui/drawer';
 import {toast} from '~/components/ui/use-toast';
-import {AppointmentForm, newsletterSchema} from '~/components/blocks/FormBlock';
+import {
+  AppointmentForm,
+  getKlaviyoSubscriptionRequestData,
+  newsletterSchema,
+} from '~/components/blocks/FormBlock';
 import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
 import type {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -322,7 +326,6 @@ function PasswordForm({lock, isLive}: {lock: LockFragment; isLive: boolean}) {
   const controls = useAnimationControls();
   const actionData = useActionData();
   const [pwRef, setFocus] = useFocus<HTMLInputElement>();
-  console.log('hasLockPassword', hasLockPassword);
   const [hasPw, setHasPw] = useState<boolean>(hasLockPassword);
 
   useEffect(() => {
@@ -570,16 +573,9 @@ const NewsletterPopup = () => {
 
     const options = {
       method: 'POST',
-      headers: {revision: '2023-02-22', 'content-type': 'application/json'},
+      headers: {revision: '2025-01-15', 'content-type': 'application/json'},
       body: JSON.stringify({
-        data: {
-          type: 'subscription',
-          attributes: {
-            list_id: 'Wimtnj',
-            custom_source: 'popup',
-            email: data.email,
-          },
-        },
+        data: getKlaviyoSubscriptionRequestData(data.email, 'popup'),
       }),
     };
     fetch(url, options)
@@ -857,16 +853,9 @@ function NewsletterForm({
     const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
     const options = {
       method: 'POST',
-      headers: {revision: '2023-02-22', 'content-type': 'application/json'},
+      headers: {revision: '2025-01-15', 'content-type': 'application/json'},
       body: JSON.stringify({
-        data: {
-          type: 'subscription',
-          attributes: {
-            list_id: 'Wimtnj',
-            custom_source: id,
-            email: data.email,
-          },
-        },
+        data: getKlaviyoSubscriptionRequestData(data.email, id),
       }),
     };
     fetch(url, options)

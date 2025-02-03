@@ -73,7 +73,6 @@ export function getPathSlug({request, context, params}: LoaderFunctionArgs) {
   // if slug is undefined, fallback with random number to ensure that "layoutsWhere" does not return any results.
   const path = new URL(request.url).pathname;
   const delocalizedPath = delocalizePath(path, context.i18n);
-  if (delocalizedPath === '/mohair-redeemed') return 'mohair-redeemed';
   return delocalizedPath === '/' ? 'home' : hygraphSlug ?? editorialHandle;
 }
 

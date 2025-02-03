@@ -1059,41 +1059,6 @@ export type FeaturedItemsQuery = {
   };
 };
 
-export type GetQuantitiesQueryVariables = StorefrontAPI.Exact<{
-  handle: StorefrontAPI.Scalars['String']['input'];
-  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
-  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
-  filters?: StorefrontAPI.InputMaybe<
-    Array<StorefrontAPI.ProductFilter> | StorefrontAPI.ProductFilter
-  >;
-  sortKey: StorefrontAPI.ProductCollectionSortKeys;
-  reverse?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Boolean']['input']>;
-  first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  last?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['Int']['input']>;
-  startCursor?: StorefrontAPI.InputMaybe<
-    StorefrontAPI.Scalars['String']['input']
-  >;
-  endCursor?: StorefrontAPI.InputMaybe<
-    StorefrontAPI.Scalars['String']['input']
-  >;
-}>;
-
-export type GetQuantitiesQuery = {
-  collection?: StorefrontAPI.Maybe<{
-    products: {
-      nodes: Array<
-        Pick<StorefrontAPI.Product, 'id' | 'totalInventory'> & {
-          variants: {
-            nodes: Array<
-              Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale'>
-            >;
-          };
-        }
-      >;
-    };
-  }>;
-};
-
 interface GeneratedQueryTypes {
   '#graphql\nquery homepageFeaturedCollections($country: CountryCode, $language: LanguageCode)\n@inContext(country: $country, language: $language) {\n    collections(\n        first: 4,\n        sortKey: UPDATED_AT\n    ) {\n        nodes {\n            id\n            title\n            handle\n            image {\n                altText\n                width\n                height\n                url\n            }\n        }\n    }\n}\n': {
     return: HomepageFeaturedCollectionsQuery;
@@ -1150,10 +1115,6 @@ interface GeneratedQueryTypes {
   '#graphql\nquery FeaturedItems(\n    $country: CountryCode\n    $language: LanguageCode\n    $pageBy: Int = 12\n) @inContext(country: $country, language: $language) {\n    featuredCollections: collections(first: 3, sortKey: UPDATED_AT) {\n        nodes {\n            ...FeaturedCollectionDetails\n        }\n    }\n    featuredProducts: products(first: $pageBy, query: "available_for_sale:true") {\n        nodes {\n            ...ProductCard\n        }\n    }\n}\n\n#graphql\nfragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    media(first: 2) {\n        nodes {\n            ...Media\n        }\n    }\n    totalInventory\n    variants(first: 10) {\n        nodes {\n            title\n            id\n            availableForSale\n            price {\n                amount\n                currencyCode\n            }\n            compareAtPrice {\n                amount\n                currencyCode\n            }\n            selectedOptions {\n                name\n                value\n            }\n            product {\n                handle\n                title\n            }\n        }\n    }\n}\n#graphql\nfragment Media on Media {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n        url\n    }\n    ... on MediaImage {\n        id\n        image {\n            id\n            url\n            width\n            height\n        }\n    }\n    ... on Video {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on Model3d {\n        id\n        sources {\n            mimeType\n            url\n        }\n    }\n    ... on ExternalVideo {\n        id\n        embedUrl\n        host\n    }\n}\n\n\n#graphql\nfragment FeaturedCollectionDetails on Collection {\n    id\n    title\n    handle\n    image {\n        altText\n        width\n        height\n        url\n    }\n}\n\n': {
     return: FeaturedItemsQuery;
     variables: FeaturedItemsQueryVariables;
-  };
-  '#graphql\n\nquery GetQuantities(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n    $filters: [ProductFilter!]\n    $sortKey: ProductCollectionSortKeys!\n    $reverse: Boolean\n    $first: Int\n    $last: Int\n    $startCursor: String\n    $endCursor: String\n) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n        products(\n            first: $first,\n            last: $last,\n            before: $startCursor,\n            after: $endCursor,\n            filters: $filters,\n            sortKey: $sortKey,\n            reverse: $reverse\n        ) {\n            nodes {\n                id\n                totalInventory\n                variants(first: 1) {\n                    nodes {\n                        id\n                        availableForSale\n                    }\n                }\n            }\n        }\n    }\n}': {
-    return: GetQuantitiesQuery;
-    variables: GetQuantitiesQueryVariables;
   };
 }
 

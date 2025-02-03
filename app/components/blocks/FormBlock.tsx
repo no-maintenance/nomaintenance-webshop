@@ -428,6 +428,39 @@ export const newsletterSchema = z.object({
     message: 'Please review and accept the terms and conditions to continue.',
   }),
 });
+export const getKlaviyoSubscriptionRequestData = (
+  email: string,
+  src?: string,
+  id = 'Wimtnj',
+) => ({
+  type: 'subscription',
+  attributes: {
+    profile: {
+      data: {
+        type: 'profile',
+        attributes: {
+          subscriptions: {
+            email: {
+              marketing: {
+                consent: 'SUBSCRIBED',
+              },
+            },
+          },
+          email,
+        },
+      },
+    },
+    custom_source: src,
+  },
+  relationships: {
+    list: {
+      data: {
+        type: 'list',
+        id,
+      },
+    },
+  },
+});
 
 export function NewsletterForm({
   hasSubmitBtn = true,
@@ -453,20 +486,15 @@ export function NewsletterForm({
 
   const onSubmit = (data: z.infer<typeof newsletterSchema>) => {
     const url = `${KLAVIYO_BASE_URL}/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`;
+
     const options = {
       method: 'POST',
-      headers: {revision: '2023-02-22', 'content-type': 'application/json'},
+      headers: {revision: '2025-01-15', 'content-type': 'application/json'},
       body: JSON.stringify({
-        data: {
-          type: 'subscription',
-          attributes: {
-            list_id: 'Wimtnj',
-            custom_source: id,
-            email: data.email,
-          },
-        },
+        data: getKlaviyoSubscriptionRequestData(data.email, id),
       }),
     };
+
     fetch(url, options)
       .then((res) => {
         if (res.ok) {
