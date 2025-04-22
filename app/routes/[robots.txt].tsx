@@ -26,6 +26,16 @@ function robotsTxtData({url, shopId}: {shopId?: string; url?: string}) {
 User-agent: *
 ${generalDisallowRules({sitemapUrl, shopId})}
 
+# Explicitly allow Googlebot
+User-agent: Googlebot
+Allow: /
+${generalDisallowRules({sitemapUrl, shopId})}
+
+# Explicitly allow Googlebot-Image
+User-agent: Googlebot-Image
+Allow: /
+${generalDisallowRules({sitemapUrl, shopId})}
+
 # Google adsbot ignores robots.txt unless specifically named!
 User-agent: adsbot-google
 Disallow: /checkouts/

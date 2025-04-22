@@ -67,7 +67,6 @@ export function FacebookPixel({id}: {id: string}) {
       log('Cart updated:', data);
     });
     subscribe('product_added_to_cart', (data) => {
-      console.log('product_added_to_cart', data);
       const m = data?.currentLine?.merchandise;
       const p = m?.product;
       ReactPixel.track('AddToCart', {
