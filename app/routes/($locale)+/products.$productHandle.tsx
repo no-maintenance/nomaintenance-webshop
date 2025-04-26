@@ -409,7 +409,7 @@ export function ProductForm({
           showVariantTitle={showVariantTitle}
         />
         {selectedVariant && (
-          <div className="grid items-stretch gap-4">
+          <div className={`grid items-stretch gap-4 ${combinedListing ? 'relative' : ''}`}>
             <div className={'flex gap-4'}>
               {combinedListing && (
                 <div className={'flex-1'}>
@@ -456,7 +456,7 @@ export function ProductForm({
                 </div>
               )}
             </div>
-            <div className={'relative'}>
+            <div className={`${combinedListing ? '' : 'relative'}`}>
               {!isOutOfStock &&
                 product.selectedVariant.quantityAvailable < 5 && (
                   <h6
