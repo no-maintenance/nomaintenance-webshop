@@ -256,7 +256,7 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
               as={'h1'}
               className={'tracking-widest uppercase mx-auto text-center'}
             >
-              Private Sale &#39;24
+              Private Sale &#39;25
             </Heading>
             <PasswordForm isLive={isLive} lock={lock} />
           </div>
