@@ -164,6 +164,9 @@ export function getLock(
   locks: LockFragment[],
 ) {
   const routeCtx = getRouteSlugInfo(context, request, params);
+  if (context.env.BYPASS_PAGE_PROTECTION) {
+    return null;
+  }
   // const locks = [];
   // const globalTheme = null;
   return findActiveLock(locks, routeCtx, context.session);

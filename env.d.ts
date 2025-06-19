@@ -27,6 +27,7 @@ declare global {
       SENTRY_DSN: string;
       NODE_ENV: 'production' | 'development';
       DEBUG_TRACKING: boolean | undefined;
+      BYPASS_PAGE_PROTECTION: boolean | undefined;
     };
   };
 
