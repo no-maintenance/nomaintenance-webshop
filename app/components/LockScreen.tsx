@@ -104,7 +104,8 @@ function CustomLockScreen({
       >
         {({timeLeft, isLive}) => {
           if (isLive && alwaysUnlockOnTime) {
-            window.location.reload();
+            // window.location.reload();
+            window.location.href = '/collections/sale';
           }
           return null;
         }}
@@ -164,7 +165,8 @@ function CountdownLockScreen({lock}: {lock: LockFragment}) {
               >
                 {({timeLeft, isLive}) => {
                   if (isLive) {
-                    window.location.reload();
+                    // window.location.reload();
+                    window.location.href = '/collections/sale';
                   }
                   return (
                     <div>
@@ -222,7 +224,9 @@ function PasswordLockScreen({lock}: {lock: LockFragment}) {
         opacity: 1,
         transition: {duration: 3},
       });
-      window.location.reload();
+      window.location.href = '/collections/sale';
+      // window.location.reload();
+
       // revalidator.revalidate();
     };
     if (!isProtected) {

@@ -12,7 +12,7 @@ import type {
   SerializeFrom,
 } from '@shopify/remix-oxygen';
 import {defer, json} from '@shopify/remix-oxygen';
-import {useRouteLoaderData} from 'react-router';
+import {redirect, useRouteLoaderData} from 'react-router';
 import {CacheLong, CacheShort, useNonce} from '@shopify/hydrogen'; // import LockLayout from '~/components/LockLayout';
 import {getLock, hasLockPasswordCookie} from '~/lib/locks.server';
 import {GenericError, NotFound} from '~/components/Error';
@@ -90,10 +90,15 @@ export async function action({request, context}: ActionFunctionArgs) {
   }
   if (lock.password === pw) {
     await context.session.set('bypass-page-protection', id);
-    return json({
-      status: 200,
-      message: '',
+    return redirect('/collections/sale', {
+      headers: {
+        'Set-Cookie': `bypass-page-protection=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600`,
+      },
     });
+    // return json({
+    //   status: 200,
+    //   message: '',
+    // });
   } else {
     return json({
       status: 401,
