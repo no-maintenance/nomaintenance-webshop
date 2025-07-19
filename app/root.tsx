@@ -44,6 +44,7 @@ import {seoPayload} from '~/lib/seo.server';
 import {Toaster} from '~/components/ui/toaster';
 import {SEO_PLACEHOLDER} from '~/lib/const';
 import {Pixels} from '~/components/analytics/CustomAnalytics';
+import {ShutdownSplash} from '~/components/ShutdownSplash';
 import yn from 'yn'; // import {parseAcceptLanguage} from 'intl-parse-accept-language';
 
 // import {parseAcceptLanguage} from 'intl-parse-accept-language';
@@ -150,6 +151,7 @@ export async function loader({context, request}: LoaderFunctionArgs) {
       ENV: {
         DEBUG_TRACKING: yn(context.env.DEBUG_TRACKING, {default: false}),
         NODE_ENV: process.env.NODE_ENV,
+        SHUTDOWN_ENABLED: yn(context.env.SHUTDOWN_ENABLED, {default: false}),
       },
     },
     {
@@ -171,6 +173,21 @@ export const meta = ({data}: MetaArgs<typeof loader>) => {
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
+
+  // Check if shutdown is enabled
+  if (data.ENV.SHUTDOWN_ENABLED) {
+    return (
+      <Document
+        nonce={nonce}
+        lang={data?.i18n?.language?.code}
+        themes={data?.themes}
+        tokens={data?.analyticsTokens}
+      >
+        <ShutdownSplash />
+      </Document>
+    );
+  }
+
   return (
     <Document
       nonce={nonce}
